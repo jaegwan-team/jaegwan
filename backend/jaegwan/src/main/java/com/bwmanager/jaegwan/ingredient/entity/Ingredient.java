@@ -20,7 +20,7 @@ public class Ingredient {
     @Convert(converter = CategoryConverter.class)
     private Category category;
 
-    @Enumerated
+    @Convert(converter = UnitConverter.class)
     private Unit unit;
 
     //TODO: 식당 FK 추가
