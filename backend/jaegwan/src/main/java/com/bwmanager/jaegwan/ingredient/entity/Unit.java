@@ -1,18 +1,21 @@
 package com.bwmanager.jaegwan.ingredient.entity;
 
+import com.bwmanager.jaegwan.global.converter.CommonType;
 import lombok.Getter;
 
 @Getter
-public enum Unit {
+public enum Unit implements CommonType {
 
-    G("g"),
-    KG("kg"),
-    ML("ml"),
-    L("L");
+    G("g", "1"),
+    KG("kg", "2"),
+    ML("ml", "3"),
+    L("L", "4");
 
-    private final String value;
+    private final String desc;
+    private final String code;
 
-    Unit(String value) {
-        this.value = value;
+    Unit(String desc, String code) {
+        this.desc = desc;
+        this.code = code;
     }
 }
