@@ -1,23 +1,27 @@
 package com.bwmanager.jaegwan.ingredient.entity;
 
+import com.bwmanager.jaegwan.global.converter.CommonType;
 import lombok.Getter;
 
 @Getter
-public enum Category {
+public enum Category implements CommonType {
 
-    Vegetables("채소"),
-    Fruits("과일"),
-    Meat("고기"),
-    Seafood("해산물"),
-    Dairy("유제품"),
-    Grains("곡물"),
-    Spices("향신료"),
-    Herbs("허브"),
-    Oils("오일");
+    Vegetables("채소", "1"),
+    Fruits("과일", "2"),
+    Meat("고기", "3"),
+    Seafood("해산물", "4"),
+    Dairy("유제품", "5"),
+    Grains("곡물", "6"),
+    Spices("향신료", "7"),
+    Herbs("허브", "8"),
+    Oils("오일", "9");
 
-    private final String value;
+    private final String desc;
+    private final String code;
 
-    Category(String value) {
-        this.value = value;
+    Category(String desc,
+             String code) {
+        this.desc = desc;
+        this.code = code;
     }
 }
