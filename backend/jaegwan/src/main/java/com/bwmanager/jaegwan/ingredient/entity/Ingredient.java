@@ -17,7 +17,7 @@ public class Ingredient {
 
     private String name;
 
-    @Enumerated
+    @Convert(converter = CategoryConverter.class)
     private Category category;
 
     @Enumerated
