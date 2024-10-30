@@ -1,12 +1,16 @@
 package com.bwmanager.jaegwan.ingredient.service;
 
+import com.bwmanager.jaegwan.ingredient.dto.IngredientDetailResponse;
 import com.bwmanager.jaegwan.ingredient.dto.IngredientResponse;
 import com.bwmanager.jaegwan.ingredient.entity.Ingredient;
+import com.bwmanager.jaegwan.ingredient.entity.IngredientDetail;
 import com.bwmanager.jaegwan.ingredient.repository.IngredientDetailRepository;
 import com.bwmanager.jaegwan.ingredient.repository.IngredientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -28,6 +32,18 @@ public class IngredientServiceImpl implements IngredientService {
                 .totalAmount(ingredientDetailRepository.findTotalAmountByIngredientId(ingredient.getId()))
                 .unit(ingredient.getUnit())
                 .leftExpirationDay(ingredientDetailRepository.findMinExpirationDayById(ingredient.getId()))
+                .build()).toList();
+    }
+
+    @Override
+    public List<IngredientDetailResponse> getIngredientDetailsInfo(Long id) {
+        // STEP 1. 재료 종류 ID를 통해 모든 재료 현황 상세 조회
+        List<IngredientDetail> ingredientDetails = ingredientDetailRepository.findAllByIngredientId(id);
+
+        return ingredientDetails.stream().map(ingredientDetail -> IngredientDetailResponse.builder()
+                .purchaseDate(ingredientDetail.getPurchaseDate())
+                .amount(ingredientDetail.getAmount())
+                .leftExpirationDay(ChronoUnit.DAYS.between(LocalDateTime.now(), ingredientDetail.getExpirationDate()))
                 .build()).toList();
     }
 }
