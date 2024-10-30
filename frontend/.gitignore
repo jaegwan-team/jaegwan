@@ -1,0 +1,26 @@
+# essential dependencies
+.env
+node_modules/
+npm-debug.*
+*.local
+*.pem
+
+# JS Packages
+package-lock.json
+
+# Next Packages
+.next/
+dist/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# typescript
