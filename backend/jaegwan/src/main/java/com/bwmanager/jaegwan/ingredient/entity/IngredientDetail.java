@@ -3,6 +3,7 @@ package com.bwmanager.jaegwan.ingredient.entity;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.sql.Timestamp;
 
@@ -19,6 +20,7 @@ public class IngredientDetail {
 
     private Timestamp expirationDate;
 
+    @CreatedDate
     private Timestamp purchaseDate;
 
     private int amount;
