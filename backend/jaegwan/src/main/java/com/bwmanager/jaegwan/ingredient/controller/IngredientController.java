@@ -23,4 +23,14 @@ public class IngredientController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getIngredientInfo(@PathVariable("id") Long id) {
+        CommonResponse<Object> response = CommonResponse.builder()
+                .data(ingredientService.getIngredientDetailsInfo(id))
+                .message("한 종류의 재료 상세 조회에 성공했습니다")
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
 }
