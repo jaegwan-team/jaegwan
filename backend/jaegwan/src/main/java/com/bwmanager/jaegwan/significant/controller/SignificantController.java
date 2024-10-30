@@ -1,6 +1,5 @@
 package com.bwmanager.jaegwan.significant.controller;
 
-
 import com.bwmanager.jaegwan.significant.service.SignificantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
