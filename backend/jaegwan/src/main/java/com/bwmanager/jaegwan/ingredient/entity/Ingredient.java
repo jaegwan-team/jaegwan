@@ -1,6 +1,7 @@
 package com.bwmanager.jaegwan.ingredient.entity;
 
 
+import com.bwmanager.jaegwan.restaurant.entity.Restaurant;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +24,7 @@ public class Ingredient {
     @Convert(converter = UnitConverter.class)
     private Unit unit;
 
-    //TODO: 식당 FK 추가
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id", nullable = false)
+    private Restaurant restaurant;
 }
