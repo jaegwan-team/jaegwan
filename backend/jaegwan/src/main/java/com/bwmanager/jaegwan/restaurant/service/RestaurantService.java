@@ -2,8 +2,6 @@ package com.bwmanager.jaegwan.restaurant.service;
 
 import com.bwmanager.jaegwan.restaurant.dto.RestaurantResponse;
 
-import java.util.Optional;
-
 public interface RestaurantService {
 
     /**
