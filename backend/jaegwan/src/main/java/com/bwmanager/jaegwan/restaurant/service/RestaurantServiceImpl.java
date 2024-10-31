@@ -24,7 +24,6 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .orElseThrow(() -> new RestaurantException(ErrorCode.RESTAURANT_NOT_FOUND));
 
         return RestaurantResponse.from(restaurant);
-
     }
 
 }
