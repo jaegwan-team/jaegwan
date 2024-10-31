@@ -22,7 +22,7 @@ public class IngredientDetail {
     @CreatedDate
     private LocalDateTime purchaseDate;
 
-    private int amount;
+    private double amount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ingredient_id", nullable = false)
