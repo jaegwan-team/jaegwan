@@ -31,7 +31,7 @@ public class IngredientServiceImpl implements IngredientService {
                 .category(ingredient.getCategory())
                 .totalAmount(ingredientDetailRepository.findTotalAmountByIngredientId(ingredient.getId()))
                 .unit(ingredient.getUnit())
-                .leftExpirationDay(ingredientDetailRepository.findMinExpirationDayById(ingredient.getId()))
+                .leftExpirationDay(ingredientDetailRepository.findMinExpirationDayByIngredientId(ingredient.getId()))
                 .build()).toList();
     }
 
