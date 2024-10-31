@@ -1,5 +1,6 @@
 package com.bwmanager.jaegwan.receipt.controller;
 
+import com.bwmanager.jaegwan.global.dto.CommonResponse;
 import com.bwmanager.jaegwan.global.error.ErrorCode;
 import com.bwmanager.jaegwan.global.error.exception.FileException;
 import com.bwmanager.jaegwan.receipt.service.ReceiptService;
@@ -31,7 +32,12 @@ public class ReceiptController {
                     content = @Content(mediaType = "application/form-data", schema = @Schema(type = "string", format = "binary"))
             ) @RequestParam("files") List<MultipartFile> files) {
         try {
-            return ResponseEntity.ok(receiptService.saveReceipt(restaurantId, files));
+            CommonResponse<Object> response = CommonResponse.builder()
+                    .data(receiptService.saveReceipt(restaurantId, files))
+                    .message("영수증 사진 업로드에 성공했습니다")
+                    .build();
+
+            return ResponseEntity.ok(response);
         } catch (IOException e) {
             throw new FileException(ErrorCode.IMAGE_UPLOAD_ERROR);
         }
