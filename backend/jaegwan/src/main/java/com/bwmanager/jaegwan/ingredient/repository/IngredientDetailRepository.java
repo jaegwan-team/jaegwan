@@ -15,8 +15,8 @@ public interface IngredientDetailRepository extends JpaRepository<IngredientDeta
 
     @Query("SELECT FUNCTION('DATE_DIFF', CURRENT_DATE, i.expirationDate)  " +
             "FROM IngredientDetail i " +
-            "WHERE i.id = :id")
-    int findMinExpirationDayById(Long id);
+            "WHERE i.ingredient.id = :ingredientId")
+    int findMinExpirationDayById(Long ingredientId);
 
     List<IngredientDetail> findAllByIngredientId(Long ingredientId);
 }
