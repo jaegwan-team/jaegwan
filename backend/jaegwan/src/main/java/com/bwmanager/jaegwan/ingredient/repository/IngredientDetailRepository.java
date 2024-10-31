@@ -1,9 +1,10 @@
 package com.bwmanager.jaegwan.ingredient.repository;
 
-import com.bwmanager.jaegwan.ingredient.entity.Ingredient;
 import com.bwmanager.jaegwan.ingredient.entity.IngredientDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 public interface IngredientDetailRepository extends JpaRepository<IngredientDetail, Long> {
 
@@ -14,6 +15,8 @@ public interface IngredientDetailRepository extends JpaRepository<IngredientDeta
 
     @Query("SELECT FUNCTION('DATE_DIFF', CURRENT_DATE, i.expirationDate)  " +
             "FROM IngredientDetail i " +
-            "WHERE i.id = :id")
-    int findMinExpirationDayById(Long id);
+            "WHERE i.ingredient.id = :ingredientId")
+    int findMinExpirationDayByIngredientId(Long ingredientId);
+
+    List<IngredientDetail> findAllByIngredientId(Long ingredientId);
 }
