@@ -1,7 +1,6 @@
-package com.bwmanager.jaegwan.restaurant;
+package com.bwmanager.jaegwan.restaurant.controller;
 
 import com.bwmanager.jaegwan.global.dto.CommonResponse;
-import com.bwmanager.jaegwan.restaurant.dto.RestaurantResponse;
 import com.bwmanager.jaegwan.restaurant.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
