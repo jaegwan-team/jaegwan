@@ -50,7 +50,7 @@ public class SwaggerConfig {
     public GroupedOpenApi authApi() {
         return GroupedOpenApi.builder()
                 .group("auth")
-                .pathsToMatch("/api/v1/auth/**")
+                .pathsToMatch("/api/auth/**")
                 .build();
     }
 
@@ -59,52 +59,26 @@ public class SwaggerConfig {
     public GroupedOpenApi memberApi() {
         return GroupedOpenApi.builder()
                 .group("member")
-                .pathsToMatch("/api/v1/member/**")
+                .pathsToMatch("/api/member/**")
                 .build();
     }
 
-    // ! account 관련 API 모음
+    // ! receipt 관련 API 모음
     @Bean
-    public GroupedOpenApi accountApi() {
+    public GroupedOpenApi receiptApi() {
         return GroupedOpenApi.builder()
-                .group("account")
-                .pathsToMatch("/api/v1/account/**")
+                .group("receipt")
+                .pathsToMatch("/api/receipt/**")
                 .build();
     }
 
-    // ! chat 관련 API 모음
+    // ! ingredient 관련 API 모음
     @Bean
-    public GroupedOpenApi chatApi() {
+    public GroupedOpenApi ingredientApi() {
         return GroupedOpenApi.builder()
                 .group("chat")
-                .pathsToMatch("/api/v1/chat/**")
+                .pathsToMatch("/api/ingredient/**")
                 .build();
     }
 
-    // ! transaction 관련 API 모음
-    @Bean
-    public GroupedOpenApi transactionApi() {
-        return GroupedOpenApi.builder()
-                .group("transaction")
-                .pathsToMatch("/api/v1/transaction/**")
-                .build();
-    }
-
-    // ! 차용증 관련 API 모음
-    @Bean
-    public GroupedOpenApi iouApi() {
-        return GroupedOpenApi.builder()
-                .group("iou")
-                .pathsToMatch("/api/v1/iou/**")
-                .build();
-    }
-
-    // ! 무통장 계좌 관련 API 모음
-    @Bean
-    public GroupedOpenApi virtualAccountApi() {
-        return GroupedOpenApi.builder()
-                .group("virtual-account")
-                .pathsToMatch("/api/v1/virtual-account/**")
-                .build();
-    }
 }
