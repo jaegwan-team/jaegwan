@@ -1,14 +1,205 @@
 .layout {
   width: 100%;
   height: 90%;
-  padding-left: 5rem;
-  padding-right: 5rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  padding: 0 12rem;
 }
 
-.mainbox {
-  background-color: aqua;
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem 2rem 0;
+  height: 8%;
+}
+
+.tab {
+  padding: 1rem 2.5rem;
+  background: rgb(250, 250, 250);
+  border-radius: 1rem 1rem 0 0;
+  font-weight: 550;
+  font-size: 1.5rem;
+  color: #4d525b;
+  transition: all 0.2s ease;
+}
+
+.tab:hover {
+  background-color: #ebebeb;
+}
+
+.activeTab {
+  background-color: #80af81;
+  color: white;
+  font-weight: 700;
+  position: relative;
+}
+
+.activeTab::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0.1rem;
+  background-color: #508d4e;
+}
+
+.content {
+  padding: 1rem 2rem;
+  width: 100%;
+  height: 89%;
+  border-radius: 1rem;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 1),
+    rgba(255, 255, 255, 0.9)
+  );
+  box-shadow: 0 0.2rem 2rem rgba(0, 0, 0, 0.3),
+    0 0.4rem 0.8rem rgba(0, 0, 0, 0.3),
+    inset 0 0.1rem 0.2rem rgba(255, 255, 255, 0.3);
+}
+
+.maincontent {
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.overview {
+  border-radius: 0.5rem;
+  height: 52%;
+  box-shadow: 0 0.1rem 0.5rem rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.overview:hover {
+  transform: translateY(-0.2rem);
+  box-shadow: 0 0.3rem 0.7rem rgba(0, 0, 0, 0.2);
+}
+
+.overviewtxt {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.overviewtitle {
+  font-weight: bolder;
+  font-size: 2.5rem;
+  padding-top: 2rem;
+}
+
+.overviewdate {
+  font-size: 1.5rem;
+  padding-top: 1.5rem;
+}
+
+.overviewsale {
+  font-weight: bold;
+  font-size: 3rem;
+  padding-top: 2rem;
+}
+
+.saleamount {
+  font-weight: bold;
+  color: #508d4e;
+}
+
+.overviewcompare {
+  padding-top: 2rem;
+  font-size: 2rem;
+}
+
+.compareamount {
+  font-weight: bold;
+  color: red;
+}
+
+.overviewchart {
+  width: 70%;
+  height: 100%;
+}
+
+.lists {
+  width: 100%;
+  height: 45%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.listbox {
+  border-radius: 0.5rem;
+  width: 49.5%;
+  height: 100%;
+  box-shadow: 0 0.1rem 0.5rem rgba(0, 0, 0, 0.2);
+  padding: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.listbox:hover {
+  transform: translateY(-0.2rem);
+  box-shadow: 0 0.3rem 0.7rem rgba(0, 0, 0, 0.2);
+}
+
+.listtitle {
+  font-size: 2rem;
+  font-weight: bolder;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.newlist {
+  font-size: 1.5rem;
+}
+
+.listtable {
+  width: 100%;
+  height: 92%;
+  padding-top: 1rem;
+}
+
+.tablehead {
+  width: 100%;
+  height: 20%;
+  background-color: #d6efd8;
+  border-radius: 1rem 1rem 0 0;
+  box-shadow: 0 0.1rem 0.5rem rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.tabledetail {
+  width: 100%;
+  height: 25%;
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+}
+
+.tableheaddate {
+  padding-left: 1.5rem;
+  width: 30%;
+}
+
+.tableheaditem {
+  padding-left: 1.5rem;
+  width: 40%;
+}
+
+.tableheadcheck {
+  padding-left: 1.5rem;
+  width: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

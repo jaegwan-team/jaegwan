@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "../../../styles/globals.css";
 import Header from "@/features/ui/header";
+import styles from "../../../styles/main.module.css";
+import TabNavigation from "../../features/ui/TabNavigation";
 
 export const metadata: Metadata = {
   title: "재관둥이",
@@ -16,7 +18,10 @@ export default function MainLayout({
     <html lang="en" className="font-pretendard">
       <body className="font-pretendard">
         <Header />
-        {children}
+        <div className={styles.layout}>
+          <TabNavigation />
+          {children}
+        </div>
       </body>
     </html>
   );
