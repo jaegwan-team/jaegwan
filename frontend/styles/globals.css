@@ -121,7 +121,7 @@ body {
   line-height: 1;
   width: 100dvw;
   height: 100dvh;
-  background-color: #1a5319;
+  background-color: rgba(26, 83, 25, 0.7);
 }
 
 ol,
