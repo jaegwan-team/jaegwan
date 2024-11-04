@@ -8,7 +8,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-
+        
+        loginClickedBackground : "#0F2D0F",
+        loginBtnBackground : "#1A5319",
         loginBackground: "#A4D1A5",
         loginBackgroundTransparent: "rgba(164, 209, 165, 0.45)",
 

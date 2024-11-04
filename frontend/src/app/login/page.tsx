@@ -5,7 +5,7 @@ import LoginLayout from "@/features/ui/layout/loginLayout";
 
 const Login = () => {
     return (
-        <div className="flex flex-col justify-between items-center p-24 min-h-screen overflow-hidden">
+        <div className="flex flex-col justify-center items-center p-24 min-h-screen overflow-hidden">
             <LoginLayout/>
             <video
                 src={videoSrc}
