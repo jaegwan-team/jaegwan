@@ -1,5 +1,6 @@
 package com.bwmanager.jaegwan.significant.service;
 
+import com.bwmanager.jaegwan.significant.dto.SignificantCreateRequest;
 import com.bwmanager.jaegwan.significant.dto.SignificantReadResponse;
 import java.util.List;
 
@@ -19,4 +20,11 @@ public interface SignificantService {
      * @return SignificantReadResponse
      */
     SignificantReadResponse getSignificant(long significantId);
+
+    /**
+     * 특이사항 생성
+     *
+     * @param significantCreateRequest
+     */
+    void createSignificant(SignificantCreateRequest significantCreateRequest);
 }
