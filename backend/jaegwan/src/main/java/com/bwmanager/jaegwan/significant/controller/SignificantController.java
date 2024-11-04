@@ -18,7 +18,7 @@ public class SignificantController {
 
     private final SignificantService significantService;
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<?> getSignificants() {
         CommonResponse<Object> response = CommonResponse.builder()
                 .data(significantService.getSignificants())
