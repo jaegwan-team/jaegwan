@@ -1,5 +1,6 @@
 package com.bwmanager.jaegwan.significant.service;
 
+import com.bwmanager.jaegwan.significant.dto.SignificantConfirmRequest;
 import com.bwmanager.jaegwan.significant.dto.SignificantCreateRequest;
 import com.bwmanager.jaegwan.significant.dto.SignificantReadResponse;
 import java.util.List;
@@ -27,4 +28,6 @@ public interface SignificantService {
      * @param significantCreateRequest
      */
     void createSignificant(SignificantCreateRequest significantCreateRequest);
+
+    void confirmSignificant(SignificantConfirmRequest significantConfirmRequest);
 }

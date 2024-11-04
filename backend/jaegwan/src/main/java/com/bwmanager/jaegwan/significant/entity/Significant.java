@@ -42,4 +42,8 @@ public class Significant {
 
     @CreatedDate
     private LocalDate date;
+
+    public void confirm() {
+        this.isConfirmed = true;
+    }
 }

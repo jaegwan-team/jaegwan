@@ -2,13 +2,16 @@ package com.bwmanager.jaegwan.significant.service;
 
 import com.bwmanager.jaegwan.restaurant.entity.Restaurant;
 import com.bwmanager.jaegwan.restaurant.repository.RestaurantRepository;
+import com.bwmanager.jaegwan.significant.dto.SignificantConfirmRequest;
 import com.bwmanager.jaegwan.significant.dto.SignificantCreateRequest;
 import com.bwmanager.jaegwan.significant.dto.SignificantReadResponse;
+import com.bwmanager.jaegwan.significant.entity.Significant;
 import com.bwmanager.jaegwan.significant.repository.SignificantRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,4 +40,14 @@ public class SignificantServiceImpl implements SignificantService {
                 .orElseThrow(EntityNotFoundException::new);
         significantRepository.save(significantCreateRequest.toEntity(restaurant));
     }
+
+    @Override
+    @Transactional
+    public void confirmSignificant(SignificantConfirmRequest significantConfirmRequest) {
+        Significant significant = significantRepository.findById(significantConfirmRequest.getSignificantId())
+                .orElseThrow(EntityNotFoundException::new);
+        significant.confirm();
+    }
+
+    
 }
