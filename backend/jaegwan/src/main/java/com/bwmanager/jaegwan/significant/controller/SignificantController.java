@@ -32,14 +32,6 @@ public class SignificantController {
     }
 
     /*
-     *   텍스트를 통한 빅스비 테스트
-     * */
-    @GetMapping("/bixbyByText")
-    public ResponseEntity<?> bixbyByText() {
-        return ResponseEntity.ok("텍스트를 통한 테스트입니다!");
-    }
-
-    /*
      *   JSON을 통한 빅스비 테스트
      * */
     @GetMapping("/bixbyByJson")
