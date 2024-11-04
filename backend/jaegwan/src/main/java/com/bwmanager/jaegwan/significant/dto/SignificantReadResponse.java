@@ -2,7 +2,7 @@ package com.bwmanager.jaegwan.significant.dto;
 
 
 import com.bwmanager.jaegwan.significant.entity.Significant;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class SignificantReadResponse {
 
-    private long id;
+    private Long id;
 
     private String detail;
 
@@ -22,7 +22,7 @@ public class SignificantReadResponse {
 
     private long restaurantId;
 
-    private Timestamp date;
+    private LocalDate date;
 
     public static SignificantReadResponse fromEntity(Significant significant) {
         return SignificantReadResponse.builder()
