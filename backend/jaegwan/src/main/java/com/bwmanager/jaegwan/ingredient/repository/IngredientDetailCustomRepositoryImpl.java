@@ -44,7 +44,7 @@ public class IngredientDetailCustomRepositoryImpl implements IngredientDetailCus
                 .select(Projections.fields(IngredientDetailResponse.class,
                         ingredientDetail.purchaseDate,
                         ingredientDetail.amount,
-                        Expressions.numberTemplate(Long.class,
+                        Expressions.numberTemplate(Integer.class,
                                 "DATEDIFF({0}, {1})",
                                 ingredientDetail.expirationDate, LocalDateTime.now()).as("leftExpirationDay")))
                 .from(ingredientDetail)
