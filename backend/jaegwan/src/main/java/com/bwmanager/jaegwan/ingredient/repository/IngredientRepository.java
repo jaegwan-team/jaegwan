@@ -7,5 +7,11 @@ import java.util.List;
 
 public interface IngredientRepository extends JpaRepository<Ingredient, Long>, IngredientCustomRepository {
 
+    /**
+     * 식당에 있는 모든 재료를 조회한다.
+     *
+     * @param restaurantId 식당 ID
+     * @return 식당에 있는 재료 객체들
+     */
     List<Ingredient> findAllByRestaurantId(Long restaurantId);
 }
