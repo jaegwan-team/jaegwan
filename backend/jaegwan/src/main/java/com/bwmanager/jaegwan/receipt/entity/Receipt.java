@@ -1,6 +1,5 @@
 package com.bwmanager.jaegwan.receipt.entity;
 
-
 import com.bwmanager.jaegwan.restaurant.entity.Restaurant;
 import jakarta.persistence.*;
 import lombok.*;
