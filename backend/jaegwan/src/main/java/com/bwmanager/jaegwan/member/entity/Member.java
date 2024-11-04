@@ -1,4 +1,4 @@
-package com.bwmanager.jaegwan.restaurant.entity;
+package com.bwmanager.jaegwan.member.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,19 +13,28 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Builder
-public class Restaurant {
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String name; // 식당 이름
+    private String name;
 
     @Column(nullable = false)
-    private String registerNumber; // 사업자 등록 번호
+    private String role;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String phoneNumber;
+
+    @Column(nullable = false)
+    private String imageUrl;
 
 }

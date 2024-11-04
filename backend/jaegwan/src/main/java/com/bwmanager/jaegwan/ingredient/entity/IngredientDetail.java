@@ -1,10 +1,10 @@
 package com.bwmanager.jaegwan.ingredient.entity;
 
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -17,9 +17,10 @@ public class IngredientDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Timestamp expirationDate;
+    private LocalDateTime expirationDate;
 
-    private Timestamp purchaseDate;
+    @CreatedDate
+    private LocalDateTime purchaseDate;
 
     private int amount;
 
