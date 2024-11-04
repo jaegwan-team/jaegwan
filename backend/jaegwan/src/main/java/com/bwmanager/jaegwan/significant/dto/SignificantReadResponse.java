@@ -1,6 +1,5 @@
 package com.bwmanager.jaegwan.significant.dto;
 
-
 import com.bwmanager.jaegwan.significant.entity.Significant;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
