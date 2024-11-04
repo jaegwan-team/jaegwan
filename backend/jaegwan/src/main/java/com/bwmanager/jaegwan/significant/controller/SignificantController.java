@@ -3,7 +3,6 @@ package com.bwmanager.jaegwan.significant.controller;
 import com.bwmanager.jaegwan.global.dto.CommonResponse;
 import com.bwmanager.jaegwan.significant.dto.SignificantCreateRequest;
 import com.bwmanager.jaegwan.significant.dto.TestBixby;
-import com.bwmanager.jaegwan.significant.dto.TestBixby.TestBixbyBuilder;
 import com.bwmanager.jaegwan.significant.service.SignificantService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,9 +44,10 @@ public class SignificantController {
      * */
     @GetMapping("/bixbyByJson")
     public ResponseEntity<?> bixbyByJson() {
-        TestBixbyBuilder testBixbyBuilder = TestBixby.builder()
-                .resMessage("JSON을 통한 테스트입니다!");
-        return ResponseEntity.ok().body(testBixbyBuilder);
+        TestBixby testBixby = TestBixby.builder()
+                .resMessage("JSON을 통한 테스트입니다!")
+                .build();
+        return ResponseEntity.ok(testBixby);
     }
 
     @GetMapping("/{significantId}")
