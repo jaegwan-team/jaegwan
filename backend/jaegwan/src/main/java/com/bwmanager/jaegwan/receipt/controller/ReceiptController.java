@@ -3,6 +3,8 @@ package com.bwmanager.jaegwan.receipt.controller;
 import com.bwmanager.jaegwan.global.dto.CommonResponse;
 import com.bwmanager.jaegwan.global.error.ErrorCode;
 import com.bwmanager.jaegwan.global.error.exception.FileException;
+import com.bwmanager.jaegwan.ingredient.dto.IngredientRequest;
+import com.bwmanager.jaegwan.receipt.dto.ReceiptRequest;
 import com.bwmanager.jaegwan.receipt.service.ReceiptService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,5 +43,15 @@ public class ReceiptController {
         } catch (IOException e) {
             throw new FileException(ErrorCode.IMAGE_UPLOAD_ERROR);
         }
+    }
+
+    @PostMapping("/detail")
+    public ResponseEntity<?> getReceiptsInfo(@RequestBody ReceiptRequest request) {
+        CommonResponse<Object> response = CommonResponse.builder()
+                .data(receiptService.getReceiptsInfo(request.getRestaurantId()))
+                .message("구매 내역 조회에 성공했습니다")
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 }

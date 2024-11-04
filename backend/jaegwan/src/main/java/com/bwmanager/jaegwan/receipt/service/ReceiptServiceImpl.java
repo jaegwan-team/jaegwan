@@ -54,6 +54,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     @Override
     public List<ReceiptResponse> getReceiptsInfo(Long restaurantId) {
+        log.info("size={}", receiptRepository.getReceiptsInfoByRestaurantId(restaurantId).size());
         return receiptRepository.getReceiptsInfoByRestaurantId(restaurantId);
     }
 }
