@@ -2,6 +2,7 @@ package com.bwmanager.jaegwan.significant.controller;
 
 import com.bwmanager.jaegwan.global.dto.CommonResponse;
 import com.bwmanager.jaegwan.significant.dto.SignificantCreateRequest;
+import com.bwmanager.jaegwan.significant.dto.TestBixby;
 import com.bwmanager.jaegwan.significant.service.SignificantService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,25 @@ public class SignificantController {
         return ResponseEntity.ok(response);
     }
 
+    /*
+     *   텍스트를 통한 빅스비 테스트
+     * */
+    @GetMapping("/bixbyByText")
+    public ResponseEntity<?> bixbyByText() {
+        return ResponseEntity.ok("텍스트를 통한 테스트입니다!");
+    }
+
+    /*
+     *   JSON을 통한 빅스비 테스트
+     * */
+    @GetMapping("/bixbyByJson")
+    public ResponseEntity<?> bixbyByJson() {
+        TestBixby testBixby = TestBixby.builder()
+                .resMessage("JSON을 통한 테스트입니다!")
+                .build();
+        return ResponseEntity.ok(testBixby);
+    }
+
     @GetMapping("/{significantId}")
     public ResponseEntity<?> getSignificant(@PathVariable long significantId) {
         CommonResponse<Object> response = CommonResponse.builder()
@@ -44,5 +64,4 @@ public class SignificantController {
         significantService.createSignificant(significantCreateRequest);
         return ResponseEntity.ok("정상적으로 특이사항 생성");
     }
-
 }
