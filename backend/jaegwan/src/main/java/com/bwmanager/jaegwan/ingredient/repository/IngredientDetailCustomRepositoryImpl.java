@@ -27,9 +27,9 @@ public class IngredientDetailCustomRepositoryImpl implements IngredientDetailCus
                 .select(Projections.fields(IngredientResponse.class,
                         ingredientDetail.ingredient.id,
                         ingredientDetail.ingredient.category,
-                        ingredientDetail.amount.sum(),
+                        ingredientDetail.amount.sum().as("totalAmount"),
                         ingredientDetail.ingredient.unit,
-                        Expressions.numberTemplate(Long.class,
+                        Expressions.numberTemplate(Integer.class,
                                 "DATEDIFF({0}, {1})",
                                 ingredientDetail.expirationDate.min(), LocalDateTime.now()).as("leftExpirationDay")))
                 .from(ingredientDetail)
