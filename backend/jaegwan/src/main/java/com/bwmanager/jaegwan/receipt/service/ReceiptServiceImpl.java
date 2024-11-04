@@ -3,6 +3,7 @@ package com.bwmanager.jaegwan.receipt.service;
 import com.bwmanager.jaegwan.global.error.ErrorCode;
 import com.bwmanager.jaegwan.global.error.exception.RestaurantException;
 import com.bwmanager.jaegwan.global.util.S3Util;
+import com.bwmanager.jaegwan.receipt.dto.ReceiptResponse;
 import com.bwmanager.jaegwan.receipt.entity.Receipt;
 import com.bwmanager.jaegwan.receipt.repository.ReceiptRepository;
 import com.bwmanager.jaegwan.restaurant.entity.Restaurant;
@@ -51,4 +52,8 @@ public class ReceiptServiceImpl implements ReceiptService {
         return receiptUrls;
     }
 
+    @Override
+    public List<ReceiptResponse> getReceiptsInfo(Long restaurantId) {
+        return receiptRepository.getReceiptsInfoByRestaurantId(restaurantId);
+    }
 }
