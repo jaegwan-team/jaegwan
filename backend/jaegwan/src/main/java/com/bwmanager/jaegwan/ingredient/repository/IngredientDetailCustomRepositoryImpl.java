@@ -9,12 +9,10 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static com.bwmanager.jaegwan.ingredient.entity.QIngredientDetail.*;
+import static com.bwmanager.jaegwan.ingredient.entity.QIngredientDetail.ingredientDetail;
 
 @RequiredArgsConstructor
 @Repository
