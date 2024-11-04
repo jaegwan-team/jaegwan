@@ -35,7 +35,7 @@ public class Significant {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
-    private Restaurant restaurantId;
+    private Restaurant restaurant;
 
     @CreatedDate
     private Timestamp date;
