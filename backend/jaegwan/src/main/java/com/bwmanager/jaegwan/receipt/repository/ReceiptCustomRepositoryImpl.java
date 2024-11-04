@@ -2,6 +2,7 @@ package com.bwmanager.jaegwan.receipt.repository;
 
 import com.bwmanager.jaegwan.receipt.dto.QReceiptResponse;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptResponse;
+import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,12 @@ public class ReceiptCustomRepositoryImpl implements ReceiptCustomRepository {
                                 .select(receiptIngredient.count().castToNum(Integer.class).subtract(1))
                                 .from(receiptIngredient)
                                 .where(receiptIngredient.receipt.id.eq(receipt.id)),
-                        receipt.creationDate
+                        receipt.creationDate,
+                        JPAExpressions
+                                .select(Wildcard.count.eq(0L))
+                                .from(receiptIngredient)
+                                .where(receiptIngredient.receipt.id.eq(receipt.id),
+                                        receiptIngredient.isConfirmed.eq(false))
                 ))
                 .from(receipt, receiptIngredient)
                 .where(receipt.restaurant.id.eq(restaurantId),

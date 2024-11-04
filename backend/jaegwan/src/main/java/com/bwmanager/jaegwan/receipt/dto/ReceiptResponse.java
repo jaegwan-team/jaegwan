@@ -14,12 +14,14 @@ public class ReceiptResponse {
     private String mainIngredientName;
     private int leftCount;
     private LocalDateTime createdDate;
+    private boolean isConfirmed;
 
     @QueryProjection
-    public ReceiptResponse(Long id, String mainIngredientName, int leftCount, LocalDateTime createdDate) {
+    public ReceiptResponse(Long id, String mainIngredientName, int leftCount, LocalDateTime createdDate, boolean isConfirmed) {
         this.id = id;
         this.mainIngredientName = mainIngredientName;
         this.leftCount = leftCount;
         this.createdDate = createdDate;
+        this.isConfirmed = isConfirmed;
     }
 }
