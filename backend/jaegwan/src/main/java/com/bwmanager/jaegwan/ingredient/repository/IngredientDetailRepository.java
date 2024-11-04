@@ -6,17 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface IngredientDetailRepository extends JpaRepository<IngredientDetail, Long> {
+public interface IngredientDetailRepository extends JpaRepository<IngredientDetail, Long>, IngredientDetailCustomRepository {
 
-    @Query("SELECT SUM(i.amount) " +
-            "FROM IngredientDetail i " +
-            "WHERE i.ingredient.id = :ingredientId")
-    double findTotalAmountByIngredientId(Long ingredientId);
-
-    @Query("SELECT FUNCTION('DATE_DIFF', CURRENT_DATE, i.expirationDate)  " +
-            "FROM IngredientDetail i " +
-            "WHERE i.ingredient.id = :ingredientId")
-    int findMinExpirationDayByIngredientId(Long ingredientId);
-
-    List<IngredientDetail> findAllByIngredientId(Long ingredientId);
 }

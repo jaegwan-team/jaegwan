@@ -3,14 +3,11 @@ package com.bwmanager.jaegwan.ingredient.service;
 import com.bwmanager.jaegwan.ingredient.dto.IngredientDetailResponse;
 import com.bwmanager.jaegwan.ingredient.dto.IngredientResponse;
 import com.bwmanager.jaegwan.ingredient.entity.Ingredient;
-import com.bwmanager.jaegwan.ingredient.entity.IngredientDetail;
 import com.bwmanager.jaegwan.ingredient.repository.IngredientDetailRepository;
 import com.bwmanager.jaegwan.ingredient.repository.IngredientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -26,24 +23,14 @@ public class IngredientServiceImpl implements IngredientService {
         List<Ingredient> ingredients = ingredientRepository.findAllByRestaurantId(restaurantId);
 
         // STEP 2. 종류별 재료 잔여량 및 가장 짧은 유통기한일 조회
-        return ingredients.stream().map(ingredient -> IngredientResponse.builder()
-                .id(ingredient.getId())
-                .category(ingredient.getCategory())
-                .totalAmount(ingredientDetailRepository.findTotalAmountByIngredientId(ingredient.getId()))
-                .unit(ingredient.getUnit())
-                .leftExpirationDay(ingredientDetailRepository.findMinExpirationDayByIngredientId(ingredient.getId()))
-                .build()).toList();
+        return ingredients.stream()
+                .map(ingredient -> ingredientDetailRepository.getIngredientsInfo(ingredient.getId()))
+                .toList();
     }
 
     @Override
     public List<IngredientDetailResponse> getIngredientDetailsInfo(Long id) {
         // STEP 1. 재료 종류 ID를 통해 모든 재료 현황 상세 조회
-        List<IngredientDetail> ingredientDetails = ingredientDetailRepository.findAllByIngredientId(id);
-
-        return ingredientDetails.stream().map(ingredientDetail -> IngredientDetailResponse.builder()
-                .purchaseDate(ingredientDetail.getPurchaseDate())
-                .amount(ingredientDetail.getAmount())
-                .leftExpirationDay(ChronoUnit.DAYS.between(LocalDateTime.now(), ingredientDetail.getExpirationDate()))
-                .build()).toList();
+        return ingredientDetailRepository.getIngredientDetailsInfoByIngredientId(id);
     }
 }
