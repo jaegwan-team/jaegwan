@@ -12,7 +12,8 @@ const config: Config = {
         loginClickedBackground : "#0F2D0F",
         loginBtnBackground : "#1A5319",
         loginBackground: "#A4D1A5",
-        loginBackgroundTransparent: "rgba(164, 209, 165, 0.45)",
+        loginBackgroundTransparent: "rgba(164, 209, 165, 0.7)",
+        inputFieldBackground: "rgba(26, 83, 25, 0.4)",
 
         background: "var(--background)",
         foreground: "var(--foreground)",
