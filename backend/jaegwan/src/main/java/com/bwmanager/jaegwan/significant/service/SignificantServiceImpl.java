@@ -18,17 +18,20 @@ public class SignificantServiceImpl implements SignificantService {
     private final RestaurantRepository restaurantRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<SignificantReadResponse> getSignificants() {
         return significantRepository.findAll().stream().map(SignificantReadResponse::fromEntity).toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public SignificantReadResponse getSignificant(long significantId) {
         return SignificantReadResponse.fromEntity(
                 significantRepository.findById(significantId).orElseThrow(EntityNotFoundException::new));
     }
 
     @Override
+    @Transactional
     public void createSignificant(SignificantCreateRequest significantCreateRequest) {
         Restaurant restaurant = restaurantRepository.findById(significantCreateRequest.getRestaurantId())
                 .orElseThrow(EntityNotFoundException::new);
