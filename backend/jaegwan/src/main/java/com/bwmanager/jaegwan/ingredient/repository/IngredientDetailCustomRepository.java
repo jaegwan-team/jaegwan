@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IngredientDetailCustomRepository {
 
-    IngredientResponse getIngredientsInfo(Long ingredientId);
+    IngredientResponse getIngredientInfo(Long ingredientId);
 
     List<IngredientDetailResponse> getIngredientDetailsInfoByIngredientId(Long ingredientId);
 }

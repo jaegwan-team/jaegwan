@@ -21,7 +21,7 @@ public class IngredientDetailCustomRepositoryImpl implements IngredientDetailCus
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public IngredientResponse getIngredientsInfo(Long ingredientId) {
+    public IngredientResponse getIngredientInfo(Long ingredientId) {
 
         return jpaQueryFactory
                 .select(Projections.fields(IngredientResponse.class,

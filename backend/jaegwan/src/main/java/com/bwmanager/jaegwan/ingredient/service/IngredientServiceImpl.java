@@ -24,7 +24,7 @@ public class IngredientServiceImpl implements IngredientService {
 
         // STEP 2. 종류별 재료 잔여량 및 가장 짧은 유통기한일 조회
         return ingredients.stream()
-                .map(ingredient -> ingredientDetailRepository.getIngredientsInfo(ingredient.getId()))
+                .map(ingredient -> ingredientDetailRepository.getIngredientInfo(ingredient.getId()))
                 .toList();
     }
 
