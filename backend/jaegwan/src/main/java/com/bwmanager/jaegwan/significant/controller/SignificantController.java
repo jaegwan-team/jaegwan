@@ -1,8 +1,7 @@
 package com.bwmanager.jaegwan.significant.controller;
 
-import com.bwmanager.jaegwan.significant.dto.SignificantReadResponse;
+import com.bwmanager.jaegwan.global.dto.CommonResponse;
 import com.bwmanager.jaegwan.significant.service.SignificantService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +19,21 @@ public class SignificantController {
     private final SignificantService significantService;
 
     @GetMapping("")
-    ResponseEntity<?> getSignificants() {
-        List<SignificantReadResponse> significantReadResponses = significantService.getSignificants();
-        return ResponseEntity.ok(significantReadResponses);
+    public ResponseEntity<?> getSignificants() {
+        CommonResponse<Object> response = CommonResponse.builder()
+                .data(significantService.getSignificants())
+                .message("정상적으로 특이사항 리스트를 응답")
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{significantId}")
-    ResponseEntity<?> getSignificant(@PathVariable long significantId) {
-        SignificantReadResponse significant = significantService.getSignificant(significantId);
-        return ResponseEntity.ok(significant);
+    public ResponseEntity<?> getSignificant(@PathVariable long significantId) {
+        CommonResponse<Object> response = CommonResponse.builder()
+                .data(significantService.getSignificant(significantId))
+                .message("정상적으로 특이사항 단일값 응답")
+                .build();
+        return ResponseEntity.ok(response);
     }
 
 }
