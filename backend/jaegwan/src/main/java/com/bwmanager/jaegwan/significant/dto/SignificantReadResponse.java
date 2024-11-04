@@ -19,7 +19,7 @@ public class SignificantReadResponse {
 
     private boolean isConfirmed;
 
-    private long restaurantId;
+    private Long restaurantId;
 
     private LocalDate date;
 
