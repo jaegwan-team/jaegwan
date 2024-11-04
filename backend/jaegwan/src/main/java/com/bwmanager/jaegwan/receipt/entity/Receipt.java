@@ -27,7 +27,7 @@ public class Receipt {
     @CreatedDate
     private LocalDateTime creationDate;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "restaurant_id", nullable = false)
-//    private Restaurant restaurant;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id", nullable = false)
+    private Restaurant restaurant;
 }
