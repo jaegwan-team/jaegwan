@@ -3,7 +3,6 @@ package com.bwmanager.jaegwan.ingredient.dto;
 import com.bwmanager.jaegwan.ingredient.entity.Category;
 import com.bwmanager.jaegwan.ingredient.entity.Unit;
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +16,6 @@ public class IngredientResponse {
     private Unit unit;
     private int leftExpirationDay;
 
-    @Builder
     @QueryProjection
     public IngredientResponse(Long id, Category category, double totalAmount, Unit unit, int leftExpirationDay) {
         this.id = id;
