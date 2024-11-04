@@ -15,5 +15,5 @@ public class IngredientDetailResponse {
 
     private LocalDateTime purchaseDate;
     private double amount;
-    private long leftExpirationDay;
+    private int leftExpirationDay;
 }
