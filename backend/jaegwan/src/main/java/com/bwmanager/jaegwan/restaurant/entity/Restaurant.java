@@ -28,4 +28,13 @@ public class Restaurant {
     @Column(nullable = false)
     private String registerNumber; // 사업자 등록 번호
 
+    private Restaurant(String name, String registerNumber) {
+        this.name = name;
+        this.registerNumber = registerNumber;
+    }
+
+    public static Restaurant of(String name, String registerNumber) {
+        return new Restaurant(name, registerNumber);
+    }
+
 }
