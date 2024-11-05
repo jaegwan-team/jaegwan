@@ -3,13 +3,14 @@ package com.bwmanager.jaegwan.receipt.controller;
 import com.bwmanager.jaegwan.global.dto.CommonResponse;
 import com.bwmanager.jaegwan.global.error.ErrorCode;
 import com.bwmanager.jaegwan.global.error.exception.FileException;
-import com.bwmanager.jaegwan.ingredient.dto.IngredientRequest;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptRequest;
 import com.bwmanager.jaegwan.receipt.service.ReceiptService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,16 @@ public class ReceiptController {
         }
     }
 
+    @Operation(summary = "구매내역 목록 조회", description = "id(restaurantId)가 필요합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "구매내역 목록 조회 성공",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터입니다.",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 내부 에러가 발생했습니다.",
+                    content = @Content)
+    })
     @PostMapping("/detail")
     public ResponseEntity<?> getReceiptsInfo(@RequestBody ReceiptRequest request) {
         CommonResponse<Object> response = CommonResponse.builder()
