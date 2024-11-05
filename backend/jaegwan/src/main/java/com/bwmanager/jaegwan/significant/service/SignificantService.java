@@ -21,7 +21,7 @@ public interface SignificantService {
      * @param significantId
      * @return SignificantReadResponse
      */
-    SignificantReadResponse getSignificant(long significantId);
+    SignificantReadResponse getSignificant(Long significantId);
 
     /**
      * 저장된 특이사항 확인을 처리

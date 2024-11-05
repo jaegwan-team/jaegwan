@@ -38,7 +38,7 @@ public class SignificantServiceImpl implements SignificantService {
 
     @Override
     @Transactional(readOnly = true)
-    public SignificantReadResponse getSignificant(long significantId) {
+    public SignificantReadResponse getSignificant(Long significantId) {
         return SignificantReadResponse.fromEntity(
                 significantRepository.findById(significantId).orElseThrow(EntityNotFoundException::new));
     }
@@ -65,7 +65,7 @@ public class SignificantServiceImpl implements SignificantService {
         }
         return true;
     }
-    
+
     private boolean validateAmountSumAndProcess(SignificantIngredient significantIngredient,
                                                 List<IngredientDetail> ingredientDetails) {
         double sum = ingredientDetails.stream().mapToDouble(IngredientDetail::getAmount).sum();
