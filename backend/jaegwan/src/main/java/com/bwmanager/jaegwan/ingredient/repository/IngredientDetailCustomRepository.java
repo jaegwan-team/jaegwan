@@ -8,7 +8,7 @@ import java.util.List;
 public interface IngredientDetailCustomRepository {
 
     /**
-     * 해당 재료에 해당하는 간단한 정보를 조회한다. (재료 목록 화면에서 필요)
+     * 선택한 재료에 해당하는 간단한 정보를 조회한다. (재료 목록 화면에서 필요)
      *
      * @param ingredientId 조회할 재료 종류 ID
      * @return 재료 정보
@@ -16,7 +16,7 @@ public interface IngredientDetailCustomRepository {
     IngredientResponse getIngredientInfo(Long ingredientId);
 
     /**
-     * 해당 재료에 헤댕하는 상세 정보를 조회한다. (재료 목록 화면에서 재료 클릭 시 필요)
+     * 선택한 재료에 헤당하는 상세 정보를 조회한다. (재료 목록 화면에서 재료 클릭 시 필요)
      *
      * @param ingredientId 조회할 재료 종류 ID
      * @return 재료 종류에 해당하는 재료 상세 정보들
