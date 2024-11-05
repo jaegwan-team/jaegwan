@@ -1,5 +1,6 @@
 package com.bwmanager.jaegwan.receipt.service;
 
+import com.bwmanager.jaegwan.receipt.dto.ReceiptDetailResponse;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptResponse;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,4 +25,12 @@ public interface ReceiptService {
      * @return 구매 내역 정보
      */
     List<ReceiptResponse> getReceiptsInfo(Long restaurantId);
+
+    /**
+     * 확정된 구매 내역 상세를 조회한다.
+     *
+     * @param receiptId 영수증 ID
+     * @return 구매 내역 상세
+     */
+    List<ReceiptDetailResponse> getReceiptDetail(Long receiptId);
 }

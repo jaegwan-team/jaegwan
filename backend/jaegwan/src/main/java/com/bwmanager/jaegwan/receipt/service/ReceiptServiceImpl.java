@@ -3,8 +3,10 @@ package com.bwmanager.jaegwan.receipt.service;
 import com.bwmanager.jaegwan.global.error.ErrorCode;
 import com.bwmanager.jaegwan.global.error.exception.RestaurantException;
 import com.bwmanager.jaegwan.global.util.S3Util;
+import com.bwmanager.jaegwan.receipt.dto.ReceiptDetailResponse;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptResponse;
 import com.bwmanager.jaegwan.receipt.entity.Receipt;
+import com.bwmanager.jaegwan.receipt.repository.ReceiptIngredientRepository;
 import com.bwmanager.jaegwan.receipt.repository.ReceiptRepository;
 import com.bwmanager.jaegwan.restaurant.entity.Restaurant;
 import com.bwmanager.jaegwan.restaurant.repository.RestaurantRepository;
@@ -27,6 +29,7 @@ public class ReceiptServiceImpl implements ReceiptService {
     private final S3Util s3Util;
     private final ReceiptRepository receiptRepository;
     private final RestaurantRepository restaurantRepository;
+    private final ReceiptIngredientRepository receiptIngredientRepository;
     private final String prefix = "receipt";
 
     @Override
@@ -56,5 +59,10 @@ public class ReceiptServiceImpl implements ReceiptService {
     public List<ReceiptResponse> getReceiptsInfo(Long restaurantId) {
         log.info("size={}", receiptRepository.getReceiptsInfoByRestaurantId(restaurantId).size());
         return receiptRepository.getReceiptsInfoByRestaurantId(restaurantId);
+    }
+
+    @Override
+    public List<ReceiptDetailResponse> getReceiptDetail(Long receiptId) {
+        return receiptIngredientRepository.getReceiptsDetailByReceiptId(receiptId);
     }
 }

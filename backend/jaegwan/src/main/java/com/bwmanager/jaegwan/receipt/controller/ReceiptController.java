@@ -37,7 +37,7 @@ public class ReceiptController {
         try {
             CommonResponse<Object> response = CommonResponse.builder()
                     .data(receiptService.saveReceipt(restaurantId, files))
-                    .message("영수증 사진 업로드에 성공했습니다")
+                    .message("영수증 사진 업로드에 성공했습니다.")
                     .build();
 
             return ResponseEntity.ok(response);
@@ -48,7 +48,7 @@ public class ReceiptController {
 
     @Operation(summary = "구매내역 목록 조회", description = "id(restaurantId)가 필요합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "구매내역 목록 조회 성공",
+            @ApiResponse(responseCode = "200", description = "구매내역 목록 조회에 성공했습니다.",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CommonResponse.class))),
             @ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터입니다.",
@@ -60,7 +60,28 @@ public class ReceiptController {
     public ResponseEntity<?> getReceiptsInfo(@RequestBody ReceiptRequest request) {
         CommonResponse<Object> response = CommonResponse.builder()
                 .data(receiptService.getReceiptsInfo(request.getRestaurantId()))
-                .message("구매 내역 조회에 성공했습니다")
+                .message("구매 내역 조회에 성공했습니다.")
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "구매내역 상세 조회", description = "id가 필요합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "구매내역 상세 조회에 성공했습니다.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터입니다.",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 내부 에러가 발생했습니다.",
+                    content = @Content)
+    })
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<?> getReceiptInfo(@Parameter(description = "조회할 영수증 ID", required = true, example = "10")
+                                            @PathVariable("id") Long id) {
+        CommonResponse<Object> response = CommonResponse.builder()
+                .data(receiptService.getReceiptDetail(id))
+                .message("구매 내역 상세 조회에 성공했습니다.")
                 .build();
 
         return ResponseEntity.ok(response);
