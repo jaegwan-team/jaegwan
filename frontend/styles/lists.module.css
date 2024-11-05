@@ -1,5 +1,5 @@
 .content {
-  padding: 1rem 2rem;
+  padding: 1rem;
   width: 100%;
   height: 89%;
   border-radius: 1rem;
@@ -13,91 +13,90 @@
     inset 0 0.1rem 0.2rem rgba(255, 255, 255, 0.3);
 }
 
-.listbox {
+.container {
   width: 100%;
   height: 100%;
   padding: 2rem;
 }
 
-.listtitle {
+.title {
   font-size: 2.5rem;
-  font-weight: 1000;
-  display: flex;
-  align-items: center;
+  font-weight: 800;
 }
 
-.listtable {
+.table {
   width: 100%;
   height: 95%;
   padding-top: 1rem;
 }
 
-.tablehead {
+.tableHeader {
   width: 100%;
-  height: 10%;
+  height: 3rem;
   background-color: #d6efd8;
-  border-radius: 1rem 1rem 0 0;
+  border-radius: 0.5rem 0.5rem 0 0;
   box-shadow: 0 0.1rem 0.5rem rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
-  font-size: 1.2rem;
+  font-size: 1.125rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
 
-.tabledetails {
+.tableBody {
   width: 100%;
   height: 90%;
   overflow-y: auto;
-
-  &::-webkit-scrollbar {
-    width: 0.4rem;
-    background-color: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: rgba(26, 83, 25, 0.3);
-    border-radius: 0.4rem;
-
-    &:hover {
-      background-color: rgba(26, 83, 25, 0.5);
-    }
-  }
-
-  &::-webkit-scrollbar-track {
-    background-color: transparent;
-    margin: 0.2rem 0;
-  }
 }
-.tabledetail {
+
+.tableBody::-webkit-scrollbar {
+  width: 0.4rem;
+  background-color: transparent;
+}
+
+.tableBody::-webkit-scrollbar-thumb {
+  background-color: rgba(26, 83, 25, 0.3);
+  border-radius: 0.4rem;
+}
+
+.tableBody::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(26, 83, 25, 0.5);
+}
+
+.tableBody::-webkit-scrollbar-track {
+  background-color: transparent;
+  margin: 0.2rem 0;
+}
+
+.tableRow {
   width: 100%;
-  height: 11%;
+  height: 3.5rem;
   display: flex;
   align-items: center;
-  font-size: 1.1rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
 }
 
-.tabledetail:hover {
+.tableRow:hover {
   background-color: rgb(234, 234, 234);
 }
 
-.tableheaddate {
+.dateColumn {
   padding-left: 1.5rem;
   width: 30%;
 }
 
-.tableheaditem {
+.itemColumn {
   padding-left: 1.5rem;
   width: 40%;
 }
 
-.tableheadcheck {
+.checkColumn {
   padding-left: 1.5rem;
   width: 30%;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }

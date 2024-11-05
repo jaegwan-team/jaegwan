@@ -15,7 +15,7 @@ export default function MainLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="font-pretendard">
+    <html lang="en">
       <body className="font-pretendard">
         <Header />
         <div className={styles.layout}>
