@@ -1,5 +1,6 @@
 package com.bwmanager.jaegwan.receipt.entity;
 
+import com.bwmanager.jaegwan.ingredient.entity.Ingredient;
 import com.bwmanager.jaegwan.restaurant.entity.Restaurant;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,19 +15,27 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Receipt {
+public class ReceiptIngredient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "image_url", nullable = false, unique = true)
-    private String imageUrl;
+    @Column(nullable = false)
+    private double amount;
 
-    @CreatedDate
-    private LocalDateTime createdDate;
+    @Column(nullable = false)
+    private int price;
+
+    @Column(nullable = false)
+    private boolean isConfirmed;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false)
-    private Restaurant restaurant;
+    @JoinColumn(name = "receipt_id", nullable = false)
+    private Receipt receipt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ingredient_id", nullable = false)
+    private Ingredient ingredient;
+
 }

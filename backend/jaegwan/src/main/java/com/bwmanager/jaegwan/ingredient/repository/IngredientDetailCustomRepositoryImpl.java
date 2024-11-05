@@ -1,8 +1,9 @@
 package com.bwmanager.jaegwan.ingredient.repository;
 
-
 import com.bwmanager.jaegwan.ingredient.dto.IngredientDetailResponse;
 import com.bwmanager.jaegwan.ingredient.dto.IngredientResponse;
+import com.bwmanager.jaegwan.ingredient.dto.QIngredientDetailResponse;
+import com.bwmanager.jaegwan.ingredient.dto.QIngredientResponse;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -24,10 +25,10 @@ public class IngredientDetailCustomRepositoryImpl implements IngredientDetailCus
     public IngredientResponse getIngredientInfo(Long ingredientId) {
 
         return jpaQueryFactory
-                .select(Projections.fields(IngredientResponse.class,
+                .select(new QIngredientResponse(
                         ingredientDetail.ingredient.id,
                         ingredientDetail.ingredient.category,
-                        ingredientDetail.amount.sum().as("totalAmount"),
+                        ingredientDetail.amount.sum(),
                         ingredientDetail.ingredient.unit,
                         Expressions.numberTemplate(Integer.class,
                                 "DATEDIFF({0}, {1})",
@@ -41,7 +42,7 @@ public class IngredientDetailCustomRepositoryImpl implements IngredientDetailCus
     public List<IngredientDetailResponse> getIngredientDetailsInfoByIngredientId(Long ingredientId) {
 
         return jpaQueryFactory
-                .select(Projections.fields(IngredientDetailResponse.class,
+                .select(new QIngredientDetailResponse(
                         ingredientDetail.purchaseDate,
                         ingredientDetail.amount,
                         Expressions.numberTemplate(Integer.class,
