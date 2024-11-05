@@ -10,7 +10,9 @@ import java.util.List;
 
 public interface RestaurantMemberRepository extends JpaRepository<RestaurantMember, Long> {
 
-    @Query("SELECT rm.member FROM RestaurantMember rm WHERE rm.restaurant.id = :restaurantId")
+    @Query("SELECT rm.member " +
+            "FROM RestaurantMember rm " +
+            "WHERE rm.restaurant.id = :restaurantId")
     List<Member> findMembersByRestaurantId(@Param("restaurantId") Long restaurantId);
 
 }
