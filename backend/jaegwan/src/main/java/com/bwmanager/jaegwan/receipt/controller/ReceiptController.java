@@ -66,7 +66,7 @@ public class ReceiptController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "구매내역 상세 조회", description = "id(receiptId)가 필요합니다.")
+    @Operation(summary = "구매내역 상세 조회", description = "id가 필요합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "구매내역 상세 조회 성공",
                     content = @Content(mediaType = "application/json",
@@ -76,11 +76,11 @@ public class ReceiptController {
             @ApiResponse(responseCode = "500", description = "서버 내부 에러가 발생했습니다.",
                     content = @Content)
     })
-    @GetMapping("/detail/{receiptId}")
+    @GetMapping("/detail/{id}")
     public ResponseEntity<?> getReceiptInfo(@Parameter(description = "조회할 영수증 ID", required = true, example = "10")
-                                            @PathVariable("receiptId") Long receiptId) {
+                                            @PathVariable("id") Long id) {
         CommonResponse<Object> response = CommonResponse.builder()
-                .data(receiptService.getReceiptDetail(receiptId))
+                .data(receiptService.getReceiptDetail(id))
                 .message("구매 내역 상세 조회에 성공했습니다")
                 .build();
 
