@@ -36,7 +36,7 @@ public class ReceiptCustomRepositoryImpl implements ReceiptCustomRepository {
                                 .select(receiptIngredient.count().castToNum(Integer.class).subtract(1))
                                 .from(receiptIngredient)
                                 .where(receiptIngredient.receipt.id.eq(receipt.id)),
-                        receipt.creationDate,
+                        receipt.createdDate,
                         JPAExpressions
                                 .select(Wildcard.count.eq(0L))
                                 .from(receiptIngredient)
