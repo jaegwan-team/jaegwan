@@ -1,11 +1,15 @@
 package com.bwmanager.jaegwan.significant.service;
 
+import com.bwmanager.jaegwan.ingredient.entity.Ingredient;
+import com.bwmanager.jaegwan.ingredient.repository.IngredientRepository;
 import com.bwmanager.jaegwan.restaurant.entity.Restaurant;
 import com.bwmanager.jaegwan.restaurant.repository.RestaurantRepository;
 import com.bwmanager.jaegwan.significant.dto.SignificantConfirmRequest;
 import com.bwmanager.jaegwan.significant.dto.SignificantCreateRequest;
+import com.bwmanager.jaegwan.significant.dto.SignificantCreateResponse;
 import com.bwmanager.jaegwan.significant.dto.SignificantReadResponse;
 import com.bwmanager.jaegwan.significant.entity.Significant;
+import com.bwmanager.jaegwan.significant.repository.SignificantIngredientRepository;
 import com.bwmanager.jaegwan.significant.repository.SignificantRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
@@ -19,6 +23,8 @@ public class SignificantServiceImpl implements SignificantService {
 
     private final SignificantRepository significantRepository;
     private final RestaurantRepository restaurantRepository;
+    private final IngredientRepository ingredientRepository;
+    private final SignificantIngredientRepository significantIngredientRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -35,19 +41,30 @@ public class SignificantServiceImpl implements SignificantService {
 
     @Override
     @Transactional
-    public void createSignificant(SignificantCreateRequest significantCreateRequest) {
-        Restaurant restaurant = restaurantRepository.findById(significantCreateRequest.getRestaurantId())
-                .orElseThrow(EntityNotFoundException::new);
-        significantRepository.save(significantCreateRequest.toEntity(restaurant));
-    }
-
-    @Override
-    @Transactional
     public void confirmSignificant(SignificantConfirmRequest significantConfirmRequest) {
         Significant significant = significantRepository.findById(significantConfirmRequest.getSignificantId())
                 .orElseThrow(EntityNotFoundException::new);
         significant.confirm();
     }
 
-    
+    @Override
+    @Transactional
+    public SignificantCreateResponse createBySignificant(SignificantCreateRequest significantCreateRequest) {
+        Ingredient ingredient = ingredientRepository.findByRestaurantIdAndName(
+                significantCreateRequest.getRestaurantId(),
+                significantCreateRequest.getIngredientName()).orElseThrow(EntityNotFoundException::new);
+        saveBySignificant(significantCreateRequest, ingredient);
+        return significantCreateRequest.toSignificantCreateResponse();
+    }
+
+    private void saveBySignificant(SignificantCreateRequest significantCreateRequest, Ingredient ingredient) {
+        Significant significant = saveSignificant(significantCreateRequest);
+        significantIngredientRepository.save(significantCreateRequest.toSignificantIngredient(significant, ingredient));
+    }
+
+    private Significant saveSignificant(SignificantCreateRequest significantCreateRequest) {
+        Restaurant restaurant = restaurantRepository.findById(significantCreateRequest.getRestaurantId())
+                .orElseThrow(EntityNotFoundException::new);
+        return significantRepository.save(significantCreateRequest.toSignificant(restaurant));
+    }
 }

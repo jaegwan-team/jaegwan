@@ -53,18 +53,27 @@ public class SignificantController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping
-    public ResponseEntity<?> createSignificant(@RequestBody SignificantCreateRequest significantCreateRequest) {
-        significantService.createSignificant(significantCreateRequest);
-        return ResponseEntity.ok("정상적으로 특이사항 생성");
-    }
+//    @PostMapping
+//    public ResponseEntity<?> createSignificant(@RequestBody SignificantCreateRequest significantCreateRequest) {
+//        significantService.createSignificant(significantCreateRequest);
+//        return ResponseEntity.ok("정상적으로 특이사항 생성");
+//    }
 
     @PutMapping
     public ResponseEntity<?> confirmSignificant(@RequestBody SignificantConfirmRequest
                                                         significantConfirmRequest) {
         significantService.confirmSignificant(significantConfirmRequest);
         CommonResponse<Object> response = CommonResponse.builder()
-                .message("정상적으로 특이사항 단일값 응답")
+                .message("정상적으로 특이사항 확인 적용")
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createBySignificant(@RequestBody SignificantCreateRequest significantCreateRequest) {
+        CommonResponse<Object> response = CommonResponse.builder()
+                .message("특이사항으로 정보 생성")
+                .data(significantService.createBySignificant(significantCreateRequest))
                 .build();
         return ResponseEntity.ok(response);
     }
