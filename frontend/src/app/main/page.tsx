@@ -125,8 +125,7 @@ export default function MainPage() {
           <div className={styles.listbox}>
             <div className={styles.listtitle}>
               <div>
-                구매 내역{" "}
-                <span className={styles.newlist}>(새 구매 내역 : 1건)</span>
+                구매 내역 <span className={styles.newlist}>(신규 : 1건)</span>
               </div>
               <div>
                 <Image src={ArrowSVG} alt="checked" width={20} height={20} />
@@ -168,8 +167,7 @@ export default function MainPage() {
             {" "}
             <div className={styles.listtitle}>
               <div>
-                특이 사항{" "}
-                <span className={styles.newlist}>(새 특이 사항 : 1건)</span>
+                특이 사항 <span className={styles.newlist}>(신규 1건)</span>
               </div>
               <div>
                 <Image src={ArrowSVG} alt="checked" width={20} height={20} />

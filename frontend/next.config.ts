@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-import withVideos from 'next-videos';
+import withVideos from "next-videos";
 
 const nextConfig: NextConfig = {
   /* config options here */

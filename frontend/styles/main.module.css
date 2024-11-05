@@ -19,6 +19,9 @@
   font-size: 1.5rem;
   color: #4d525b;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .tab:hover {
