@@ -1,10 +1,9 @@
 package com.bwmanager.jaegwan.ingredient.repository;
 
 import com.bwmanager.jaegwan.ingredient.entity.IngredientDetail;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import java.util.List;
 
 public interface IngredientDetailRepository extends JpaRepository<IngredientDetail, Long> {
 
@@ -19,4 +18,7 @@ public interface IngredientDetailRepository extends JpaRepository<IngredientDeta
     int findMinExpirationDayByIngredientId(Long ingredientId);
 
     List<IngredientDetail> findAllByIngredientId(Long ingredientId);
+
+    List<IngredientDetail> findAllByIngredientIdAndIngredient_Restaurant_id(Long ingredientId, Long restaurantId);
+
 }

@@ -23,8 +23,13 @@ public interface SignificantService {
      */
     SignificantReadResponse getSignificant(long significantId);
 
+    /**
+     * 저장된 특이사항 확인을 처리
+     *
+     * @param significantConfirmRequest 특이사항의 id
+     */
     void confirmSignificant(SignificantConfirmRequest significantConfirmRequest);
-    
+
     /**
      * 특이사항이 입력되면 해당 내용에 대한 재료가 존재하는지를 확인
      *

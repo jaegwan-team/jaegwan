@@ -1,6 +1,8 @@
 package com.bwmanager.jaegwan.significant.service;
 
 import com.bwmanager.jaegwan.ingredient.entity.Ingredient;
+import com.bwmanager.jaegwan.ingredient.entity.IngredientDetail;
+import com.bwmanager.jaegwan.ingredient.repository.IngredientDetailRepository;
 import com.bwmanager.jaegwan.ingredient.repository.IngredientRepository;
 import com.bwmanager.jaegwan.restaurant.entity.Restaurant;
 import com.bwmanager.jaegwan.restaurant.repository.RestaurantRepository;
@@ -9,6 +11,7 @@ import com.bwmanager.jaegwan.significant.dto.SignificantCreateRequest;
 import com.bwmanager.jaegwan.significant.dto.SignificantCreateResponse;
 import com.bwmanager.jaegwan.significant.dto.SignificantReadResponse;
 import com.bwmanager.jaegwan.significant.entity.Significant;
+import com.bwmanager.jaegwan.significant.entity.SignificantIngredient;
 import com.bwmanager.jaegwan.significant.repository.SignificantIngredientRepository;
 import com.bwmanager.jaegwan.significant.repository.SignificantRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -25,6 +28,7 @@ public class SignificantServiceImpl implements SignificantService {
     private final RestaurantRepository restaurantRepository;
     private final IngredientRepository ingredientRepository;
     private final SignificantIngredientRepository significantIngredientRepository;
+    private final IngredientDetailRepository ingredientDetailRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -44,7 +48,43 @@ public class SignificantServiceImpl implements SignificantService {
     public void confirmSignificant(SignificantConfirmRequest significantConfirmRequest) {
         Significant significant = significantRepository.findById(significantConfirmRequest.getSignificantId())
                 .orElseThrow(EntityNotFoundException::new);
-        significant.confirm();
+        if (validateAmountAndProcess(significant)) {
+            significant.confirm();
+        }
+    }
+
+    private boolean validateAmountAndProcess(Significant significant) {
+        List<SignificantIngredient> significantIngredients = significantIngredientRepository.findAllBySignificantId(
+                significant.getId());
+        for (SignificantIngredient significantIngredient : significantIngredients) {
+            List<IngredientDetail> ingredientDetails = ingredientDetailRepository.findAllByIngredientIdAndIngredient_Restaurant_id(
+                    significantIngredient.getIngredient().getId(), significant.getRestaurant().getId());
+            if (!validateAmountSumAndProcess(significantIngredient, ingredientDetails)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private boolean validateAmountSumAndProcess(SignificantIngredient significantIngredient,
+                                                List<IngredientDetail> ingredientDetails) {
+        double sum = ingredientDetails.stream().mapToDouble(IngredientDetail::getAmount).sum();
+        if (significantIngredient.getAmount() <= sum) {
+            processAmount(significantIngredient.getAmount(), ingredientDetails);
+            return true;
+        }
+        return false;
+    }
+
+    private void processAmount(double amount, List<IngredientDetail> ingredientDetails) {
+        for (IngredientDetail ingredientDetail : ingredientDetails) {
+            if (ingredientDetail.getAmount() <= amount) {
+                ingredientDetailRepository.delete(ingredientDetail);
+                amount -= ingredientDetail.getAmount();
+            } else {
+                ingredientDetail.decreaseAmount(amount);
+            }
+        }
     }
 
     @Override

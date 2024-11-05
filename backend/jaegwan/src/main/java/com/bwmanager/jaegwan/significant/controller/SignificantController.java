@@ -53,12 +53,6 @@ public class SignificantController {
         return ResponseEntity.ok(response);
     }
 
-//    @PostMapping
-//    public ResponseEntity<?> createSignificant(@RequestBody SignificantCreateRequest significantCreateRequest) {
-//        significantService.createSignificant(significantCreateRequest);
-//        return ResponseEntity.ok("정상적으로 특이사항 생성");
-//    }
-
     @PutMapping
     public ResponseEntity<?> confirmSignificant(@RequestBody SignificantConfirmRequest
                                                         significantConfirmRequest) {
