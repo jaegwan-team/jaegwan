@@ -1,19 +1,23 @@
 package com.bwmanager.jaegwan.ingredient.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class IngredientDetailResponse {
 
     private LocalDateTime purchaseDate;
     private double amount;
-    private long leftExpirationDay;
+    private int leftExpirationDay;
+
+    @QueryProjection
+    public IngredientDetailResponse(LocalDateTime purchaseDate, double amount, int leftExpirationDay) {
+        this.purchaseDate = purchaseDate;
+        this.amount = amount;
+        this.leftExpirationDay = leftExpirationDay;
+    }
 }

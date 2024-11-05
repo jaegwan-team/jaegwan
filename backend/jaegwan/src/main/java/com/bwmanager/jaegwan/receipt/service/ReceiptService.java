@@ -1,5 +1,7 @@
 package com.bwmanager.jaegwan.receipt.service;
 
+import com.bwmanager.jaegwan.receipt.dto.ReceiptDetailResponse;
+import com.bwmanager.jaegwan.receipt.dto.ReceiptResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -15,4 +17,20 @@ public interface ReceiptService {
      * @throws IOException
      */
     List<String> saveReceipt(Long restaurantId, List<MultipartFile> files) throws IOException;
+
+    /**
+     * 영수증으로 등록된 구매 내역을 조회한다.
+     *
+     * @param restaurantId 식당 ID
+     * @return 구매 내역 정보
+     */
+    List<ReceiptResponse> getReceiptsInfo(Long restaurantId);
+
+    /**
+     * 확정된 구매 내역 상세를 조회한다.
+     *
+     * @param receiptId 영수증 ID
+     * @return 구매 내역 상세
+     */
+    List<ReceiptDetailResponse> getReceiptDetail(Long receiptId);
 }
