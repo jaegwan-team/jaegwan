@@ -37,4 +37,13 @@ public class RestaurantMember {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
+    private RestaurantMember(Restaurant restaurant, Member member) {
+        this.restaurant = restaurant;
+        this.member = member;
+    }
+
+    public static RestaurantMember from(Restaurant restaurant, Member member) {
+        return new RestaurantMember(restaurant, member);
+    }
+
 }
