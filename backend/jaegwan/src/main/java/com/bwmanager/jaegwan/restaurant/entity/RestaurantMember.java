@@ -42,7 +42,7 @@ public class RestaurantMember {
         this.member = member;
     }
 
-    public static RestaurantMember from(Restaurant restaurant, Member member) {
+    public static RestaurantMember of(Restaurant restaurant, Member member) {
         return new RestaurantMember(restaurant, member);
     }
 

@@ -24,7 +24,7 @@ public class RestaurantController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getRestaurant(@PathVariable("id") Long id) {
         CommonResponse<Object> response = CommonResponse.builder()
-                .data(restaurantService.getRestaurantById(id))
+                .data(restaurantService.getRestaurant(id))
                 .message("식당 정보 조회에 성공했습니다.")
                 .build();
 
@@ -35,7 +35,7 @@ public class RestaurantController {
     @GetMapping("/{id}/member")
     public ResponseEntity<?> getRestaurantMembers(@PathVariable("id") Long id) {
         CommonResponse<Object> response = CommonResponse.builder()
-                .data(restaurantService.getMembersByRestaurantId(id))
+                .data(restaurantService.getRestaurantMembers(id))
                 .message("식당에 속한 사용자 목록 조회에 성공했습니다.")
                 .build();
 

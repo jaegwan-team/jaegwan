@@ -30,12 +30,12 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final MemberRepository memberRepository;
 
     @Override
-    public RestaurantResponse getRestaurantById(Long id) {
-        return RestaurantResponse.from(getRestaurant(id));
+    public RestaurantResponse getRestaurant(Long id) {
+        return RestaurantResponse.from(getRestaurantById(id));
     }
 
     @Override
-    public List<MemberResponse> getMembersByRestaurantId(Long id) {
+    public List<MemberResponse> getRestaurantMembers(Long id) {
         return restaurantMemberRepository.findMembersByRestaurantId(id)
                 .stream().map(MemberResponse::from)
                 .toList();
@@ -45,25 +45,25 @@ public class RestaurantServiceImpl implements RestaurantService {
     public RestaurantResponse createRestaurant(RestaurantRequest request) {
         // TODO: 식당을 저장하고 식당에 사용자 등록 로직 추가
 
-        Restaurant restaurant = Restaurant.from(request.getName(), request.getRegisterNumber());
+        Restaurant restaurant = Restaurant.of(request.getName(), request.getRegisterNumber());
         restaurantRepository.save(restaurant);
         return RestaurantResponse.from(restaurant);
     }
 
     @Override
     public void addRestaurantMember(Long restaurantId, Long memberId) {
-        Restaurant restaurant = getRestaurant(restaurantId);
-        Member member = getMember(memberId);
-        RestaurantMember restaurantMember = RestaurantMember.from(restaurant, member);
+        Restaurant restaurant = getRestaurantById(restaurantId);
+        Member member = getMemberById(memberId);
+        RestaurantMember restaurantMember = RestaurantMember.of(restaurant, member);
         restaurantMemberRepository.save(restaurantMember);
     }
 
-    private Restaurant getRestaurant(Long id) {
+    private Restaurant getRestaurantById(Long id) {
         return restaurantRepository.findById(id)
                 .orElseThrow(() -> new RestaurantException(ErrorCode.RESTAURANT_NOT_FOUND));
     }
 
-    private Member getMember(Long id) {
+    private Member getMemberById(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
     }

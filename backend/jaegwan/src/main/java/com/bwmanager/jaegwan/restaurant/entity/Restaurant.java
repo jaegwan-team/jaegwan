@@ -33,7 +33,7 @@ public class Restaurant {
         this.registerNumber = registerNumber;
     }
 
-    public static Restaurant from(String name, String registerNumber) {
+    public static Restaurant of(String name, String registerNumber) {
         return new Restaurant(name, registerNumber);
     }
 
