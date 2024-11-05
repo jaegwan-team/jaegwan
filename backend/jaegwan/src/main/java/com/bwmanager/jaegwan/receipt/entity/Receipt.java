@@ -24,7 +24,7 @@ public class Receipt {
     private String imageUrl;
 
     @CreatedDate
-    private LocalDateTime creationDate;
+    private LocalDateTime createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)

@@ -30,9 +30,6 @@ public class ReceiptIngredient {
     @Column(nullable = false)
     private boolean isConfirmed;
 
-    @CreatedDate
-    private LocalDateTime creationDate;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receipt_id", nullable = false)
     private Receipt receipt;
