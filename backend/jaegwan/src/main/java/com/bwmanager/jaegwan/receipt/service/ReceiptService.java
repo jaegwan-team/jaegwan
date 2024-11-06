@@ -1,6 +1,7 @@
 package com.bwmanager.jaegwan.receipt.service;
 
 import com.bwmanager.jaegwan.receipt.dto.ReceiptDetailResponse;
+import com.bwmanager.jaegwan.receipt.dto.ReceiptIngredientConfirmRequest;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptResponse;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,4 +34,11 @@ public interface ReceiptService {
      * @return 구매 내역 상세
      */
     List<ReceiptDetailResponse> getReceiptDetail(Long receiptId);
+
+    /**
+     * 구매 내역에 있는 재료를 확정한다.
+     *
+     * @param request 확정 요청에 필요한 DTO
+     */
+    void confirmReceiptIngredient(ReceiptIngredientConfirmRequest request);
 }

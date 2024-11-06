@@ -30,6 +30,23 @@ public enum ErrorCode {
      */
     RESTAURANT_FORBIDDEN_ERROR(FORBIDDEN, "RESTAURANT-000", "식당에 대한 접근 권한이 없습니다."),
     RESTAURANT_NOT_FOUND(NOT_FOUND, "RESTAURANT-001", "식당이 존재하지 않습니다."),
+
+    /**
+     * Receipt
+     */
+    RECEIPT_NOT_FOUND(NOT_FOUND, "RECEIPT-000", "구매내역이 존재하지 않습니다."),
+
+    /**
+     * Ingredient
+     */
+    INGREDIENT_NOT_FOUND(NOT_FOUND, "INGREDIENT-000", "등록되지 않은 재료입니다."),
+    INGREDIENT_CATEGORY_NOT_FOUND(NOT_FOUND, "INGREDIENT-001", "등록되지 않은 재료 카테고리입니다."),
+    INGREDIENT_UNIT_NOT_FOUND(NOT_FOUND, "INGREDIENT-002", "재료 단위가 존재하지 않습니다."),
+
+    /**
+     * Enum
+     */
+    ENUM_NOT_FOUND(NOT_FOUND, "ENUM-000", "code에 해당하는 ENUM이 없습니다."),
     ;
 
     private final HttpStatus httpStatus;

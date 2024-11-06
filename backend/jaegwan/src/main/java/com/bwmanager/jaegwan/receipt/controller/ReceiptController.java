@@ -3,6 +3,7 @@ package com.bwmanager.jaegwan.receipt.controller;
 import com.bwmanager.jaegwan.global.dto.CommonResponse;
 import com.bwmanager.jaegwan.global.error.ErrorCode;
 import com.bwmanager.jaegwan.global.error.exception.FileException;
+import com.bwmanager.jaegwan.receipt.dto.ReceiptIngredientConfirmRequest;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptRequest;
 import com.bwmanager.jaegwan.receipt.service.ReceiptService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -82,6 +83,27 @@ public class ReceiptController {
         CommonResponse<Object> response = CommonResponse.builder()
                 .data(receiptService.getReceiptDetail(id))
                 .message("구매 내역 상세 조회에 성공했습니다.")
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "구매 내역 확정", description = "ReceiptIngredientConfirmRequest가 필요합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "구매 내역 확정에 성공했습니다.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터입니다.",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 내부 에러가 발생했습니다.",
+                    content = @Content)
+    })
+    @PostMapping("/confirm")
+    public ResponseEntity<?> confirmReceiptIngredient(@RequestBody ReceiptIngredientConfirmRequest request) {
+
+        receiptService.confirmReceiptIngredient(request);
+        CommonResponse<Object> response = CommonResponse.builder()
+                .message("구매 내역 재료 확정에 성공했습니다.")
                 .build();
 
         return ResponseEntity.ok(response);
