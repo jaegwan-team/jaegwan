@@ -113,7 +113,7 @@ public class SignificantServiceImpl implements SignificantService {
         if (!significantRepository.existsById(significantId)) {
             throw new EntityNotFoundException("[deleteBySignificant] Significant id 가 존재하지 않습니다!]");
         }
-        significantIngredientRepository.deleteBySignificant_Id(significantConfirmRequest.getSignificantId());
+        significantIngredientRepository.deleteBySignificantId(significantConfirmRequest.getSignificantId());
         significantRepository.deleteById(significantId);
     }
 }
