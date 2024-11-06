@@ -1,7 +1,11 @@
 package com.bwmanager.jaegwan.ingredient.entity;
 
 import com.bwmanager.jaegwan.global.converter.CommonType;
+import com.bwmanager.jaegwan.global.error.ErrorCode;
+import com.bwmanager.jaegwan.ingredient.exception.IngredientServiceException;
 import lombok.Getter;
+
+import java.util.EnumSet;
 
 @Getter
 public enum Category implements CommonType {
@@ -23,5 +27,12 @@ public enum Category implements CommonType {
              String code) {
         this.desc = desc;
         this.code = code;
+    }
+
+    public static Category fromDesc(String desc) {
+        return EnumSet.allOf(Category.class).stream()
+                .filter(v -> v.getDesc().equals(desc))
+                .findAny()
+                .orElseThrow(() -> new IngredientServiceException(ErrorCode.INGREDIENT_CATEGORY_NOT_FOUND));
     }
 }
