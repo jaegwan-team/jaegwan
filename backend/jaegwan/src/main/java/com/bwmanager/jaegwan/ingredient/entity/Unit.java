@@ -9,7 +9,8 @@ public enum Unit implements CommonType {
     G("g", "1"),
     KG("kg", "2"),
     ML("ml", "3"),
-    L("L", "4");
+    L("L", "4"),
+    ;
 
     private final String desc;
     private final String code;
