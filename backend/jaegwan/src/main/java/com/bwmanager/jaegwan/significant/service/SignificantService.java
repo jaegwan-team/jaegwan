@@ -37,4 +37,11 @@ public interface SignificantService {
      * @return 입력한 정보에 대한 값을 리턴 -> 어떤 정보가 저장되었는지를 보여주기위함
      */
     SignificantCreateResponse createBySignificant(SignificantCreateRequest significantCreateRequest);
+
+    /**
+     * 사용자가 특이사항을 제거할때 사용하는 로직
+     *
+     * @param significantConfirmRequest 어떤 특이사항을 제거할지에 대한 특이사항 id 값
+     */
+    void deleteBySignificant(SignificantConfirmRequest significantConfirmRequest);
 }

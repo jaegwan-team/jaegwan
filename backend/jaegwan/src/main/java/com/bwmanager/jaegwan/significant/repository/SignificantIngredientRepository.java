@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SignificantIngredientRepository extends JpaRepository<SignificantIngredient, Long> {
     List<SignificantIngredient> findAllBySignificantId(Long id);
+
+    void deleteBySignificant_Id(Long significantId);
 }

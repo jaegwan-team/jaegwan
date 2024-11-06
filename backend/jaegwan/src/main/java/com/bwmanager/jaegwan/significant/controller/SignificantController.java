@@ -129,9 +129,9 @@ public class SignificantController {
     @DeleteMapping
     public ResponseEntity<?> deleteBySignificant(@Parameter(description = "특이사항 삭제 요청 데이터", required = true)
                                                  @RequestBody SignificantConfirmRequest significantConfirmRequest) {
+        significantService.deleteBySignificant(significantConfirmRequest);
         CommonResponse<Object> response = CommonResponse.builder()
                 .message("특이사항이 성공적으로 삭제되었습니다.")
-                .data(significantService.deleteBySignificant(significantConfirmRequest))
                 .build();
         return ResponseEntity.ok(response);
     }
