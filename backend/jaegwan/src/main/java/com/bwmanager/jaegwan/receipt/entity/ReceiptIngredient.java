@@ -1,13 +1,9 @@
 package com.bwmanager.jaegwan.receipt.entity;
 
 import com.bwmanager.jaegwan.ingredient.entity.Ingredient;
-import com.bwmanager.jaegwan.restaurant.entity.Restaurant;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -35,7 +31,11 @@ public class ReceiptIngredient {
     private Receipt receipt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ingredient_id", nullable = false)
+    @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient;
 
+    public void confirm(Ingredient ingredient) {
+        isConfirmed = true;
+        this.ingredient = ingredient;
+    }
 }
