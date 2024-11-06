@@ -97,8 +97,8 @@ public class ReceiptServiceImpl implements ReceiptService {
                         () -> {
                             Ingredient savedIngredient = ingredientRepository.save(Ingredient.builder()
                                     .name(request.getName())
-                                    .category(EnumValueConvertUtils.ofDesc(Category.class, request.getCategory()))
-                                    .unit(EnumValueConvertUtils.ofDesc(Unit.class, request.getUnit()))
+                                    .category(EnumValueConvertUtils.ofDesc(Category.class, ErrorCode.INGREDIENT_CATEGORY_NOT_FOUND, request.getCategory()))
+                                    .unit(EnumValueConvertUtils.ofDesc(Unit.class, ErrorCode.INGREDIENT_UNIT_NOT_FOUND, request.getUnit()))
                                     .restaurant(restaurant)
                                     .build());
                             log.info("재료가 추가됨 - {}", savedIngredient.getName());

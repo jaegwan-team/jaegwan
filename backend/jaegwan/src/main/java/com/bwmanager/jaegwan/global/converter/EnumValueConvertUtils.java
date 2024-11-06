@@ -25,7 +25,7 @@ public class EnumValueConvertUtils {
     }
 
     public static <T extends Enum<T> & CommonType> T ofDesc(Class<T> enumClass,
-                                                            String desc) {
+                                                            ErrorCode errorCode, String desc) {
 
         if (StringUtils.isBlank(desc)) {
             return null;
@@ -34,7 +34,7 @@ public class EnumValueConvertUtils {
         return EnumSet.allOf(enumClass).stream()
                 .filter(v -> v.getCode().equals(desc))
                 .findAny()
-                .orElseThrow(() -> new EnumException(ErrorCode.ENUM_NOT_FOUND));
+                .orElseThrow(() -> new EnumException(errorCode));
     }
 
     public static <T extends Enum<T> & CommonType> String toCode(T enumValue) {
