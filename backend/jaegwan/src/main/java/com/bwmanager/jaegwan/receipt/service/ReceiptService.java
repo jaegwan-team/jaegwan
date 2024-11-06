@@ -41,4 +41,11 @@ public interface ReceiptService {
      * @param request 확정 요청에 필요한 DTO
      */
     void confirmReceiptIngredient(ReceiptIngredientConfirmRequest request);
+
+    /**
+     * 구매 내역에 있는 재료를 삭제한다.
+     *
+     * @param receiptIngredientId 영수증-재료 ID
+     */
+    void deleteReceiptIngredient(Long receiptIngredientId);
 }

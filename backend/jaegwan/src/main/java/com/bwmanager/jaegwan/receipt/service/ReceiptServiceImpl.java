@@ -118,4 +118,9 @@ public class ReceiptServiceImpl implements ReceiptService {
                 .expirationDate(request.getExpirationDate().atStartOfDay())
                 .build());
     }
+
+    @Override
+    public void deleteReceiptIngredient(Long receiptIngredientId) {
+        receiptIngredientRepository.deleteById(receiptIngredientId);
+    }
 }
