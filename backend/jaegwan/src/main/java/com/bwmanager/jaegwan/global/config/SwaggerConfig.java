@@ -63,6 +63,15 @@ public class SwaggerConfig {
                 .build();
     }
 
+    // ! restaurant 관련 API 모음
+    @Bean
+    public GroupedOpenApi restaurantApi() {
+        return GroupedOpenApi.builder()
+                .group("restaurant")
+                .pathsToMatch("/restaurant/**")
+                .build();
+    }
+
     // ! receipt 관련 API 모음
     @Bean
     public GroupedOpenApi receiptApi() {

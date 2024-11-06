@@ -4,7 +4,12 @@ import com.bwmanager.jaegwan.global.dto.CommonResponse;
 import com.bwmanager.jaegwan.restaurant.dto.RestaurantRequest;
 import com.bwmanager.jaegwan.restaurant.service.RestaurantService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +26,17 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
 
     @Operation(summary = "식당 정보 조회", description = "식당 ID에 해당하는 식당의 정보를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "식당 정보 조회에 성공했습니다.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터입니다.",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "식당이 존재하지 않습니다.",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 내부 에러가 발생했습니다.",
+                    content = @Content)
+    })
     @GetMapping("/{id}")
     public ResponseEntity<?> getRestaurant(@PathVariable("id") Long id) {
         CommonResponse<Object> response = CommonResponse.builder()
@@ -28,10 +44,21 @@ public class RestaurantController {
                 .message("식당 정보 조회에 성공했습니다.")
                 .build();
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @Operation(summary = "식당에 속한 사용자 목록 조회", description = "식당에 속한 사용자들의 목록을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "식당에 속한 사용자 목록 조회에 성공했습니다.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터입니다.",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "식당 또는 사용자가 존재하지 않습니다.",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 내부 에러가 발생했습니다.",
+                    content = @Content)
+    })
     @GetMapping("/{id}/member")
     public ResponseEntity<?> getRestaurantMembers(@PathVariable("id") Long id) {
         CommonResponse<Object> response = CommonResponse.builder()
@@ -39,10 +66,19 @@ public class RestaurantController {
                 .message("식당에 속한 사용자 목록 조회에 성공했습니다.")
                 .build();
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @Operation(summary = "식당 등록", description = "식당 정보를 통해 식당을 등록합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "식당 등록에 성공했습니다.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터입니다.",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 내부 에러가 발생했습니다.",
+                    content = @Content)
+    })
     @PostMapping
     public ResponseEntity<?> createRestaurant(@RequestBody RestaurantRequest request) {
         // TODO: 식당을 등록한 사용자의 정보도 함께 저장해야 한다.
@@ -52,20 +88,31 @@ public class RestaurantController {
                 .message("식당 등록에 성공했습니다.")
                 .build();
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(summary = "식당에 사용자 추가", description = "식당에 사용자를 추가합니다.")
-    @PostMapping("/{restaurantId}/member/{memberId}")
-    public ResponseEntity<?> addRestaurantMember(@PathVariable("restaurantId") Long restaurantId,
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "식당에 사용자를 추가했습니다.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터입니다.",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "식당 또는 사용자가 존재하지 않습니다.",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 내부 에러가 발생했습니다.",
+                    content = @Content)
+    })
+    @PostMapping("/{id}/member/{memberId}")
+    public ResponseEntity<?> addRestaurantMember(@PathVariable("id") Long id,
                                                  @PathVariable("memberId") Long memberId) {
-        restaurantService.addRestaurantMember(restaurantId, memberId);
+        restaurantService.addRestaurantMember(id, memberId);
 
         CommonResponse<Object> response = CommonResponse.builder()
                 .message("식당에 사용자를 추가했습니다.")
                 .build();
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
 }
