@@ -1,7 +1,10 @@
 package com.bwmanager.jaegwan.ingredient.exception;
 
-public class IngredientServiceException extends RuntimeException {
+import com.bwmanager.jaegwan.global.error.ErrorCode;
+import com.bwmanager.jaegwan.global.error.exception.AbstractBusinessLogicException;
 
-    public IngredientServiceException(String format) {
+public class IngredientServiceException extends AbstractBusinessLogicException {
+    public IngredientServiceException(ErrorCode errorCode) {
+        super(errorCode);
     }
 }

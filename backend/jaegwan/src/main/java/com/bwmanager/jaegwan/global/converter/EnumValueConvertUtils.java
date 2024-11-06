@@ -1,5 +1,6 @@
 package com.bwmanager.jaegwan.global.converter;
 
+import com.bwmanager.jaegwan.global.error.ErrorCode;
 import com.bwmanager.jaegwan.ingredient.exception.IngredientServiceException;
 import io.micrometer.common.util.StringUtils;
 import lombok.AccessLevel;
@@ -21,7 +22,7 @@ public class EnumValueConvertUtils {
         return EnumSet.allOf(enumClass).stream()
                 .filter(v -> v.getCode().equals(code))
                 .findAny()
-                .orElseThrow(() -> new IngredientServiceException(String.format("enum={%s}, code={%s}가 존재하지 않습니다.", enumClass.getName(), code)));
+                .orElseThrow(() -> new IngredientServiceException(ErrorCode.INGREDIENT_NOT_FOUND));
     }
 
     public static <T extends Enum<T> & CommonType> String toCode(T enumValue) {
