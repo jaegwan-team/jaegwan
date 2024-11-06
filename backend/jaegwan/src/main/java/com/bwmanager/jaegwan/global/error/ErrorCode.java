@@ -46,7 +46,8 @@ public enum ErrorCode {
     /**
      * Enum
      */
-    ENUM_NOT_FOUND(NOT_FOUND, "ENUM-000", "code에 해당하는 ENUM이 없습니다.");
+    ENUM_NOT_FOUND(NOT_FOUND, "ENUM-000", "code에 해당하는 ENUM이 없습니다."),
+    ;
 
     private final HttpStatus httpStatus;
     private final String code;
