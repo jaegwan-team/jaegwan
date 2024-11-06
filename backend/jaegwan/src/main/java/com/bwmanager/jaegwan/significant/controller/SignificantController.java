@@ -68,7 +68,7 @@ public class SignificantController {
     })
     @GetMapping("/{significantId}")
     public ResponseEntity<?> getSignificant(@Parameter(description = "조회할 특이사항 ID", required = true)
-                                            @PathVariable long significantId) {
+                                            @PathVariable Long significantId) {
         CommonResponse<Object> response = CommonResponse.builder()
                 .data(significantService.getSignificant(significantId))
                 .message("정상적으로 특이사항 단일값 응답")
