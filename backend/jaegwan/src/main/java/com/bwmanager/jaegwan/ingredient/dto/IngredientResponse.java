@@ -13,7 +13,7 @@ public class IngredientResponse {
     private Long id;
     private Category category;
     private double totalAmount;
-    private Unit unit;
+    private String unit;
     private int leftExpirationDay;
 
     @QueryProjection
@@ -21,7 +21,7 @@ public class IngredientResponse {
         this.id = id;
         this.category = category;
         this.totalAmount = totalAmount;
-        this.unit = unit;
+        this.unit = unit.getDesc();
         this.leftExpirationDay = leftExpirationDay;
     }
 }
