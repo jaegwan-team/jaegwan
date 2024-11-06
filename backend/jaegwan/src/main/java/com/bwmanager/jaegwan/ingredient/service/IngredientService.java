@@ -22,4 +22,11 @@ public interface IngredientService {
      * @return 한 종류에 해당하는 재료 정보
      */
     List<IngredientDetailResponse> getIngredientDetailsInfo(Long id);
+
+    /**
+     * 유통기한이 지난 재료 상세를 삭제한다.
+     *
+     * @param ingredientDetailId 삭제할 재료 상세 ID
+     */
+    void deleteIngredientDetail(Long ingredientDetailId);
 }

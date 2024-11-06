@@ -60,4 +60,26 @@ public class IngredientController {
 
         return ResponseEntity.ok(response);
     }
+
+    @Operation(summary = "유통기한이 지난 재료 삭제", description = "id(ingredientDetailId)가 필요합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "재료 상세 삭제에 성공했습니다.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터입니다.",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 내부 에러가 발생했습니다.",
+                    content = @Content)
+    })
+    @DeleteMapping("/detail/{ingredientDetailId}")
+    public ResponseEntity<?> deleteIngredientDetail(@Parameter(description = "삭제할 재료 상세 ID", required = true, example = "1")
+                                                    @PathVariable("ingredientDetailId") Long ingredientDetailId) {
+        ingredientService.deleteIngredientDetail(ingredientDetailId);
+        CommonResponse<Object> response = CommonResponse.builder()
+                .data(null)
+                .message("재료 상세 삭제에 성공했습니다.")
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
 }
