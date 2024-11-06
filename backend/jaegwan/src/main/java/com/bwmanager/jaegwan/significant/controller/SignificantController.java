@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -111,6 +112,26 @@ public class SignificantController {
         CommonResponse<Object> response = CommonResponse.builder()
                 .message("특이사항으로 정보 생성")
                 .data(significantService.createBySignificant(significantCreateRequest))
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "특이사항 삭제", description = "특정 특이사항을 삭제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "특이사항이 성공적으로 삭제되었습니다.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터입니다.",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 내부 에러가 발생했습니다.",
+                    content = @Content)
+    })
+    @DeleteMapping
+    public ResponseEntity<?> deleteBySignificant(@Parameter(description = "특이사항 삭제 요청 데이터", required = true)
+                                                 @RequestBody SignificantConfirmRequest significantConfirmRequest) {
+        CommonResponse<Object> response = CommonResponse.builder()
+                .message("특이사항이 성공적으로 삭제되었습니다.")
+                .data(significantService.deleteBySignificant(significantConfirmRequest))
                 .build();
         return ResponseEntity.ok(response);
     }
