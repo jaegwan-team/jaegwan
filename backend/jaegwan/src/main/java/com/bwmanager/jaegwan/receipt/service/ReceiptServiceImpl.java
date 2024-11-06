@@ -1,5 +1,6 @@
 package com.bwmanager.jaegwan.receipt.service;
 
+import com.bwmanager.jaegwan.global.converter.EnumValueConvertUtils;
 import com.bwmanager.jaegwan.global.error.ErrorCode;
 import com.bwmanager.jaegwan.global.error.exception.RestaurantException;
 import com.bwmanager.jaegwan.global.util.S3Util;
@@ -96,8 +97,8 @@ public class ReceiptServiceImpl implements ReceiptService {
                         () -> {
                             Ingredient savedIngredient = ingredientRepository.save(Ingredient.builder()
                                     .name(request.getName())
-                                    .category(Category.fromDesc(request.getCategory()))
-                                    .unit(Unit.fromDesc(request.getUnit()))
+                                    .category(EnumValueConvertUtils.ofDesc(Category.class, request.getCategory()))
+                                    .unit(EnumValueConvertUtils.ofDesc(Unit.class, request.getUnit()))
                                     .restaurant(restaurant)
                                     .build());
                             log.info("재료가 추가됨 - {}", savedIngredient.getName());

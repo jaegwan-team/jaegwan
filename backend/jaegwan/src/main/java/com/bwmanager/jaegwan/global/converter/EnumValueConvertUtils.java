@@ -25,6 +25,19 @@ public class EnumValueConvertUtils {
                 .orElseThrow(() -> new EnumException(ErrorCode.ENUM_NOT_FOUND));
     }
 
+    public static <T extends Enum<T> & CommonType> T ofDesc(Class<T> enumClass,
+                                                            String desc) {
+
+        if (StringUtils.isBlank(desc)) {
+            return null;
+        }
+
+        return EnumSet.allOf(enumClass).stream()
+                .filter(v -> v.getCode().equals(desc))
+                .findAny()
+                .orElseThrow(() -> new EnumException(ErrorCode.ENUM_NOT_FOUND));
+    }
+
     public static <T extends Enum<T> & CommonType> String toCode(T enumValue) {
 
         if (enumValue == null) {
