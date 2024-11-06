@@ -12,7 +12,7 @@ import java.util.EnumSet;
 public class EnumValueConvertUtils {
 
     public static <T extends Enum<T> & CommonType> T ofCode(Class<T> enumClass,
-                                                            String code) {
+                                                            ErrorCode errorCode, String code) {
 
         if (StringUtils.isBlank(code)) {
             return null;
@@ -21,7 +21,7 @@ public class EnumValueConvertUtils {
         return EnumSet.allOf(enumClass).stream()
                 .filter(v -> v.getCode().equals(code))
                 .findAny()
-                .orElseThrow(() -> new EnumException(ErrorCode.ENUM_NOT_FOUND));
+                .orElseThrow(() -> new EnumException(errorCode));
     }
 
     public static <T extends Enum<T> & CommonType> T ofDesc(Class<T> enumClass,

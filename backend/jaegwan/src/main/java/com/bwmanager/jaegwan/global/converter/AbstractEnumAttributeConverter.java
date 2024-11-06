@@ -1,6 +1,7 @@
 package com.bwmanager.jaegwan.global.converter;
 
 
+import com.bwmanager.jaegwan.global.error.ErrorCode;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.AttributeConverter;
 import lombok.Getter;
@@ -11,23 +12,29 @@ public class AbstractEnumAttributeConverter<E extends Enum<E> & CommonType> impl
     /**
      * 대상 Enum 클래스의 {@link Class} 객체
      */
-    private Class<E> targetEnumClass;
+    private final Class<E> targetEnumClass;
 
     /**
      * <code>nullable = false</code> 이면, 변환할 값이 null로 들어왔을 때 예외가 발생한다.
      * <code>nullable = true</code> 이면, 변환할 값이 null일 때, 예외 없이 실행하며,
      * 특히 code로 변환 시에는 빈 문자열("")로 변환한다.
      */
-    private boolean nullable;
+    private final boolean nullable;
 
     /**
-     * <code>nullalbe = false</code> 일 때 출력할 오류 메시지에서 enum에 대한 설명을 위해 Enum 의 설명적 이름을 받는다.
+     * <code>nullable = false</code> 일 때 출력할 오류 메시지에서 enum에 대한 설명을 위해 enum의 설명적 이름을 받는다.
      */
-    private String enumName;
+    private final String enumName;
 
-    public AbstractEnumAttributeConverter(Class<E> targetEnumClass, boolean nullable, String enumName) {
+    /**
+     * 문자열 값에 해당하는 enum이 존재하지 않는 경우 예외에 넣을 errorCode를 받는다.
+     */
+    private final ErrorCode errorCode;
+
+    public AbstractEnumAttributeConverter(Class<E> targetEnumClass, boolean nullable, ErrorCode errorCode, String enumName) {
         this.targetEnumClass = targetEnumClass;
         this.nullable = nullable;
+        this.errorCode = errorCode;
         this.enumName = enumName;
     }
 
@@ -45,6 +52,6 @@ public class AbstractEnumAttributeConverter<E extends Enum<E> & CommonType> impl
             throw new IllegalArgumentException(String.format("%s(이)가 DB에 NULL 혹은 Empty로(%s) 저장되어 있습니다.",
                     enumName, dbData));
         }
-        return EnumValueConvertUtils.ofCode(targetEnumClass, dbData);
+        return EnumValueConvertUtils.ofCode(targetEnumClass, errorCode, dbData);
     }
 }
