@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class SignificantServiceImpl implements SignificantService {
 
     private final SignificantRepository significantRepository;
@@ -44,7 +45,6 @@ public class SignificantServiceImpl implements SignificantService {
     }
 
     @Override
-    @Transactional
     public void confirmSignificant(SignificantConfirmRequest significantConfirmRequest) {
         Significant significant = significantRepository.findById(significantConfirmRequest.getSignificantId())
                 .orElseThrow(EntityNotFoundException::new);
@@ -88,7 +88,6 @@ public class SignificantServiceImpl implements SignificantService {
     }
 
     @Override
-    @Transactional
     public SignificantCreateResponse createBySignificant(SignificantCreateRequest significantCreateRequest) {
         Ingredient ingredient = ingredientRepository.findByRestaurantIdAndName(
                 significantCreateRequest.getRestaurantId(),
@@ -106,5 +105,15 @@ public class SignificantServiceImpl implements SignificantService {
         Restaurant restaurant = restaurantRepository.findById(significantCreateRequest.getRestaurantId())
                 .orElseThrow(EntityNotFoundException::new);
         return significantRepository.save(significantCreateRequest.toSignificant(restaurant));
+    }
+
+    @Override
+    public void deleteBySignificant(SignificantConfirmRequest significantConfirmRequest) {
+        Long significantId = significantConfirmRequest.getSignificantId();
+        if (!significantRepository.existsById(significantId)) {
+            throw new EntityNotFoundException("[deleteBySignificant] Significant id 가 존재하지 않습니다!]");
+        }
+        significantIngredientRepository.deleteBySignificantId(significantConfirmRequest.getSignificantId());
+        significantRepository.deleteById(significantId);
     }
 }
