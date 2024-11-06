@@ -31,9 +31,9 @@ public interface RestaurantService {
 
     /**
      * 식당에 사용자를 추가한다.
-     * @param restaurantId 식당 ID
+     * @param id 식당 ID
      * @param memberId 식당에 추가할 사용자 ID
      */
-    void addRestaurantMember(Long restaurantId, Long memberId);
+    void addRestaurantMember(Long id, Long memberId);
 
 }
