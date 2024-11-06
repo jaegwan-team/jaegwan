@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.EnumSet;
 
-
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EnumValueConvertUtils {
 
