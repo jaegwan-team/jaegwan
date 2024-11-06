@@ -119,7 +119,8 @@ public class ReceiptController {
                     content = @Content)
     })
     @DeleteMapping("/detail/{receiptIngredientId}")
-    public ResponseEntity<?> confirmReceiptIngredient(@PathVariable("receiptIngredientId") Long receiptIngredientId) {
+    public ResponseEntity<?> confirmReceiptIngredient(@Parameter(description = "삭제할 재료 상세 ID", required = true, example = "1")
+                                                      @PathVariable("receiptIngredientId") Long receiptIngredientId) {
         receiptService.deleteReceiptIngredient(receiptIngredientId);
         CommonResponse<Object> response = CommonResponse.builder()
                 .message("구매 내역 재료 삭제에 성공했습니다.")
