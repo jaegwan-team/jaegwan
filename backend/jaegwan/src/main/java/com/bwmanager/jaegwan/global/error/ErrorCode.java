@@ -42,8 +42,12 @@ public enum ErrorCode {
      */
     INGREDIENT_NOT_FOUND(NOT_FOUND, "INGREDIENT-000", "재료 종류가 존재하지 않습니다."),
     INGREDIENT_CATEGORY_NOT_FOUND(NOT_FOUND, "INGREDIENT-001", "재료 카테고리가 존재하지 않습니다."),
-    INGREDIENT_UNIT_NOT_FOUND(NOT_FOUND, "INGREDIENT-002", "재료 단위가 존재하지 않습니다.");
+    INGREDIENT_UNIT_NOT_FOUND(NOT_FOUND, "INGREDIENT-002", "재료 단위가 존재하지 않습니다."),
 
+    /**
+     * Enum
+     */
+    ENUM_NOT_FOUND(NOT_FOUND, "ENUM-000", "code에 해당하는 ENUM이 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
