@@ -35,4 +35,9 @@ public class IngredientServiceImpl implements IngredientService {
         // STEP 1. 재료 종류 ID를 통해 모든 재료 현황 상세 조회
         return ingredientDetailRepository.getIngredientDetailsInfoByIngredientId(id);
     }
+
+    @Override
+    public void deleteIngredientDetail(Long ingredientDetailId) {
+        ingredientDetailRepository.deleteById(ingredientDetailId);
+    }
 }
