@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Schema(description = "특이사항 관련 정보 생성 요청 DTO")
 public class SignificantCreateRequest {
 
     @Schema(description = "특이사항 세부 내용", example = "재료 부족으로 인해 추가 주문 필요")

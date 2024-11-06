@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Schema(description = "특이사항 생성에 대한 응답 DTO")
 public class SignificantCreateResponse {
 
     @Schema(description = "재료 이름", example = "양파")

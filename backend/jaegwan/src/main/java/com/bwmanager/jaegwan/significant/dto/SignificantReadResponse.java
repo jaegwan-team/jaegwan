@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Schema(description = "특이사항의 조회 응답 DTO")
 public class SignificantReadResponse {
 
     @Schema(description = "특이사항 ID", example = "1")
