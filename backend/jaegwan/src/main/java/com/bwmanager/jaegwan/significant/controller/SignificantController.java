@@ -3,6 +3,7 @@ package com.bwmanager.jaegwan.significant.controller;
 import com.bwmanager.jaegwan.global.dto.CommonResponse;
 import com.bwmanager.jaegwan.significant.dto.SignificantConfirmRequest;
 import com.bwmanager.jaegwan.significant.dto.SignificantCreateRequest;
+import com.bwmanager.jaegwan.significant.dto.SignificantReadRequest;
 import com.bwmanager.jaegwan.significant.dto.TestBixby;
 import com.bwmanager.jaegwan.significant.service.SignificantService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,10 +39,11 @@ public class SignificantController {
                             schema = @Schema(implementation = CommonResponse.class)))
     })
     @GetMapping
-    public ResponseEntity<?> getSignificants() {
+    public ResponseEntity<?> getSignificantsByRestaurantId(
+            SignificantReadRequest significantReadRequest) {
         CommonResponse<Object> response = CommonResponse.builder()
-                .data(significantService.getSignificants())
-                .message("정상적으로 특이사항 리스트를 응답")
+                .data(significantService.getSignificants(significantReadRequest))
+                .message("정상적으로 식당별 특이사항 리스트를 응답")
                 .build();
         return ResponseEntity.ok(response);
     }
