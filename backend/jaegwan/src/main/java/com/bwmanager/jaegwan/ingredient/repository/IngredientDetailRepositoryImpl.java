@@ -18,11 +18,11 @@ import static com.querydsl.core.types.dsl.Expressions.numberTemplate;
 @Repository
 public class IngredientDetailRepositoryImpl implements IngredientDetailCustomRepository {
 
-    private final JPAQueryFactory jpaQueryFactory;
+    private final JPAQueryFactory queryFactory;
 
     @Override
     public IngredientResponse getIngredientInfo(Long ingredientId) {
-        return jpaQueryFactory
+        return queryFactory
                 .select(new QIngredientResponse(
                         ingredientDetail.ingredient.id,
                         ingredientDetail.ingredient.category,
@@ -38,7 +38,7 @@ public class IngredientDetailRepositoryImpl implements IngredientDetailCustomRep
 
     @Override
     public List<IngredientDetailResponse> getIngredientDetailsInfoByIngredientId(Long ingredientId) {
-        return jpaQueryFactory
+        return queryFactory
                 .select(new QIngredientDetailResponse(
                         ingredientDetail.purchaseDate,
                         ingredientDetail.amount,

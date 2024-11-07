@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class IngredientRepositoryImpl implements IngredientCustomRepository {
 
-    private final JPAQueryFactory jpaQueryFactory;
+    private final JPAQueryFactory queryFactory;
 
 }
