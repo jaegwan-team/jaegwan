@@ -3,7 +3,11 @@ package com.bwmanager.jaegwan.receipt.service;
 import com.bwmanager.jaegwan.global.converter.EnumValueConvertUtils;
 import com.bwmanager.jaegwan.global.error.ErrorCode;
 import com.bwmanager.jaegwan.global.error.exception.RestaurantException;
+import com.bwmanager.jaegwan.global.util.OcrFeignClient;
+import com.bwmanager.jaegwan.global.util.RestClientUtil;
 import com.bwmanager.jaegwan.global.util.S3Util;
+import com.bwmanager.jaegwan.global.util.dto.OcrRequest;
+import com.bwmanager.jaegwan.global.util.dto.OcrResponse;
 import com.bwmanager.jaegwan.ingredient.entity.Category;
 import com.bwmanager.jaegwan.ingredient.entity.Ingredient;
 import com.bwmanager.jaegwan.ingredient.entity.IngredientDetail;
@@ -11,6 +15,7 @@ import com.bwmanager.jaegwan.ingredient.entity.Unit;
 import com.bwmanager.jaegwan.ingredient.exception.IngredientServiceException;
 import com.bwmanager.jaegwan.ingredient.repository.IngredientDetailRepository;
 import com.bwmanager.jaegwan.ingredient.repository.IngredientRepository;
+import com.bwmanager.jaegwan.receipt.dto.ImageUrlRequest;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptDetailResponse;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptIngredientConfirmRequest;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptResponse;
@@ -38,6 +43,8 @@ import java.util.List;
 public class ReceiptServiceImpl implements ReceiptService {
 
     private final S3Util s3Util;
+    private final RestClientUtil restClientUtil;
+    private final OcrFeignClient ocrFeignClient;
     private final ReceiptRepository receiptRepository;
     private final RestaurantRepository restaurantRepository;
     private final IngredientRepository ingredientRepository;
@@ -66,6 +73,13 @@ public class ReceiptServiceImpl implements ReceiptService {
         }
 
         return receiptUrls;
+    }
+
+    @Override
+    public List<OcrResponse> imageOcr(ImageUrlRequest request) {
+//        return restClientUtil.imageOcr(request.getImageUrl());
+        log.info("example -> {}", ocrFeignClient.imageOcr(OcrRequest.builder().image_url(request.getImageUrl()).build()));
+        return ocrFeignClient.imageOcr(OcrRequest.builder().image_url(request.getImageUrl()).build());
     }
 
     @Override
