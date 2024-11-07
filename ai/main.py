@@ -1,16 +1,31 @@
-# This is a sample Python script.
+from fastapi import FastAPI
+from pydantic import BaseModel
+from ocr_service import analyze_image_with_ocr, analyze_text_with_chatgpt
+import asyncio
+import sys
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+app = FastAPI()
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+class ImageRequest(BaseModel):
+    image_url: str
+
+
+@app.get("/")
+def root():
+    return {"message": "Hello World"}
+
+
+@app.post("/api/receipt/image")
+def ocr(request: ImageRequest):
+    analyzer = analyze_image_with_ocr(request.image_url)
+    result = analyze_text_with_chatgpt(analyzer)
+    return result
+
+
+# if __name__ == "__main__":
+    # asyncio.run(main())
