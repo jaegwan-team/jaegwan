@@ -2,9 +2,13 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from ocr_service import analyze_image_with_ocr, analyze_text_with_chatgpt
 import asyncio
+import sys
 
 app = FastAPI()
-asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
+
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 
 class ImageRequest(BaseModel):
