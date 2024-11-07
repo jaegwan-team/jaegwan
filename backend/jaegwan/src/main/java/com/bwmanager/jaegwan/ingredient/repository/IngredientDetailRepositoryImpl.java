@@ -16,7 +16,7 @@ import static com.querydsl.core.types.dsl.Expressions.numberTemplate;
 
 @RequiredArgsConstructor
 @Repository
-public class IngredientDetailCustomRepositoryImpl implements IngredientDetailCustomRepository {
+public class IngredientDetailRepositoryImpl implements IngredientDetailCustomRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 

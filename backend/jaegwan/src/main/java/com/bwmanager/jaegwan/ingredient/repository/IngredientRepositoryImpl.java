@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
 @Repository
-public class IngredientCustomRepositoryImpl implements IngredientCustomRepository {
+public class IngredientRepositoryImpl implements IngredientCustomRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
