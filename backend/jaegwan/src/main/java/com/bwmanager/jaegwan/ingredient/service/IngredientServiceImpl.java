@@ -1,5 +1,6 @@
 package com.bwmanager.jaegwan.ingredient.service;
 
+import com.bwmanager.jaegwan.ingredient.dto.IngredientAutoCompleteResponse;
 import com.bwmanager.jaegwan.ingredient.dto.IngredientDetailResponse;
 import com.bwmanager.jaegwan.ingredient.dto.IngredientResponse;
 import com.bwmanager.jaegwan.ingredient.entity.Ingredient;
@@ -39,5 +40,10 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public void deleteIngredientDetail(Long ingredientDetailId) {
         ingredientDetailRepository.deleteById(ingredientDetailId);
+    }
+
+    @Override
+    public IngredientAutoCompleteResponse getAutoCompleteResult(Long restaurantId, String word) {
+        return ingredientRepository.getAutoCompleteResult(restaurantId, word);
     }
 }
