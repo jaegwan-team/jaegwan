@@ -1,11 +1,11 @@
 package com.bwmanager.jaegwan.global.auth.service;
 
-import com.bwmanager.jaegwan.global.auth.dto.KakaoProfileResponse;
+import com.bwmanager.jaegwan.global.auth.dto.AuthResponse;
 
 public interface AuthService {
 
     String getAuthorizationUrl();
 
-    KakaoProfileResponse loginOrRegister(String code);
+    AuthResponse loginOrRegister(String code);
 
 }
