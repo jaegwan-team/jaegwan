@@ -9,7 +9,7 @@ import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@OpenAPIDefinition(servers = {@Server(url = "https://k11a501.p.ssafy.io", description = "Default Server URL")})
+@OpenAPIDefinition(servers = {@Server(url = "https://k11a501.p.ssafy.io/api", description = "Default Server URL")})
 @Configuration
 public class SwaggerConfig {
 
