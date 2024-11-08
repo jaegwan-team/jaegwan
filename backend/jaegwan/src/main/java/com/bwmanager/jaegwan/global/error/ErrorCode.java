@@ -16,6 +16,7 @@ public enum ErrorCode {
     /**
      * Member
      */
+    AUTHENTICATION_FAILED(NOT_FOUND, "AUTH-000", "사용자 인증에 실패했습니다."),
     MEMBER_FORBIDDEN_ERROR(FORBIDDEN, "MEMBER-000", "사용자의 접근 권한이 없습니다."),
     MEMBER_NOT_FOUND(NOT_FOUND, "MEMBER-001", "사용자가 존재하지 않습니다."),
 

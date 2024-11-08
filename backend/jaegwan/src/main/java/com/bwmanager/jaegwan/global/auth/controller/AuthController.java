@@ -1,7 +1,7 @@
 package com.bwmanager.jaegwan.global.auth.controller;
 
-import com.bwmanager.jaegwan.global.auth.dto.AuthResponse;
 import com.bwmanager.jaegwan.global.auth.service.AuthService;
+import com.bwmanager.jaegwan.global.dto.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +19,19 @@ public class AuthController {
 
     @GetMapping("/kakao/login")
     public ResponseEntity<?> loginKakao() {
-        String redirectUrl = authService.getAuthorizationUrl();
+        // 카카오 로그인 페이지로 리다이렉트할 URL을 가져온다.
+        String authorizationUrl = authService.getAuthorizationUrl();
 
-        return ResponseEntity.status(HttpStatus.FOUND).header("Location", redirectUrl).build();
+        // 리다이렉트 URL을 응답한다.
+        return ResponseEntity.status(HttpStatus.FOUND).header("Location", authorizationUrl).build();
     }
 
     @GetMapping("/kakao/callback")
-    public ResponseEntity<?> callbackKakao(@RequestParam String code) {
-        AuthResponse response = authService.authenticate(code);
+    public ResponseEntity<?> loginOrRegister(@RequestParam String code) {
+        CommonResponse<Object> response = CommonResponse.builder()
+                .data(authService.loginOrRegister(code))
+                .message("테스트 중")
+                .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
