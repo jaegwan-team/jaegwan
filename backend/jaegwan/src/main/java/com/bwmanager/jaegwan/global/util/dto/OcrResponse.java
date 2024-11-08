@@ -1,9 +1,6 @@
 package com.bwmanager.jaegwan.global.util.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-
-import java.util.List;
 
 @Data
 @Builder
@@ -11,6 +8,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OcrResponse {
+
     private int category;
     private String name;
     private int unit;

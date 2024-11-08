@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ReceiptRepository extends JpaRepository<Receipt, Long>,  ReceiptCustomRepository{
-    Optional<Receipt> findIdByImageUrl(String imageUrl);
+public interface ReceiptRepository extends JpaRepository<Receipt, Long>, ReceiptCustomRepository {
+    Optional<Receipt> findByImageUrl(String imageUrl);
 }

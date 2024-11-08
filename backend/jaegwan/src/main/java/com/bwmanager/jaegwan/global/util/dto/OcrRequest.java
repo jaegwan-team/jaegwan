@@ -8,5 +8,6 @@ import lombok.ToString;
 @Builder
 @ToString
 public class OcrRequest {
+    
     private String image_url;
 }
