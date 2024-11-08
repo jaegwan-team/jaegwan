@@ -1,7 +1,7 @@
 package com.bwmanager.jaegwan.ingredient.controller;
 
 import com.bwmanager.jaegwan.global.dto.CommonResponse;
-import com.bwmanager.jaegwan.ingredient.dto.IngredientRequest;
+import com.bwmanager.jaegwan.ingredient.dto.*;
 import com.bwmanager.jaegwan.ingredient.service.IngredientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,7 +24,7 @@ public class IngredientController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "등록된 재료 현황 조회에 성공했습니다.",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CommonResponse.class))),
+                            schema = @Schema(implementation = IngredientResponse.class))),
             @ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터입니다.",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 내부 에러가 발생했습니다.",
@@ -44,7 +44,7 @@ public class IngredientController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "등록된 재료 상세 조회에 성공했습니다.",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CommonResponse.class))),
+                            schema = @Schema(implementation = IngredientDetailResponse.class))),
             @ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터입니다.",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 내부 에러가 발생했습니다.",
@@ -78,6 +78,26 @@ public class IngredientController {
         CommonResponse<Object> response = CommonResponse.builder()
                 .data(null)
                 .message("재료 상세 삭제에 성공했습니다.")
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "재료 검색 시 자동완성 결과 조회", description = "id(restaurantId), word 가 필요합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "재료 자동완성 검색에 성공했습니다.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IngredientAutoCompleteResponse.class))),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터입니다.",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 내부 에러가 발생했습니다.",
+                    content = @Content)
+    })
+    @PostMapping("/auto-complete")
+    public ResponseEntity<?> getIngredientAutoCompleteResult(@RequestBody IngredientAutoCompleteRequest request) {
+        CommonResponse<Object> response = CommonResponse.builder()
+                .data(ingredientService.getAutoCompleteResult(request.getRestaurantId(), request.getWord()))
+                .message("재료 자동완성 검색에 성공했습니다.")
                 .build();
 
         return ResponseEntity.ok(response);

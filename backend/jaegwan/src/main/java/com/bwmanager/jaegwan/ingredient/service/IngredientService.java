@@ -1,5 +1,6 @@
 package com.bwmanager.jaegwan.ingredient.service;
 
+import com.bwmanager.jaegwan.ingredient.dto.IngredientAutoCompleteResponse;
 import com.bwmanager.jaegwan.ingredient.dto.IngredientDetailResponse;
 import com.bwmanager.jaegwan.ingredient.dto.IngredientResponse;
 
@@ -29,4 +30,13 @@ public interface IngredientService {
      * @param ingredientDetailId 삭제할 재료 상세 ID
      */
     void deleteIngredientDetail(Long ingredientDetailId);
+
+    /**
+     * 재료 검색 시 존재하는 재료들에 대한 자동완성 기능을 제공한다.
+     *
+     * @param restaurantId 식당 ID
+     * @param word 검색 단어
+     * @return 자동완성된 재료 이름들
+     */
+    IngredientAutoCompleteResponse getAutoCompleteResult(Long restaurantId, String word);
 }
