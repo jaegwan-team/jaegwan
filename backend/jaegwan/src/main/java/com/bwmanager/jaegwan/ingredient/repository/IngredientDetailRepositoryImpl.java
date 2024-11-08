@@ -4,6 +4,7 @@ import com.bwmanager.jaegwan.ingredient.dto.IngredientDetailResponse;
 import com.bwmanager.jaegwan.ingredient.dto.IngredientResponse;
 import com.bwmanager.jaegwan.ingredient.dto.QIngredientDetailResponse;
 import com.bwmanager.jaegwan.ingredient.dto.QIngredientResponse;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -20,7 +21,13 @@ public class IngredientDetailRepositoryImpl implements IngredientDetailCustomRep
 
     @Override
     public IngredientResponse getIngredientInfo(Long ingredientId) {
-        return queryFactory
+        boolean isExists = queryFactory
+                .select(ingredientDetail)
+                .from(ingredientDetail)
+                .where(ingredientDetail.ingredient.id.eq(ingredientId))
+                .fetchFirst() != null;
+
+        JPAQuery<IngredientResponse> ingredientResponseQuery = queryFactory
                 .select(new QIngredientResponse(
                         ingredientDetail.ingredient.id,
                         ingredientDetail.ingredient.name,
@@ -29,8 +36,9 @@ public class IngredientDetailRepositoryImpl implements IngredientDetailCustomRep
                         ingredientDetail.ingredient.unit,
                         ingredientDetail.expirationDate.min()))
                 .from(ingredientDetail)
-                .where(ingredientDetail.ingredient.id.eq(ingredientId))
-                .fetchOne();
+                .where(ingredientDetail.ingredient.id.eq(ingredientId));
+
+        return isExists ? ingredientResponseQuery.fetchOne() : null;
     }
 
     @Override
