@@ -17,7 +17,7 @@ public class SwaggerConfig {
                 .description(
                         "<h2>자율 프로젝트</h2>" +
                                 "<h3>Swagger를 이용한 API 명세서</h3><br>" +
-                                "<img src=\"/images/Dr_cha_LOGO.png\" alt = '프로젝트 로고'  width=\"200\">" +
+                                "<img src=\"http://localhost:8080/api/images/logo.png\" alt = '프로젝트 로고'  width=\"200\">" +
                                 "<h3>프로젝트 정보</h3>" +
                                 "재관둥이")
                 .version("v1.0.0")
