@@ -1,5 +1,6 @@
 package com.bwmanager.jaegwan.ingredient.repository;
 
+import com.bwmanager.jaegwan.ingredient.entity.Category;
 import com.bwmanager.jaegwan.ingredient.entity.Ingredient;
 import java.util.List;
 import java.util.Optional;
@@ -16,5 +17,7 @@ public interface IngredientRepository extends JpaRepository<Ingredient, Long>, I
     List<Ingredient> findAllByRestaurantId(Long restaurantId);
 
     Optional<Ingredient> findByRestaurantIdAndName(Long restaurantId, String name);
+
+    Optional<Ingredient> findByNameAndCategory(String name, Category category);
 
 }
