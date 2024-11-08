@@ -15,6 +15,7 @@ export default function Home() {
   }
 
   const ingredient = ingredientQuery.data?.data;
+  console.log(ingredient);
 
   if (!ingredient) {
     console.log("not render!")
