@@ -23,6 +23,7 @@ public class IngredientDetailRepositoryImpl implements IngredientDetailCustomRep
         return queryFactory
                 .select(new QIngredientResponse(
                         ingredientDetail.ingredient.id,
+                        ingredientDetail.ingredient.name,
                         ingredientDetail.ingredient.category,
                         ingredientDetail.amount.sum(),
                         ingredientDetail.ingredient.unit,
