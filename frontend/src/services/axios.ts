@@ -1,7 +1,6 @@
 import axios from "axios";
-import { BACKEND_ADDRESS } from '@env';
 
-export const BASE_URL = BACKEND_ADDRESS;
+export const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_ADDRESS;
 
 export const HEADERS = {
   "Access-Control-Allow-Origin": "*",
