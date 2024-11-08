@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class IngredientServiceImpl implements IngredientService {
         // STEP 2. 종류별 재료 잔여량 및 가장 짧은 유통기한일 조회
         return ingredients.stream()
                 .map(ingredient -> ingredientDetailRepository.getIngredientInfo(ingredient.getId()))
+                .filter(Objects::nonNull)
                 .toList();
     }
 
