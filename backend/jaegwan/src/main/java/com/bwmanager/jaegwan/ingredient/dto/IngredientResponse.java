@@ -18,6 +18,9 @@ public class IngredientResponse {
     @Schema(description = "재료 종류 ID", example = "1")
     private Long id;
 
+    @Schema(description = "재료 이름", example = "고기")
+    private String name;
+
     @Schema(description = "재료 카테고리", example = "육류")
     private Category category;
 
@@ -31,8 +34,9 @@ public class IngredientResponse {
     private int leftExpirationDay;
 
     @QueryProjection
-    public IngredientResponse(Long id, Category category, double totalAmount, Unit unit, LocalDateTime expirationDate) {
+    public IngredientResponse(Long id, String name, Category category, double totalAmount, Unit unit, LocalDateTime expirationDate) {
         this.id = id;
+        this.name = name;
         this.category = category;
         this.totalAmount = totalAmount;
         this.unit = unit.getDesc();
