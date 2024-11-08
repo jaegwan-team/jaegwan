@@ -9,7 +9,8 @@ import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@OpenAPIDefinition(servers = {@Server(url = "https://k11a501.p.ssafy.io/api", description = "Default Server URL")})
+@OpenAPIDefinition(servers = {@Server(url = "https://k11a501.p.ssafy.io/api", description = "Default Server URL"),
+                                @Server(url = "http://localhost:8080/api", description = "Local Server URL")})
 @Configuration
 public class SwaggerConfig {
 
@@ -26,7 +27,7 @@ public class SwaggerConfig {
                 .version("v1.0.0")
                 .contact(new Contact()
                         .name("재관둥이")
-                        .url("https://https://k11a501.p.ssafy.io/")
+                        .url("https://k11a501.p.ssafy.io/")
                 );
 
         // JWT 보안 스키마 정의
