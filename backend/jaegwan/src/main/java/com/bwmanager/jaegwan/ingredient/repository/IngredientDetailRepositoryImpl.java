@@ -8,11 +8,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.bwmanager.jaegwan.ingredient.entity.QIngredientDetail.ingredientDetail;
-import static com.querydsl.core.types.dsl.Expressions.numberTemplate;
 
 @RequiredArgsConstructor
 @Repository
@@ -28,9 +26,7 @@ public class IngredientDetailRepositoryImpl implements IngredientDetailCustomRep
                         ingredientDetail.ingredient.category,
                         ingredientDetail.amount.sum(),
                         ingredientDetail.ingredient.unit,
-                        numberTemplate(Integer.class,
-                                "DATEDIFF({0}, {1})",
-                                ingredientDetail.expirationDate.min(), LocalDateTime.now())))
+                        ingredientDetail.expirationDate.min()))
                 .from(ingredientDetail)
                 .where(ingredientDetail.ingredient.id.eq(ingredientId))
                 .fetchOne();
@@ -42,9 +38,7 @@ public class IngredientDetailRepositoryImpl implements IngredientDetailCustomRep
                 .select(new QIngredientDetailResponse(
                         ingredientDetail.purchaseDate,
                         ingredientDetail.amount,
-                        numberTemplate(Integer.class,
-                                "DATEDIFF({0}, {1})",
-                                ingredientDetail.expirationDate, LocalDateTime.now())))
+                        ingredientDetail.expirationDate))
                 .from(ingredientDetail)
                 .where(ingredientDetail.ingredient.id.eq(ingredientId))
                 .fetch();

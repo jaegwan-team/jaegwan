@@ -7,6 +7,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 @Getter
 @NoArgsConstructor
 @Schema(description = "재료 종류 조회 응답 DTO")
@@ -28,11 +31,11 @@ public class IngredientResponse {
     private int leftExpirationDay;
 
     @QueryProjection
-    public IngredientResponse(Long id, Category category, double totalAmount, Unit unit, int leftExpirationDay) {
+    public IngredientResponse(Long id, Category category, double totalAmount, Unit unit, LocalDateTime expirationDate) {
         this.id = id;
         this.category = category;
         this.totalAmount = totalAmount;
         this.unit = unit.getDesc();
-        this.leftExpirationDay = leftExpirationDay;
+        this.leftExpirationDay = (int) ChronoUnit.DAYS.between(LocalDateTime.now(), expirationDate);;
     }
 }
