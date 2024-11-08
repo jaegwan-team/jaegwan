@@ -3,8 +3,8 @@ import { axiosClient } from './axios';
 // user
 
 // ingredient
-export const getIngredientList = ( restuarent: Record<string, number> ) => {
-    return axiosClient.post('/ingredient', restuarent);
+export const getIngredientList = (restuarent: Record<string, number>) => {
+    return axiosClient.post('api/ingredient', restuarent);
 };
 
 export const getIngredientDetail = (id : number) => {
