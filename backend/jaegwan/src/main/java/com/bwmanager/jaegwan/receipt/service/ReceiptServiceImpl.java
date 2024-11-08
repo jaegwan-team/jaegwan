@@ -2,16 +2,14 @@ package com.bwmanager.jaegwan.receipt.service;
 
 import com.bwmanager.jaegwan.global.converter.EnumValueConvertUtils;
 import com.bwmanager.jaegwan.global.error.ErrorCode;
+import com.bwmanager.jaegwan.global.error.exception.NotFoundException;
 import com.bwmanager.jaegwan.global.error.exception.RestaurantException;
 import com.bwmanager.jaegwan.global.util.OcrFeignClient;
 import com.bwmanager.jaegwan.global.util.RestClientUtil;
 import com.bwmanager.jaegwan.global.util.S3Util;
 import com.bwmanager.jaegwan.global.util.dto.OcrRequest;
 import com.bwmanager.jaegwan.global.util.dto.OcrResponse;
-import com.bwmanager.jaegwan.ingredient.entity.Category;
-import com.bwmanager.jaegwan.ingredient.entity.Ingredient;
-import com.bwmanager.jaegwan.ingredient.entity.IngredientDetail;
-import com.bwmanager.jaegwan.ingredient.entity.Unit;
+import com.bwmanager.jaegwan.ingredient.entity.*;
 import com.bwmanager.jaegwan.ingredient.exception.IngredientServiceException;
 import com.bwmanager.jaegwan.ingredient.repository.IngredientDetailRepository;
 import com.bwmanager.jaegwan.ingredient.repository.IngredientRepository;
@@ -43,7 +41,6 @@ import java.util.List;
 public class ReceiptServiceImpl implements ReceiptService {
 
     private final S3Util s3Util;
-    private final RestClientUtil restClientUtil;
     private final OcrFeignClient ocrFeignClient;
     private final ReceiptRepository receiptRepository;
     private final RestaurantRepository restaurantRepository;
@@ -77,9 +74,41 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     @Override
     public List<OcrResponse> imageOcr(ImageUrlRequest request) {
-//        return restClientUtil.imageOcr(request.getImageUrl());
-        log.info("example -> {}", ocrFeignClient.imageOcr(OcrRequest.builder().image_url(request.getImageUrl()).build()));
-        return ocrFeignClient.imageOcr(OcrRequest.builder().image_url(request.getImageUrl()).build());
+        List<OcrResponse> ocrResponses = ocrFeignClient.imageOcr(OcrRequest.builder().image_url(request.getImageUrl()).build());
+
+        for (OcrResponse ocrResponse : ocrResponses) {
+            // Category를 코드 기반으로 변환
+            Category category = EnumValueConvertUtils.ofCode(
+                    Category.class,
+                    ErrorCode.INGREDIENT_CATEGORY_NOT_FOUND,
+                    String.valueOf(ocrResponse.getCategory())
+            );
+            log.info("category -> {}", category.getDesc());
+
+            // name과 category로 재료 찾기
+            Ingredient ingredient = ingredientRepository.findByNameAndCategory(ocrResponse.getName(), category)
+                    .orElseGet(() -> {
+                        // 재료가 없으면 새로 생성하여 저장
+                        Ingredient newIngredient = Ingredient.builder()
+                                .name(ocrResponse.getName())
+                                .category(category)
+                                .build();
+                        return ingredientRepository.save(newIngredient);
+                    });
+            log.info("ingredient -> {}", ingredient.getName());
+//
+//           // 영수증-재료 저장
+            ReceiptIngredient saved = receiptIngredientRepository.save(ReceiptIngredient.builder()
+                    .ingredient(ingredient)
+                    .amount(ocrResponse.getAmount())
+                    .isConfirmed(false)
+                    .receipt(receiptRepository.findIdByImageUrl(request.getImageUrl())
+                            .orElseThrow(() -> new NotFoundException(ErrorCode.RECEIPT_NOT_FOUND)))
+                    .build());
+            log.info("receipt-ingredient -> {}", saved.getId());
+        }
+
+        return ocrResponses;
     }
 
     @Override
