@@ -27,7 +27,7 @@ export default function Home() {
       {/* test react-query */}
       <ul>
         {ingredient.map((data : Record<string, string | number>) => (
-          <li key={data.id}>{data.title}</li>
+          <li key={data.id}>{data.category}</li>
         ))}
       </ul>
     </div>
