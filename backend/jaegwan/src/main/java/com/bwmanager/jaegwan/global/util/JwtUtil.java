@@ -4,6 +4,7 @@ import com.bwmanager.jaegwan.global.error.ErrorCode;
 import com.bwmanager.jaegwan.global.error.exception.AuthException;
 import com.bwmanager.jaegwan.member.entity.Role;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +24,8 @@ public class JwtUtil {
 
     @Value("${jwt.refresh.expiration}")
     private Long refreshExpiration;
+
+    private static final String BEARER = "Bearer ";
 
     /**
      * 액세스 토큰을 생성한다.
@@ -61,10 +64,10 @@ public class JwtUtil {
     }
 
     /**
-     * 토큰을 생성한다.
-     * @param claims 토큰에 들어갈 클레임
-     * @param expiration 토큰의 유효 시간 (밀리초 단위)
-     * @return 토큰
+     * JWT 토큰을 생성한다.
+     * @param claims JWT 토큰에 들어갈 클레임(정보)
+     * @param expiration JWT 토큰의 유효 시간(밀리초 단위)
+     * @return JWT 토큰
      */
     private String createToken(Claims claims, long expiration) {
         return Jwts.builder()
@@ -76,41 +79,21 @@ public class JwtUtil {
     }
 
     /**
-     * 토큰에서 클레임을 추출한다.
-     * @param token 토큰
-     * @return 토큰에서 추출한 클레임
+     * JWT 토큰에서 클레임을 추출한다.
+     * @param token JWT 토큰
+     * @return JWT 토큰에서 추출한 클레임 (정보)
      */
-    public Claims getClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
-    /**
-     * 토큰이 유효한지 검증한다.
-     * @param token 토큰
-     * @return 토큰이 유효하면 true, 그렇지 않다면 false
-     */
-    public boolean isTokenValid(String token) {
+    public Claims validateTokenAndgetClaims(String token) {
         try {
-            Jwts.parser()
+            return Jwts.parser()
                     .setSigningKey(secretKey)
-                    .parseClaimsJws(token);
-            return true; // 유효한 경우 true 반환
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            throw new AuthException(ErrorCode.TOKEN_EXPIRED);
         } catch (JwtException | IllegalArgumentException e) {
-            return false; // 유효하지 않은 경우 false 반환
+            throw new AuthException(ErrorCode.TOKEN_NOT_VALID);
         }
-    }
-
-    /**
-     * 토큰가 만료되었는지 검증한다.
-     * @param token 토큰
-     * @return 토큰이 만료되었다면 false, 그렇지 않다면 true
-     */
-    public boolean isTokenExpired(String token) {
-        Date expiration = getClaims(token).getExpiration();
-        return expiration.before(new Date());
     }
 
 }
