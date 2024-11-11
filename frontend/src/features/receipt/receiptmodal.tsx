@@ -1,55 +1,50 @@
 import { useState, useEffect, useCallback } from "react";
-import { X, ChevronLeft, ChevronRight, Check, Trash2 } from "lucide-react";
+import {
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Check,
+  Trash2,
+  Plus,
+  Image as ImageIcon,
+} from "lucide-react";
+import { useReceiptDetail } from "./api/get-receipt-detail";
 import styles from "../../../styles/modals.module.css";
 import { ItemType, UnitStatus } from "@/types/itemType";
 import { ModalProps } from "@/types/modalType";
 import { CategoryLabel } from "@/types/category";
 
 const UNITS: UnitStatus[] = ["kg", "g", "l", "ml", "개"];
-const pList: ItemType[] = [
-  {
-    id: 1,
-    name: "양파",
-    unit: "kg",
-    amount: 2,
-    expireDate: "2024/10/29 13:25",
-    isChecked: "Yet",
-    category: 1,
-  },
-  {
-    id: 2,
-    name: "대파",
-    unit: "g",
-    amount: 300,
-    expireDate: "2024/10/29 13:25",
-    isChecked: "Yet",
-    category: 1,
-  },
-  {
-    id: 3,
-    name: "우유",
-    unit: "l",
-    amount: 3,
-    expireDate: "2024/10/29 13:25",
-    isChecked: "Yet",
-    category: 5,
-  },
-  {
-    id: 4,
-    name: "두부",
-    unit: "개",
-    amount: 4,
-    expireDate: "2024/10/29 13:25",
-    isChecked: "Yet",
-    category: 4,
-  },
-];
 
-export default function ReceiptModal({ restaurantId, onClose }: ModalProps) {
+// 새로운 아이템 생성을 위한 기본 값
+const DEFAULT_ITEM: ItemType = {
+  name: "",
+  unit: "개",
+  amount: 0,
+  expirationDate: new Date().toISOString().split("T")[0],
+  category: 1,
+  isChecked: "Yet",
+};
+
+export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
+  const { data: receiptDetail } = useReceiptDetail(receiptId);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [slideDirection, setSlideDirection] = useState("right");
   const [isAllProcessed, setIsAllProcessed] = useState(false);
-  const [purchaseList, setPurchaseList] = useState<ItemType[]>(pList);
+  const [purchaseList, setPurchaseList] = useState<ItemType[]>([]);
+
+  // 데이터 초기화
+  useEffect(() => {
+    if (receiptDetail) {
+      // 받아온 데이터에 isChecked 추가
+      const processedData = receiptDetail.map((item: ItemType) => ({
+        ...item,
+        isChecked: "Yet" as const,
+      }));
+      setPurchaseList(processedData);
+    }
+  }, [receiptDetail]);
 
   const checkAllProcessed = useCallback(() => {
     const allProcessed = purchaseList.every((item) => item.isChecked !== "Yet");
@@ -88,16 +83,6 @@ export default function ReceiptModal({ restaurantId, onClose }: ModalProps) {
     }
   };
 
-  const handleComplete = () => {
-    const updatedItems = purchaseList.filter(
-      (item) => !(item.isChecked == "Deleted")
-    );
-
-    console.log("Updated items:", updatedItems);
-
-    onClose();
-  };
-
   const handleCheckItem = () => {
     if (purchaseList[currentIndex].isChecked === "Checked") {
       handleChange("isChecked", "Yet");
@@ -116,14 +101,66 @@ export default function ReceiptModal({ restaurantId, onClose }: ModalProps) {
     checkAllProcessed();
   };
 
+  // 이미지 모달
+  const ImageModal = () => (
+    <div
+      className={styles.imageModalOverlay}
+      onClick={() => setIsImageModalOpen(false)}
+    >
+      <div
+        className={styles.imageModalContent}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <img
+        // src={`/api/receipt/image/${receiptId}`}
+        // alt="영수증"
+        // className={styles.receiptImage}
+        />
+        <button
+          onClick={() => setIsImageModalOpen(false)}
+          className={styles.closeButton}
+        >
+          <X size={24} />
+        </button>
+      </div>
+    </div>
+  );
+
+  // 새 아이템 추가
+  const handleAddItem = () => {
+    setPurchaseList((prev) => [...prev, { ...DEFAULT_ITEM }]);
+    setCurrentIndex(purchaseList.length);
+    setSlideDirection("right");
+  };
+
+  const handleComplete = () => {
+    const updatedItems = purchaseList
+      .filter((item) => item.isChecked !== "Deleted")
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .map(({ isChecked, ...item }) => item);
+
+    console.log("Updated items:", updatedItems);
+    // API 호출 로직 추가 필요
+    onClose();
+  };
+
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContainer}>
         <div className={styles.modalHeader}>
-          <h2 className={styles.modalTitle}>2019.12.24 구매내역</h2>
-          <button onClick={onClose} className={styles.closeButton}>
-            <X size={24} />
-          </button>
+          <h2 className={styles.modalTitle}>구매내역</h2>
+          <div className={styles.headerButtons}>
+            <button
+              onClick={() => setIsImageModalOpen(true)}
+              className={styles.iconButton}
+            >
+              <ImageIcon size={20} />
+              영수증 보기
+            </button>
+            <button onClick={onClose} className={styles.closeButton}>
+              <X size={24} />
+            </button>
+          </div>
         </div>
 
         <div className={styles.progressBar}>
@@ -214,8 +251,8 @@ export default function ReceiptModal({ restaurantId, onClose }: ModalProps) {
               <label className={styles.formLabel}>유통기한:</label>
               <input
                 type="date"
-                value={purchaseList[currentIndex].expireDate}
-                onChange={(e) => handleChange("expireDate", e.target.value)}
+                value={purchaseList[currentIndex].expirationDate}
+                onChange={(e) => handleChange("expirationDate", e.target.value)}
                 className={styles.formInput}
                 disabled={purchaseList[currentIndex].isChecked === "Deleted"}
               />
@@ -278,7 +315,42 @@ export default function ReceiptModal({ restaurantId, onClose }: ModalProps) {
             </button>
           )}
         </div>
+        <div className={styles.navigationButtons}>
+          <button
+            onClick={handlePrevious}
+            disabled={currentIndex === 0}
+            className={styles.navButton}
+          >
+            <ChevronLeft size={24} />
+          </button>
+
+          <button onClick={handleAddItem} className={styles.addButton}>
+            <Plus size={20} />새 품목 추가
+          </button>
+
+          {currentIndex === purchaseList.length - 1 ? (
+            <button
+              onClick={handleComplete}
+              disabled={!isAllProcessed}
+              className={`${styles.completeButton} ${
+                isAllProcessed ? styles.active : ""
+              }`}
+            >
+              완료
+            </button>
+          ) : (
+            <button
+              onClick={handleNext}
+              disabled={currentIndex === purchaseList.length - 1}
+              className={styles.navButton}
+            >
+              <ChevronRight size={24} />
+            </button>
+          )}
+        </div>
       </div>
+
+      {isImageModalOpen && <ImageModal />}
     </div>
   );
 }

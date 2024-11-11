@@ -1,4 +1,4 @@
 export type ModalProps = {
-  restaurantId?: number;
+  receiptId: number;
   onClose: () => void;
 };

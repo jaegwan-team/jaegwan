@@ -69,9 +69,7 @@ export default function PurchasePage() {
           </div>
         </div>
       </div>
-      {isModalOpen && (
-        <ReceiptModal restaurantId={1} onClose={handleCloseModal} />
-      )}
+      {isModalOpen && <ReceiptModal receiptId={1} onClose={handleCloseModal} />}
     </div>
   );
 }
