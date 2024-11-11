@@ -20,8 +20,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll()
-//                        .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**")
+                .authorizeHttpRequests(auth -> auth
+                                .requestMatchers("/auth/**", "/swagger-ui/**", "/api-docs/**").permitAll()
+                                .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/auth/kakao/login")
