@@ -1,5 +1,6 @@
 package com.bwmanager.jaegwan.receipt.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,8 @@ public class ReceiptResponse {
     private Long id;
     private String mainIngredientName;
     private int leftCount;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime createdDate;
     private boolean isConfirmed;
 
