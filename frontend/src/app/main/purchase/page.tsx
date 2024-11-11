@@ -6,69 +6,13 @@ import Image from "next/image";
 import CheckedSVG from "../../../../public/Check circle.svg";
 import UncheckedSVG from "../../../../public/check_indeterminate_small.svg";
 import ReceiptModal from "../../../features/receipt/receiptmodal";
-
-const purchaseData = [
-  {
-    id: 1,
-    date: "2024/10/29 13:25",
-    summary: "양파 외 25개 품목",
-    isChecked: false,
-    items: [
-      {
-        id: 1,
-        name: "양파",
-        amount: "2kg",
-        expireDate: "2024-11-05",
-        isChecked: false,
-      },
-      {
-        id: 2,
-        name: "당근",
-        amount: "1kg",
-        expireDate: "2024-11-07",
-        isChecked: false,
-      },
-      {
-        id: 3,
-        name: "감자",
-        amount: "3kg",
-        expireDate: "2024-11-10",
-        isChecked: false,
-      },
-    ],
-  },
-  {
-    id: 2,
-    date: "2024/10/29 13:25",
-    summary: "양고기 외 25개 품목",
-    isChecked: true,
-    items: [
-      {
-        id: 1,
-        name: "양고기",
-        amount: "1kg",
-        expireDate: "2024-11-03",
-        isChecked: true,
-      },
-      {
-        id: 2,
-        name: "마늘",
-        amount: "500g",
-        expireDate: "2024-11-15",
-        isChecked: true,
-      },
-      {
-        id: 3,
-        name: "양배추",
-        amount: "1개",
-        expireDate: "2024-11-08",
-        isChecked: true,
-      },
-    ],
-  },
-];
+import { useReceiptList } from "@/features/receipt/api/get-receipt-list";
 
 export default function PurchasePage() {
+  const { data: purchaseData } = useReceiptList({
+    restaurantId: 1,
+  });
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDetailClick = () => {
@@ -92,16 +36,19 @@ export default function PurchasePage() {
           </div>
 
           <div className={styles.tableBody}>
-            {purchaseData.map((purchase) => (
+            {purchaseData?.map((purchase) => (
               <div
                 key={purchase.id}
                 className={styles.tableRow}
                 onClick={() => handleDetailClick()}
               >
-                <div className={styles.dateColumn}>{purchase.date}</div>
-                <div className={styles.itemColumn}>{purchase.summary}</div>
+                <div className={styles.dateColumn}>{purchase.createdDate}</div>
+                <div className={styles.itemColumn}>
+                  {purchase.mainIngredientName}
+                  {purchase.leftCount > 0 && ` 외 ${purchase.leftCount}개 품목`}
+                </div>
                 <div className={styles.checkColumn}>
-                  {purchase.isChecked ? (
+                  {purchase.confirmed ? (
                     <Image
                       src={CheckedSVG}
                       alt="checked"
@@ -122,7 +69,9 @@ export default function PurchasePage() {
           </div>
         </div>
       </div>
-      {isModalOpen && <ReceiptModal onClose={handleCloseModal} />}
+      {isModalOpen && (
+        <ReceiptModal restaurantId={1} onClose={handleCloseModal} />
+      )}
     </div>
   );
 }

@@ -21,3 +21,8 @@ export const CategoryLabel: Record<CategoryType, string> = {
   [CategoryType.Herbs]: "허브",
   [CategoryType.Oils]: "오일",
 };
+
+export const getCategoryLabel = (categoryNumber: number): string => {
+  const categoryType = String(categoryNumber) as CategoryType;
+  return CategoryLabel[categoryType] || "알 수 없음";
+};
