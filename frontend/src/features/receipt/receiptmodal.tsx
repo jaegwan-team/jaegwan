@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { X, ChevronLeft, ChevronRight, Check, Trash2 } from "lucide-react";
 import styles from "../../../styles/modals.module.css";
 import { ItemType, UnitStatus } from "@/types/itemType";
 import { ModalProps } from "@/types/modalType";
+import { CategoryLabel } from "@/types/category";
 
 const UNITS: UnitStatus[] = ["kg", "g", "l", "ml", "개"];
 const pList: ItemType[] = [
@@ -13,6 +14,7 @@ const pList: ItemType[] = [
     amount: 2,
     expireDate: "2024/10/29 13:25",
     isChecked: "Yet",
+    category: 1,
   },
   {
     id: 2,
@@ -21,6 +23,7 @@ const pList: ItemType[] = [
     amount: 300,
     expireDate: "2024/10/29 13:25",
     isChecked: "Yet",
+    category: 1,
   },
   {
     id: 3,
@@ -29,6 +32,7 @@ const pList: ItemType[] = [
     amount: 3,
     expireDate: "2024/10/29 13:25",
     isChecked: "Yet",
+    category: 5,
   },
   {
     id: 4,
@@ -37,25 +41,24 @@ const pList: ItemType[] = [
     amount: 4,
     expireDate: "2024/10/29 13:25",
     isChecked: "Yet",
+    category: 4,
   },
 ];
 
-export default function ReceiptModal({ onClose }: ModalProps) {
+export default function ReceiptModal({ restaurantId, onClose }: ModalProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [slideDirection, setSlideDirection] = useState("right");
   const [isAllProcessed, setIsAllProcessed] = useState(false);
   const [purchaseList, setPurchaseList] = useState<ItemType[]>(pList);
 
-  useEffect(() => {
-    checkAllProcessed();
+  const checkAllProcessed = useCallback(() => {
+    const allProcessed = purchaseList.every((item) => item.isChecked !== "Yet");
+    setIsAllProcessed(allProcessed);
   }, [purchaseList]);
 
-  const checkAllProcessed = () => {
-    const allProcessed = purchaseList.every(
-      (item) => item.isChecked === "Checked" || item.isChecked === "Deleted"
-    );
-    setIsAllProcessed(allProcessed);
-  };
+  useEffect(() => {
+    checkAllProcessed();
+  }, [checkAllProcessed]);
 
   const handleChange = <K extends keyof ItemType>(
     field: K,
@@ -96,12 +99,20 @@ export default function ReceiptModal({ onClose }: ModalProps) {
   };
 
   const handleCheckItem = () => {
-    handleChange("isChecked", "Checked");
+    if (purchaseList[currentIndex].isChecked === "Checked") {
+      handleChange("isChecked", "Yet");
+    } else {
+      handleChange("isChecked", "Checked");
+    }
     checkAllProcessed();
   };
 
   const handleDeleteItem = () => {
-    handleChange("isChecked", "Deleted");
+    if (purchaseList[currentIndex].isChecked === "Deleted") {
+      handleChange("isChecked", "Yet");
+    } else {
+      handleChange("isChecked", "Deleted");
+    }
     checkAllProcessed();
   };
 
@@ -150,6 +161,24 @@ export default function ReceiptModal({ onClose }: ModalProps) {
                 className={styles.formInput}
                 disabled={purchaseList[currentIndex].isChecked === "Deleted"}
               />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label className={styles.formLabel}>카테고리:</label>
+              <select
+                value={String(purchaseList[currentIndex].category)}
+                onChange={(e) =>
+                  handleChange("category", Number(e.target.value))
+                }
+                className={styles.unitSelect}
+                disabled={purchaseList[currentIndex].isChecked === "Deleted"}
+              >
+                {Object.entries(CategoryLabel).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className={styles.formGroup}>
