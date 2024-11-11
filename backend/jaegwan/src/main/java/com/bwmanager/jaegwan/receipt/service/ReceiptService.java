@@ -58,4 +58,12 @@ public interface ReceiptService {
      * @param receiptIngredientId 영수증-재료 ID
      */
     void deleteReceiptIngredient(Long receiptIngredientId);
+
+    /**
+     * S3 서버에 올라간 이미지를 조회한다.
+     *
+     * @param id
+     * @return
+     */
+    String getReceiptImage(Long id);
 }

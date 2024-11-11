@@ -8,5 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface ReceiptRepository extends JpaRepository<Receipt, Long>, ReceiptCustomRepository {
+
     Optional<Receipt> findByImageUrl(String imageUrl);
 }

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.bwmanager.jaegwan.receipt.entity.QReceipt.receipt;
 import static com.bwmanager.jaegwan.receipt.entity.QReceiptIngredient.receiptIngredient;
@@ -44,5 +45,16 @@ public class ReceiptCustomRepositoryImpl implements ReceiptCustomRepository {
                 .join(receipt.restaurant, restaurant)
                 .groupBy(receipt.id, receipt.createdDate)
                 .fetch();
+    }
+
+    @Override
+    public Optional<String> getImageUrlById(Long id) {
+        String imageUrl = jpaQueryFactory
+                .select(receipt.imageUrl)
+                .from(receipt)
+                .where(receipt.id.eq(id))
+                .fetchOne();
+
+        return Optional.ofNullable(imageUrl);
     }
 }
