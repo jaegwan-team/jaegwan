@@ -45,7 +45,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public IngredientAutoCompleteResponse getAutoCompleteResult(Long restaurantId, String word) {
+    public List<IngredientAutoCompleteResponse> getAutoCompleteResult(Long restaurantId, String word) {
         return ingredientRepository.getAutoCompleteResult(restaurantId, word);
     }
 }

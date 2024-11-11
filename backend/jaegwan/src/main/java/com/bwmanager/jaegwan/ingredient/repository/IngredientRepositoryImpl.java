@@ -1,6 +1,7 @@
 package com.bwmanager.jaegwan.ingredient.repository;
 
 import com.bwmanager.jaegwan.ingredient.dto.IngredientAutoCompleteResponse;
+import com.bwmanager.jaegwan.ingredient.dto.QIngredientAutoCompleteResponse;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -19,21 +20,21 @@ public class IngredientRepositoryImpl implements IngredientCustomRepository {
 
 
     @Override
-    public IngredientAutoCompleteResponse getAutoCompleteResult(Long restaurantId, String word) {
+    public List<IngredientAutoCompleteResponse> getAutoCompleteResult(Long restaurantId, String word) {
         NumberExpression<Integer> nameRank = new CaseBuilder()
                 .when(ingredient.name.eq(word)).then(1)
                 .when(ingredient.name.startsWith(word)).then(2)
                 .when(ingredient.name.like("%" + word)).then(3)
                 .otherwise(4);
 
-        List<String> ingredientNames = queryFactory
-                .select(ingredient.name)
+        return queryFactory
+                .select(new QIngredientAutoCompleteResponse(ingredient.name, ingredient.category))
                 .from(ingredient)
                 .where(ingredient.restaurant.id.eq(restaurantId),
                         ingredient.name.contains(word))
                 .orderBy(nameRank.asc())
                 .fetch();
 
-        return new IngredientAutoCompleteResponse(ingredientNames);
+
     }
 }
