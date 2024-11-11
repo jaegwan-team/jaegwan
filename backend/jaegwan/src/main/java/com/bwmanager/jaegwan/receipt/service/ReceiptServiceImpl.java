@@ -151,8 +151,8 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     @Transactional(readOnly = true)
     @Override
-    public String getReceiptImage(Long receiptId) {
-        return receiptRepository.getImageUrlByReceiptId(receiptId)
+    public String getReceiptImage(Long id) {
+        return receiptRepository.getImageUrlById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.IMAGE_NOT_FOUND));
     }
 }

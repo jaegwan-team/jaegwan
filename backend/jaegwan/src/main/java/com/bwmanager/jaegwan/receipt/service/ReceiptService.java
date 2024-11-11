@@ -62,8 +62,8 @@ public interface ReceiptService {
     /**
      * S3 서버에 올라간 이미지를 조회한다.
      *
-     * @param receiptId
+     * @param id
      * @return
      */
-    String getReceiptImage(Long receiptId);
+    String getReceiptImage(Long id);
 }

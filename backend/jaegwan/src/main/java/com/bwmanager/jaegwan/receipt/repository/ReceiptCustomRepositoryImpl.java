@@ -48,11 +48,11 @@ public class ReceiptCustomRepositoryImpl implements ReceiptCustomRepository {
     }
 
     @Override
-    public Optional<String> getImageUrlByReceiptId(Long receiptId) {
+    public Optional<String> getImageUrlById(Long id) {
         String imageUrl = jpaQueryFactory
                 .select(receipt.imageUrl)
                 .from(receipt)
-                .where(receipt.id.eq(receiptId))
+                .where(receipt.id.eq(id))
                 .fetchOne();
 
         return Optional.ofNullable(imageUrl);

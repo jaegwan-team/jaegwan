@@ -18,8 +18,8 @@ public interface ReceiptCustomRepository {
     /**
      * S3 서버에 올라간 이미지를 조회한다.
      *
-     * @param receiptId
+     * @param id
      * @return
      */
-    Optional<String> getImageUrlByReceiptId(Long receiptId);
+    Optional<String> getImageUrlById(Long id);
 }
