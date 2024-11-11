@@ -149,4 +149,15 @@ public class ReceiptController {
 
         return ResponseEntity.ok(response);
     }
+
+    @Operation(summary = "영수증 이미지 조회", description = "id(receiptId)가 필요합니다.")
+    @GetMapping("/image/{receiptId}")
+    public ResponseEntity<?> getReceiptImage(@PathVariable("receiptId") Long receiptId) {
+        CommonResponse<Object> response = CommonResponse.builder()
+                .data(receiptService.getReceiptImage(receiptId))
+                .message("영수증 이미지 조회 성공했습니다.")
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
 }

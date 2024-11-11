@@ -79,29 +79,8 @@ public class ReceiptServiceImpl implements ReceiptService {
         List<OcrResponse> ocrResponses = ocrFeignClient.imageOcr(OcrRequest.builder().image_url(request.getImageUrl()).build());
 
         for (OcrResponse ocrResponse : ocrResponses) {
-//            // Category를 코드 기반으로 변환
-//            Category category = EnumValueConvertUtils.ofCode(
-//                    Category.class,
-//                    ErrorCode.INGREDIENT_CATEGORY_NOT_FOUND,
-//                    String.valueOf(ocrResponse.getCategory())
-//            );
-//            log.info("category -> {}", category.getDesc());
-//
-//            // name과 category로 재료 찾기
-//            Ingredient ingredient = ingredientRepository.findByNameAndCategory(ocrResponse.getName(), category)
-//                    .orElseGet(() -> {
-//                        // 재료가 없으면 새로 생성하여 저장
-//                        Ingredient newIngredient = Ingredient.builder()
-//                                .name(ocrResponse.getName())
-//                                .category(category)
-//                                .build();
-//                        return ingredientRepository.save(newIngredient);
-//                    });
-//            log.info("ingredient -> {}", ingredient.getName());
-//
-//           // 영수증-재료 저장
+            // 영수증-재료 저장
             ReceiptIngredient saved = receiptIngredientRepository.save(ReceiptIngredient.builder()
-//                    .ingredient(ingredient)
                     .amount(ocrResponse.getAmount())
                     .isConfirmed(false)
                     .receipt(receiptRepository.findByImageUrl(request.getImageUrl())
@@ -168,5 +147,12 @@ public class ReceiptServiceImpl implements ReceiptService {
     @Override
     public void deleteReceiptIngredient(Long receiptIngredientId) {
         receiptIngredientRepository.deleteById(receiptIngredientId);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public String getReceiptImage(Long receiptId) {
+        return receiptRepository.getImageUrlByReceiptId(receiptId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.IMAGE_NOT_FOUND));
     }
 }
