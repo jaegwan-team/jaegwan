@@ -4,6 +4,7 @@ import com.bwmanager.jaegwan.global.auth.dto.KakaoProfileResponse;
 import com.bwmanager.jaegwan.global.auth.dto.KakaoTokenResponse;
 import com.bwmanager.jaegwan.global.error.ErrorCode;
 import com.bwmanager.jaegwan.global.error.exception.AuthException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
+
+import java.util.Base64;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -33,13 +37,23 @@ public class KakaoUtil {
     private String userInfoUri;
 
     private final RestClient restClient;
+    private final ObjectMapper objectMapper;
 
+    /**
+     * 카카오 로그인 URL을 반환한다.
+     * @return 카카오 로그인 URL
+     */
     public String getAuthorizationUrl() {
         return authorizationUri + "?client_id=" + clientId + "&redirect_uri="
                 + redirectUri + "&response_type=code";
     }
 
-    public KakaoTokenResponse getOAuthToken(String code) {
+    /**
+     * 카카오 로그인 후 받은 코드를 통해 토큰을 가져온다.
+     * @param kakaoCode 카카오 로그인 후 받은 코드
+     * @return 카카오 인증 서버에서 받은 토큰
+     */
+    public KakaoTokenResponse getTokens(String kakaoCode) {
         // 요청 header를 설정한다.
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -49,7 +63,7 @@ public class KakaoUtil {
         body.add("grant_type", "authorization_code");
         body.add("client_id", clientId);
         body.add("redirect_uri", redirectUri);
-        body.add("code", code);
+        body.add("code", kakaoCode);
 
         // 카카오 인증 서버로 POST 요청을 보내고 액세스 토큰과 리프레시 토큰을 응답받는다.
         KakaoTokenResponse KakaoTokenResponse = restClient
@@ -67,7 +81,12 @@ public class KakaoUtil {
         return KakaoTokenResponse;
     }
 
-    public KakaoProfileResponse getKakaoProfile(String accessToken) {
+    /**
+     * 카카오에서 받은 accessToken을 통해 사용자의 카카오 프로필을 가져온다.
+     * @param accessToken 카카오 인증 서버에서 받은 accessToken
+     * @return 사용자의 카카오 프로필
+     */
+    public KakaoProfileResponse getProfile(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
@@ -84,6 +103,30 @@ public class KakaoUtil {
         }
 
         return kakaoProfileResponse;
+    }
+
+    /**
+     * 카카오에서 받은 idToken에서 sub와 email을 추출한다.
+     * @param idToken 카카오 인증 서버에서 받은 idToken
+     * @return sub와 email이 담긴 문자열 배열
+     */
+    public String[] getSubAndEmail(String idToken) {
+        try {
+            String[] parts = idToken.split("\\.");
+
+            if (parts.length < 2) {
+                throw new AuthException(ErrorCode.ID_TOKEN_FORMAT_ERROR);
+            }
+
+            String payload = new String(Base64.getUrlDecoder().decode(parts[1]));
+            Map<String, Object> payloadMap = objectMapper.readValue(payload, Map.class);
+            String sub = (String) payloadMap.get("sub");
+            String email = (String) payloadMap.get("email");
+
+            return new String[] { sub, email };
+        } catch (Exception e) {
+            throw new AuthException(ErrorCode.ID_TOKEN_DECODE_FAILED);
+        }
     }
 
 }

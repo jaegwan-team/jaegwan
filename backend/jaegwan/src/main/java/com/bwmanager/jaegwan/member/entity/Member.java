@@ -31,12 +31,13 @@ public class Member {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'USER'")
-    private Role role;
+    @Builder.Default
+    private Role role = Role.USER;
 
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = true, unique = true)
+    @Column(unique = true)
     private String phoneNumber;
 
     @Column(nullable = false)
