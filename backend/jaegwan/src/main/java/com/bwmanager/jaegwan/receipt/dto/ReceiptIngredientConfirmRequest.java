@@ -26,6 +26,9 @@ public class ReceiptIngredientConfirmRequest {
     @Schema(description = "재료 단위", example = "개")
     private String unit;
 
+    @Schema(description = "재료 가격", example = "3000")
+    private int price;
+
     @Schema(description = "재료 유통기한", example = "2024-11-05")
     private LocalDate expirationDate;
 }

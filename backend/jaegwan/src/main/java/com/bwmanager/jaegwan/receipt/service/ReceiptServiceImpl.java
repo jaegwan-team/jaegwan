@@ -117,7 +117,7 @@ public class ReceiptServiceImpl implements ReceiptService {
                 .findByRestaurantIdAndName(restaurant.getId(), ingredientName)
                 .ifPresentOrElse(
                         // 1-1. 존재하면 해당 재료를 연관 관계에 추가
-                        receiptIngredient::confirm,
+                        ingredient -> receiptIngredient.confirm(ingredient, request.getAmount(), request.getPrice(), request.getExpirationDate()),
                         // 1-2. 존재하지 않으면 재료이름으로 재료를 추가하고 연관 관계에 추가
                         () -> {
                             Ingredient savedIngredient = ingredientRepository.save(Ingredient.builder()
@@ -127,7 +127,7 @@ public class ReceiptServiceImpl implements ReceiptService {
                                     .restaurant(restaurant)
                                     .build());
                             log.info("재료가 추가됨 - {}", savedIngredient.getName());
-                            receiptIngredient.confirm(savedIngredient);
+                            receiptIngredient.confirm(savedIngredient, request.getAmount(), request.getPrice(), request.getExpirationDate());
                         }
                 );
 

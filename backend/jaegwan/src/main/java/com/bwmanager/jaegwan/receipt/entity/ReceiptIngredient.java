@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -23,6 +25,8 @@ public class ReceiptIngredient {
     @Column(nullable = false)
     private int price;
 
+    private LocalDate expirationDate;
+
     @Column(nullable = false)
     private boolean isConfirmed;
 
@@ -34,8 +38,11 @@ public class ReceiptIngredient {
     @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient;
 
-    public void confirm(Ingredient ingredient) {
+    public void confirm(Ingredient ingredient, double amount, int price, LocalDate expirationDate) {
         isConfirmed = true;
+        this.amount = amount;
+        this.price = price;
+        this.expirationDate = expirationDate;
         this.ingredient = ingredient;
     }
 }
