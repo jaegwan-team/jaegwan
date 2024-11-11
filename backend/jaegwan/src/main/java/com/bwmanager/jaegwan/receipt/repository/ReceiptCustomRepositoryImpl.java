@@ -2,6 +2,8 @@ package com.bwmanager.jaegwan.receipt.repository;
 
 import com.bwmanager.jaegwan.receipt.dto.QReceiptResponse;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptResponse;
+import com.bwmanager.jaegwan.receipt.entity.QReceiptIngredient;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -23,25 +25,35 @@ public class ReceiptCustomRepositoryImpl implements ReceiptCustomRepository {
     @Override
     public List<ReceiptResponse> getReceiptsInfoByRestaurantId(Long restaurantId) {
 
+        QReceiptIngredient receiptIngredientSub = new QReceiptIngredient("receiptIngredientSub");
+
         return jpaQueryFactory
                 .select(new QReceiptResponse(
                         receipt.id,
-                        select(receiptIngredient.ingredient.name)
-                                .from(receiptIngredient)
-                                .where(receiptIngredient.id.eq(
-                                        select(receiptIngredient.id.max())
-                                                .from(receiptIngredient)
-                                                .where(receiptIngredient.receipt.id.eq(receipt.id)))),
-                        select(receiptIngredient.count().castToNum(Integer.class).subtract(1))
-                                .from(receiptIngredient)
-                                .where(receiptIngredient.receipt.id.eq(receipt.id)),
+                        new CaseBuilder()
+                                .when(receiptIngredient.count().ne(0L)).then(select(receiptIngredientSub.ingredient.name)
+                                        .from(receiptIngredientSub)
+                                        .where(receiptIngredientSub.id.eq(
+                                                select(receiptIngredientSub.id.max())
+                                                        .from(receiptIngredientSub)
+                                                        .where(receiptIngredientSub.receipt.id.eq(receipt.id)))))
+                                .otherwise(""),
+                        new CaseBuilder()
+                                .when(receiptIngredient.count().ne(0L))
+                                .then(select(receiptIngredientSub.count().castToNum(Integer.class).subtract(1))
+                                        .from(receiptIngredientSub)
+                                        .where(receiptIngredientSub.receipt.id.eq(receipt.id)))
+                                .otherwise(0),
                         receipt.createdDate,
-                        select(receiptIngredient.count().eq(0L))
-                                .from(receiptIngredient)
-                                .where(receiptIngredient.receipt.id.eq(receipt.id),
-                                        receiptIngredient.isConfirmed.eq(false))
+                        new CaseBuilder()
+                                .when(receiptIngredient.count().ne(0L)).then(select(receiptIngredientSub.count().eq(0L))
+                                        .from(receiptIngredientSub)
+                                        .where(receiptIngredientSub.receipt.id.eq(receipt.id),
+                                                receiptIngredientSub.isConfirmed.eq(false)))
+                                .otherwise(false)
                 ))
-                .from(receipt)
+                .from(receiptIngredient)
+                .rightJoin(receiptIngredient.receipt, receipt)
                 .join(receipt.restaurant, restaurant)
                 .groupBy(receipt.id, receipt.createdDate)
                 .fetch();

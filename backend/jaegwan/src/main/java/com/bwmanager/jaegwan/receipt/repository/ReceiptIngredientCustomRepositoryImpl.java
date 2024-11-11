@@ -21,9 +21,12 @@ public class ReceiptIngredientCustomRepositoryImpl implements ReceiptIngredientC
     public List<ReceiptDetailResponse> getReceiptsDetailByReceiptId(Long receiptId) {
         return jpaQueryFactory
                 .select(new QReceiptDetailResponse(
+                        receiptIngredient.id,
                         receiptIngredient.ingredient.name,
+                        receiptIngredient.ingredient.category,
                         receiptIngredient.amount,
-                        receiptIngredient.ingredient.unit
+                        receiptIngredient.ingredient.unit,
+                        receiptIngredient.expirationDate
                 ))
                 .from(receiptIngredient)
                 .join(receiptIngredient.receipt, receipt)

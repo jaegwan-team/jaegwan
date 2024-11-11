@@ -10,6 +10,7 @@ public enum Unit implements CommonType {
     KG("kg", "2"),
     ML("ml", "3"),
     L("L", "4"),
+    PCS("개", "5"),
     ;
 
     private final String desc;
