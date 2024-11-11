@@ -17,9 +17,10 @@ public enum ErrorCode {
      * auth
      */
     AUTHENTICATION_FAILED(NOT_FOUND, "AUTH-000", "사용자 인증에 실패했습니다."),
-    ID_TOKEN_FORMAT_ERROR(INTERNAL_SERVER_ERROR, "AUTH-001", "사용자 인증 과정에서 문제가 발생했습니다."),
-    ID_TOKEN_DECODE_FAILED(INTERNAL_SERVER_ERROR, "AUTH-002", "사용자 인증 과정에서 문제가 발생했습니다."),
+    KAKAO_ID_TOKEN_FORMAT_ERROR(INTERNAL_SERVER_ERROR, "AUTH-001", "카카오 인증 과정에서 문제가 발생했습니다."),
+    KAKAO_ID_TOKEN_DECODE_FAILED(INTERNAL_SERVER_ERROR, "AUTH-002", "카카오 인증 과정에서 문제가 발생했습니다."),
     JWT_CREATE_INVALID_INPUT(INTERNAL_SERVER_ERROR, "AUTH-003", "JWT 생성 과정에서 문제가 발생했습니다."),
+    REFRESH_TOKEN_NOT_VALID(UNAUTHORIZED, "AUTH-005", "유효하지 않은 리프레시 토큰입니다."),
 
     /**
      * Member

@@ -8,4 +8,6 @@ public interface AuthService {
 
     AuthResponse loginOrRegister(String code);
 
+    AuthResponse reissue(String Token);
+
 }

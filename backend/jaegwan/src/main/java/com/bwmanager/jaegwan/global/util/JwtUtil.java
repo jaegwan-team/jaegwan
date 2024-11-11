@@ -76,9 +76,21 @@ public class JwtUtil {
     }
 
     /**
+     * 토큰에서 클레임을 추출한다.
+     * @param token 토큰
+     * @return 토큰에서 추출한 클레임
+     */
+    public Claims getClaims(String token) {
+        return Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    /**
      * 토큰이 유효한지 검증한다.
      * @param token 토큰
-     * @return 토큰이 유효하면 true, 그렇지 않으면 false
+     * @return 토큰이 유효하면 true, 그렇지 않다면 false
      */
     public boolean isTokenValid(String token) {
         try {
@@ -92,17 +104,10 @@ public class JwtUtil {
     }
 
     /**
-     * 토큰에서 클레임을 추출한다.
+     * 토큰가 만료되었는지 검증한다.
      * @param token 토큰
-     * @return 토큰에서 추출한 클레임
+     * @return 토큰이 만료되었다면 false, 그렇지 않다면 true
      */
-    public Claims getClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
     public boolean isTokenExpired(String token) {
         Date expiration = getClaims(token).getExpiration();
         return expiration.before(new Date());

@@ -3,6 +3,8 @@ package com.bwmanager.jaegwan.global.auth.service;
 import com.bwmanager.jaegwan.global.auth.dto.AuthResponse;
 import com.bwmanager.jaegwan.global.auth.dto.KakaoProfileResponse;
 import com.bwmanager.jaegwan.global.auth.dto.KakaoTokenResponse;
+import com.bwmanager.jaegwan.global.error.ErrorCode;
+import com.bwmanager.jaegwan.global.error.exception.AuthException;
 import com.bwmanager.jaegwan.global.util.JwtUtil;
 import com.bwmanager.jaegwan.global.util.KakaoUtil;
 import com.bwmanager.jaegwan.member.entity.Member;
@@ -37,15 +39,23 @@ public class AuthServiceImpl implements AuthService {
             member = register(kakaoToken);
         }
 
-        String accessToken = jwtUtil.createAccessToken(member.getName(), member.getEmail(), member.getRole());
+        return createTokens(member);
+    }
 
-        return AuthResponse.builder()
-                .accessToken(accessToken)
-                .name(member.getName())
-                .role(member.getRole())
-                .email(member.getEmail())
-                .imageUrl(member.getImageUrl())
-                .build();
+    @Override
+    public AuthResponse reissue(String refreshToken) {
+        if (!jwtUtil.isTokenValid(refreshToken)) {
+            throw new AuthException(ErrorCode.REFRESH_TOKEN_NOT_VALID);
+        }
+
+        String email = jwtUtil.getClaims(refreshToken).get("email", String.class);
+        Member member = memberRepository.findByEmail(email);
+
+        if (member == null) {
+            throw new AuthException(ErrorCode.REFRESH_TOKEN_NOT_VALID);
+        }
+
+        return createTokens(member);
     }
 
     private Member register(KakaoTokenResponse kakaoToken) {
@@ -58,6 +68,20 @@ public class AuthServiceImpl implements AuthService {
 
         memberRepository.save(member);
         return member;
+    }
+
+    private AuthResponse createTokens(Member member) {
+        String accessToken = jwtUtil.createAccessToken(member.getName(), member.getEmail(), member.getRole());
+        String refreshToken = jwtUtil.createRefreshToken(member.getName(), member.getEmail());
+
+        return AuthResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .name(member.getName())
+                .role(member.getRole())
+                .email(member.getEmail())
+                .imageUrl(member.getImageUrl())
+                .build();
     }
 
 }

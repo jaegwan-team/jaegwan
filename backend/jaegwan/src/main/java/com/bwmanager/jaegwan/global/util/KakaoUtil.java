@@ -115,7 +115,7 @@ public class KakaoUtil {
             String[] parts = idToken.split("\\.");
 
             if (parts.length < 2) {
-                throw new AuthException(ErrorCode.ID_TOKEN_FORMAT_ERROR);
+                throw new AuthException(ErrorCode.KAKAO_ID_TOKEN_FORMAT_ERROR);
             }
 
             String payload = new String(Base64.getUrlDecoder().decode(parts[1]));
@@ -125,7 +125,7 @@ public class KakaoUtil {
 
             return new String[] { sub, email };
         } catch (Exception e) {
-            throw new AuthException(ErrorCode.ID_TOKEN_DECODE_FAILED);
+            throw new AuthException(ErrorCode.KAKAO_ID_TOKEN_DECODE_FAILED);
         }
     }
 

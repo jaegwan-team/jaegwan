@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,7 +31,19 @@ public class AuthController {
     public ResponseEntity<?> loginOrRegister(@RequestParam String code) {
         CommonResponse<Object> response = CommonResponse.builder()
                 .data(authService.loginOrRegister(code))
-                .message("테스트 중")
+                .message("로그인에 성공했습니다.")
+                .build();
+
+        // 로그인 정보를 응답한다.
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/reissue")
+    public ResponseEntity<?> reissue(@RequestParam String refreshToken) {
+        System.out.println(refreshToken);
+        CommonResponse<Object> response = CommonResponse.builder()
+                .data(authService.reissue(refreshToken))
+                .message("액세스 토큰 재발급에 성공했습니다.")
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
