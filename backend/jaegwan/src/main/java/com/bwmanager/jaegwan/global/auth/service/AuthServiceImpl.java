@@ -37,7 +37,10 @@ public class AuthServiceImpl implements AuthService {
             member = register(kakaoToken);
         }
 
+        String accessToken = jwtUtil.createAccessToken(member.getName(), member.getEmail(), member.getRole());
+
         return AuthResponse.builder()
+                .accessToken(accessToken)
                 .name(member.getName())
                 .role(member.getRole())
                 .email(member.getEmail())
