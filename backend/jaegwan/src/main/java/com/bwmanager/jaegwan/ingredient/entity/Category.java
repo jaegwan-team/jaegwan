@@ -15,6 +15,7 @@ public enum Category implements CommonType {
     Spices("향신료", "7"),
     Herbs("허브", "8"),
     Oils("오일", "9"),
+    DRINKS("음료", "10"),
     ;
 
     private final String desc;
