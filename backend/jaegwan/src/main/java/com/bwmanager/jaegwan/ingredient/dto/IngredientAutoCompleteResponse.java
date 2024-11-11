@@ -14,7 +14,7 @@ public class IngredientAutoCompleteResponse {
     @Schema(description = "재료 이름")
     private String ingredientName;
 
-    @Schema(description = "재료 이름")
+    @Schema(description = "재료 카테고리")
     private String category;
 
     @QueryProjection
