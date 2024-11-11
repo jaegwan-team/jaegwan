@@ -2,17 +2,17 @@ package com.bwmanager.jaegwan.receipt.repository;
 
 import com.bwmanager.jaegwan.receipt.dto.QReceiptResponse;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptResponse;
-import com.querydsl.core.types.dsl.Wildcard;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
-import static com.bwmanager.jaegwan.ingredient.entity.QIngredient.ingredient;
 import static com.bwmanager.jaegwan.receipt.entity.QReceipt.receipt;
 import static com.bwmanager.jaegwan.receipt.entity.QReceiptIngredient.receiptIngredient;
+import static com.bwmanager.jaegwan.restaurant.entity.QRestaurant.restaurant;
+import static com.querydsl.jpa.JPAExpressions.select;
 
 @RequiredArgsConstructor
 @Repository
@@ -26,26 +26,35 @@ public class ReceiptCustomRepositoryImpl implements ReceiptCustomRepository {
         return jpaQueryFactory
                 .select(new QReceiptResponse(
                         receipt.id,
-                        JPAExpressions
-                                .select(ingredient.name)
+                        select(receiptIngredient.ingredient.name)
                                 .from(receiptIngredient)
-                                .where(receiptIngredient.receipt.id.eq(receipt.id))
-                                .orderBy(receiptIngredient.amount.desc())
-                                .limit(1),
-                        JPAExpressions
-                                .select(receiptIngredient.count().castToNum(Integer.class).subtract(1))
+                                .where(receiptIngredient.id.eq(
+                                        select(receiptIngredient.id.max())
+                                                .from(receiptIngredient)
+                                                .where(receiptIngredient.receipt.id.eq(receipt.id)))),
+                        select(receiptIngredient.count().castToNum(Integer.class).subtract(1))
                                 .from(receiptIngredient)
                                 .where(receiptIngredient.receipt.id.eq(receipt.id)),
                         receipt.createdDate,
-                        JPAExpressions
-                                .select(Wildcard.count.eq(0L))
+                        select(receiptIngredient.count().eq(0L))
                                 .from(receiptIngredient)
                                 .where(receiptIngredient.receipt.id.eq(receipt.id),
                                         receiptIngredient.isConfirmed.eq(false))
                 ))
-                .from(receipt, receiptIngredient)
-                .where(receipt.restaurant.id.eq(restaurantId),
-                        receipt.id.eq(receiptIngredient.receipt.id))
+                .from(receipt)
+                .join(receipt.restaurant, restaurant)
+                .groupBy(receipt.id, receipt.createdDate)
                 .fetch();
+    }
+
+    @Override
+    public Optional<String> getImageUrlById(Long id) {
+        String imageUrl = jpaQueryFactory
+                .select(receipt.imageUrl)
+                .from(receipt)
+                .where(receipt.id.eq(id))
+                .fetchOne();
+
+        return Optional.ofNullable(imageUrl);
     }
 }

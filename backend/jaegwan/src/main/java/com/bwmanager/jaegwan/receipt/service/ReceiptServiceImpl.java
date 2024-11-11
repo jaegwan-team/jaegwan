@@ -2,8 +2,12 @@ package com.bwmanager.jaegwan.receipt.service;
 
 import com.bwmanager.jaegwan.global.converter.EnumValueConvertUtils;
 import com.bwmanager.jaegwan.global.error.ErrorCode;
+import com.bwmanager.jaegwan.global.error.exception.NotFoundException;
 import com.bwmanager.jaegwan.global.error.exception.RestaurantException;
+import com.bwmanager.jaegwan.global.util.OcrFeignClient;
 import com.bwmanager.jaegwan.global.util.S3Util;
+import com.bwmanager.jaegwan.global.util.dto.OcrRequest;
+import com.bwmanager.jaegwan.global.util.dto.OcrResponse;
 import com.bwmanager.jaegwan.ingredient.entity.Category;
 import com.bwmanager.jaegwan.ingredient.entity.Ingredient;
 import com.bwmanager.jaegwan.ingredient.entity.IngredientDetail;
@@ -11,6 +15,7 @@ import com.bwmanager.jaegwan.ingredient.entity.Unit;
 import com.bwmanager.jaegwan.ingredient.exception.IngredientServiceException;
 import com.bwmanager.jaegwan.ingredient.repository.IngredientDetailRepository;
 import com.bwmanager.jaegwan.ingredient.repository.IngredientRepository;
+import com.bwmanager.jaegwan.receipt.dto.ImageUrlRequest;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptDetailResponse;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptIngredientConfirmRequest;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptResponse;
@@ -38,6 +43,7 @@ import java.util.List;
 public class ReceiptServiceImpl implements ReceiptService {
 
     private final S3Util s3Util;
+    private final OcrFeignClient ocrFeignClient;
     private final ReceiptRepository receiptRepository;
     private final RestaurantRepository restaurantRepository;
     private final IngredientRepository ingredientRepository;
@@ -69,9 +75,28 @@ public class ReceiptServiceImpl implements ReceiptService {
     }
 
     @Override
+    public List<OcrResponse> imageOcr(ImageUrlRequest request) {
+        List<OcrResponse> ocrResponses = ocrFeignClient.imageOcr(OcrRequest.builder().image_url(request.getImageUrl()).build());
+
+        for (OcrResponse ocrResponse : ocrResponses) {
+            // 영수증-재료 저장
+            ReceiptIngredient saved = receiptIngredientRepository.save(ReceiptIngredient.builder()
+                    .amount(ocrResponse.getAmount())
+                    .isConfirmed(false)
+                    .receipt(receiptRepository.findByImageUrl(request.getImageUrl())
+                            .orElseThrow(() -> new NotFoundException(ErrorCode.RECEIPT_NOT_FOUND)))
+                    .build());
+            log.info("receipt-ingredient -> {}", saved.getId());
+        }
+
+        return ocrResponses;
+    }
+
+    @Override
     public List<ReceiptResponse> getReceiptsInfo(Long restaurantId) {
-        log.info("size={}", receiptRepository.getReceiptsInfoByRestaurantId(restaurantId).size());
-        return receiptRepository.getReceiptsInfoByRestaurantId(restaurantId);
+        List<ReceiptResponse> receiptResponses = receiptRepository.getReceiptsInfoByRestaurantId(restaurantId);
+        log.info("size={}", receiptResponses.size());
+        return receiptResponses;
     }
 
     @Override
@@ -122,5 +147,12 @@ public class ReceiptServiceImpl implements ReceiptService {
     @Override
     public void deleteReceiptIngredient(Long receiptIngredientId) {
         receiptIngredientRepository.deleteById(receiptIngredientId);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public String getReceiptImage(Long id) {
+        return receiptRepository.getImageUrlById(id)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.IMAGE_NOT_FOUND));
     }
 }

@@ -3,6 +3,7 @@ package com.bwmanager.jaegwan.receipt.controller;
 import com.bwmanager.jaegwan.global.dto.CommonResponse;
 import com.bwmanager.jaegwan.global.error.ErrorCode;
 import com.bwmanager.jaegwan.global.error.exception.FileException;
+import com.bwmanager.jaegwan.receipt.dto.ImageUrlRequest;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptIngredientConfirmRequest;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptRequest;
 import com.bwmanager.jaegwan.receipt.service.ReceiptService;
@@ -45,6 +46,26 @@ public class ReceiptController {
         } catch (IOException e) {
             throw new FileException(ErrorCode.IMAGE_UPLOAD_ERROR);
         }
+    }
+
+    @Operation(summary = "영수증 사진 분석", description = "id(restaurantId), imageUrl이 필요합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "영수증 사진 분석 성공했습니다.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class))),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터입니다.",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 내부 에러가 발생했습니다.",
+                    content = @Content)
+    })
+    @PostMapping("/image")
+    public ResponseEntity<?> imageOcr(@RequestBody ImageUrlRequest request) {
+        CommonResponse<Object> response = CommonResponse.builder()
+                .data(receiptService.imageOcr(request))
+                .message("영수증 사진 분석 성공했습니다.")
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "구매내역 목록 조회", description = "id(restaurantId)가 필요합니다.")
@@ -124,6 +145,17 @@ public class ReceiptController {
         receiptService.deleteReceiptIngredient(receiptIngredientId);
         CommonResponse<Object> response = CommonResponse.builder()
                 .message("구매 내역 재료 삭제에 성공했습니다.")
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "영수증 이미지 조회", description = "id(receiptId)가 필요합니다.")
+    @GetMapping("/image/{receiptId}")
+    public ResponseEntity<?> getReceiptImage(@PathVariable("receiptId") Long receiptId) {
+        CommonResponse<Object> response = CommonResponse.builder()
+                .data(receiptService.getReceiptImage(receiptId))
+                .message("영수증 이미지 조회 성공했습니다.")
                 .build();
 
         return ResponseEntity.ok(response);

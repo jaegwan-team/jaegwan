@@ -1,5 +1,7 @@
 package com.bwmanager.jaegwan.global.config;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
@@ -7,6 +9,8 @@ import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@OpenAPIDefinition(servers = {@Server(url = "https://k11a501.p.ssafy.io/api", description = "Default Server URL"),
+                                @Server(url = "http://localhost:8080/api", description = "Local Server URL")})
 @Configuration
 public class SwaggerConfig {
 
@@ -17,13 +21,13 @@ public class SwaggerConfig {
                 .description(
                         "<h2>자율 프로젝트</h2>" +
                                 "<h3>Swagger를 이용한 API 명세서</h3><br>" +
-                                "<img src=\"/images/Dr_cha_LOGO.png\" alt = '프로젝트 로고'  width=\"200\">" +
+                                "<img src=\"https://k11a501.p.ssafy.io/api/images/logo.png\" alt = '프로젝트 로고'  width=\"200\">" +
                                 "<h3>프로젝트 정보</h3>" +
                                 "재관둥이")
                 .version("v1.0.0")
                 .contact(new Contact()
                         .name("재관둥이")
-                        .url("http://localhost:8080")
+                        .url("https://k11a501.p.ssafy.io/")
                 );
 
         // JWT 보안 스키마 정의

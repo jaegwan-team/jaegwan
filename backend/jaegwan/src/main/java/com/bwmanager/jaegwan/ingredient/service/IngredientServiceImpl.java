@@ -1,5 +1,6 @@
 package com.bwmanager.jaegwan.ingredient.service;
 
+import com.bwmanager.jaegwan.ingredient.dto.IngredientAutoCompleteResponse;
 import com.bwmanager.jaegwan.ingredient.dto.IngredientDetailResponse;
 import com.bwmanager.jaegwan.ingredient.dto.IngredientResponse;
 import com.bwmanager.jaegwan.ingredient.entity.Ingredient;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,6 +29,7 @@ public class IngredientServiceImpl implements IngredientService {
         // STEP 2. 종류별 재료 잔여량 및 가장 짧은 유통기한일 조회
         return ingredients.stream()
                 .map(ingredient -> ingredientDetailRepository.getIngredientInfo(ingredient.getId()))
+                .filter(Objects::nonNull)
                 .toList();
     }
 
@@ -39,5 +42,10 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public void deleteIngredientDetail(Long ingredientDetailId) {
         ingredientDetailRepository.deleteById(ingredientDetailId);
+    }
+
+    @Override
+    public IngredientAutoCompleteResponse getAutoCompleteResult(Long restaurantId, String word) {
+        return ingredientRepository.getAutoCompleteResult(restaurantId, word);
     }
 }

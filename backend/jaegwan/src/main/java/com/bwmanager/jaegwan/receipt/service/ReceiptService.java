@@ -1,5 +1,7 @@
 package com.bwmanager.jaegwan.receipt.service;
 
+import com.bwmanager.jaegwan.global.util.dto.OcrResponse;
+import com.bwmanager.jaegwan.receipt.dto.ImageUrlRequest;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptDetailResponse;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptIngredientConfirmRequest;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptResponse;
@@ -11,13 +13,21 @@ import java.util.List;
 public interface ReceiptService {
 
     /**
-     * 영수증 사진을 올리고 저장한다.
+     * 영수증 사진들을 올리고 저장한다.
      *
      * @param files
      * @return
      * @throws IOException
      */
     List<String> saveReceipt(Long restaurantId, List<MultipartFile> files) throws IOException;
+
+    /**
+     * 영수증 사진을 분석하여 재료를 저장한다.
+     *
+     * @param request
+     * @return
+     */
+    List<OcrResponse> imageOcr(ImageUrlRequest request);
 
     /**
      * 영수증으로 등록된 구매 내역을 조회한다.
@@ -48,4 +58,12 @@ public interface ReceiptService {
      * @param receiptIngredientId 영수증-재료 ID
      */
     void deleteReceiptIngredient(Long receiptIngredientId);
+
+    /**
+     * S3 서버에 올라간 이미지를 조회한다.
+     *
+     * @param id
+     * @return
+     */
+    String getReceiptImage(Long id);
 }

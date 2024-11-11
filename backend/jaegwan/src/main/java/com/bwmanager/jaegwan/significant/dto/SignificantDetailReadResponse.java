@@ -1,6 +1,7 @@
 package com.bwmanager.jaegwan.significant.dto;
 
 import com.bwmanager.jaegwan.significant.entity.Significant;
+import com.bwmanager.jaegwan.significant.entity.SignificantIngredient;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Schema(description = "특이사항의 조회 응답 DTO")
-public class SignificantReadResponse {
+public class SignificantDetailReadResponse {
 
     @Schema(description = "특이사항 ID", example = "1")
     private Long significantId;
@@ -27,12 +28,21 @@ public class SignificantReadResponse {
     @Schema(description = "특이사항 생성 날짜", example = "2023-11-05")
     private LocalDate date;
 
-    public static SignificantReadResponse fromEntity(Significant significant) {
-        return SignificantReadResponse.builder()
+    @Schema(description = "특이사항 관련 재료 이름", example = "감자")
+    private String ingredientName;
+
+    @Schema(description = "관련 재료 양(개수)", example = "5")
+    private double amount;
+
+    public static SignificantDetailReadResponse of(Significant significant,
+                                                   SignificantIngredient significantIngredient) {
+        return SignificantDetailReadResponse.builder()
                 .significantId(significant.getId())
+                .detail(significant.getDetail())
                 .isConfirmed(significant.isConfirmed())
                 .date(significant.getDate())
-                .detail(significant.getDetail())
+                .amount(significantIngredient.getAmount())
+                .ingredientName(significantIngredient.getIngredient().getName())
                 .build();
     }
 }

@@ -3,6 +3,8 @@ package com.bwmanager.jaegwan.significant.service;
 import com.bwmanager.jaegwan.significant.dto.SignificantConfirmRequest;
 import com.bwmanager.jaegwan.significant.dto.SignificantCreateRequest;
 import com.bwmanager.jaegwan.significant.dto.SignificantCreateResponse;
+import com.bwmanager.jaegwan.significant.dto.SignificantDetailReadResponse;
+import com.bwmanager.jaegwan.significant.dto.SignificantReadRequest;
 import com.bwmanager.jaegwan.significant.dto.SignificantReadResponse;
 import java.util.List;
 
@@ -13,7 +15,8 @@ public interface SignificantService {
      *
      * @return List
      */
-    List<SignificantReadResponse> getSignificants();
+    List<SignificantReadResponse> getSignificants(
+            SignificantReadRequest significantReadRequest);
 
     /**
      * 특정 id에 맞는 특이사항 조회
@@ -21,7 +24,7 @@ public interface SignificantService {
      * @param significantId
      * @return SignificantReadResponse
      */
-    SignificantReadResponse getSignificant(Long significantId);
+    List<SignificantDetailReadResponse> getSignificant(Long significantId);
 
     /**
      * 저장된 특이사항 확인을 처리

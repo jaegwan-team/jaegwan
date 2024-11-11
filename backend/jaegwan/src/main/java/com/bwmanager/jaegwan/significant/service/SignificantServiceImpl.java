@@ -9,6 +9,8 @@ import com.bwmanager.jaegwan.restaurant.repository.RestaurantRepository;
 import com.bwmanager.jaegwan.significant.dto.SignificantConfirmRequest;
 import com.bwmanager.jaegwan.significant.dto.SignificantCreateRequest;
 import com.bwmanager.jaegwan.significant.dto.SignificantCreateResponse;
+import com.bwmanager.jaegwan.significant.dto.SignificantDetailReadResponse;
+import com.bwmanager.jaegwan.significant.dto.SignificantReadRequest;
 import com.bwmanager.jaegwan.significant.dto.SignificantReadResponse;
 import com.bwmanager.jaegwan.significant.entity.Significant;
 import com.bwmanager.jaegwan.significant.entity.SignificantIngredient;
@@ -33,15 +35,20 @@ public class SignificantServiceImpl implements SignificantService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<SignificantReadResponse> getSignificants() {
-        return significantRepository.findAll().stream().map(SignificantReadResponse::fromEntity).toList();
+    public List<SignificantReadResponse> getSignificants(
+            SignificantReadRequest significantReadRequest) {
+        return significantRepository.findAllByRestaurantId(significantReadRequest.getRestaurantId())
+                .stream().map(SignificantReadResponse::fromEntity).toList();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public SignificantReadResponse getSignificant(Long significantId) {
-        return SignificantReadResponse.fromEntity(
-                significantRepository.findById(significantId).orElseThrow(EntityNotFoundException::new));
+    public List<SignificantDetailReadResponse> getSignificant(Long significantId) {
+        Significant significant = significantRepository.findById(significantId)
+                .orElseThrow(EntityNotFoundException::new);
+        return significantIngredientRepository.findAllBySignificantId(significantId).stream()
+                .map(significantIngredient -> SignificantDetailReadResponse.of(significant, significantIngredient))
+                .toList();
     }
 
     @Override
