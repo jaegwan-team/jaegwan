@@ -1,8 +1,11 @@
-import { ModalProps } from "@/types/modalType";
 import styles from "../../../styles/modals.module.css";
 import { X } from "lucide-react";
 
-export default function SignificantModal({ onClose }: ModalProps) {
+export type ThisProps = {
+  onClose: () => void;
+};
+
+export default function SignificantModal({ onClose }: ThisProps) {
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContainer}>
