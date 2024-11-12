@@ -30,6 +30,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final MemberRepository memberRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public RestaurantResponse getRestaurant(Long id) {
         // 식당 ID에 해당하는 식당을 가져온다. 그러한 식당이 없다면 예외를 발생시킨다.
         Restaurant restaurant = restaurantRepository.findById(id)
@@ -40,6 +41,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<MemberResponse> getRestaurantMembers(Long id) {
         // 식당 ID에 해당하는 식당이 없다면 예외를 발생시킨다.
         if (!restaurantRepository.existsById(id)) {

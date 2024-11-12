@@ -1,9 +1,12 @@
 package com.bwmanager.jaegwan.restaurant.controller;
 
 import com.bwmanager.jaegwan.global.dto.CommonResponse;
+import com.bwmanager.jaegwan.member.dto.MemberResponse;
 import com.bwmanager.jaegwan.restaurant.dto.RestaurantRequest;
+import com.bwmanager.jaegwan.restaurant.dto.RestaurantResponse;
 import com.bwmanager.jaegwan.restaurant.service.RestaurantService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,7 +32,7 @@ public class RestaurantController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "식당 정보 조회에 성공했습니다.",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CommonResponse.class))),
+                            schema = @Schema(implementation = RestaurantResponse.class))),
             @ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터입니다.",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "식당이 존재하지 않습니다.",
@@ -51,7 +54,7 @@ public class RestaurantController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "식당에 속한 사용자 목록 조회에 성공했습니다.",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CommonResponse.class))),
+                            array = @ArraySchema(schema = @Schema(implementation = MemberResponse.class)))),
             @ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터입니다.",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "식당 또는 사용자가 존재하지 않습니다.",
@@ -73,7 +76,7 @@ public class RestaurantController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "식당 등록에 성공했습니다.",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CommonResponse.class))),
+                            schema = @Schema(implementation = RestaurantResponse.class))),
             @ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터입니다.",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 내부 에러가 발생했습니다.",
@@ -94,8 +97,7 @@ public class RestaurantController {
     @Operation(summary = "식당에 사용자 추가", description = "식당에 사용자를 추가합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "식당에 사용자를 추가했습니다.",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CommonResponse.class))),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터입니다.",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "식당 또는 사용자가 존재하지 않습니다.",
