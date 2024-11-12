@@ -15,6 +15,7 @@ const LoginLayout = () => {
       const response = await fetch(`${BACKEND_BASE_URL}/api/auth/kakao/login`, {
         method: "GET",
         headers: {
+          "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json",
         },
       });
