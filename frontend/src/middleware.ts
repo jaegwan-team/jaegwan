@@ -21,6 +21,46 @@ async function validateToken(token: string) {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // 루트 경로 처리
+  if (pathname === "/") {
+    const accessToken = request.cookies.get("authToken")?.value;
+    if (!accessToken) {
+      const loginUrl = new URL("/login", request.url);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    const isValidToken = await validateToken(accessToken);
+    if (isValidToken) {
+      const mainUrl = new URL("/main", request.url);
+      return NextResponse.redirect(mainUrl);
+    }
+
+    const refreshToken = request.cookies.get("refreshToken")?.value;
+    if (!refreshToken) {
+      const loginUrl = new URL("/login", request.url);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    try {
+      const response = await fetch(`${BACKEND_BASE_URL}/auth/reissue`, {
+        headers: {
+          Authorization: `${refreshToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        const loginUrl = new URL("/login", request.url);
+        return NextResponse.redirect(loginUrl);
+      }
+
+      const mainUrl = new URL("/main", request.url);
+      return NextResponse.redirect(mainUrl);
+    } catch (error) {
+      const loginUrl = new URL("/login", request.url);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
   // 공개 경로는 그대로 통과
   if (PUBLIC_PATHS.includes(pathname)) {
     return NextResponse.next();
