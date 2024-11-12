@@ -23,7 +23,7 @@ export async function middleware(request: NextRequest) {
 
   // 루트 경로 처리
   if (pathname === "/") {
-    const accessToken = request.cookies.get("authToken")?.value;
+    const accessToken = request.cookies.get("accessToken")?.value;
     if (!accessToken) {
       const loginUrl = new URL("/login", request.url);
       return NextResponse.redirect(loginUrl);
@@ -67,7 +67,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // accessToken 확인
-  const accessToken = request.cookies.get("authToken")?.value;
+  const accessToken = request.cookies.get("accessToken")?.value;
   if (!accessToken) {
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
