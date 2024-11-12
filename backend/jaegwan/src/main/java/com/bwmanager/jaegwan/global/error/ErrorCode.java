@@ -16,18 +16,17 @@ public enum ErrorCode {
     /**
      * auth
      */
-    KAKAO_AUTHENTICATION_FAILED(UNAUTHORIZED, "AUTH-000", "카카오 인증 과정에서 문제가 발생했습니다."),
-    KAKAO_ID_TOKEN_DECODE_FAILED(UNAUTHORIZED, "AUTH-002", "카카오 인증 과정에서 문제가 발생했습니다."),
+    TOKEN_EXPIRED(UNAUTHORIZED, "AUTH-000", "토큰이 만료되었습니다."),
+    TOKEN_NOT_VALID(UNAUTHORIZED, "AUTH-001", "유효하지 않은 토큰입니다."),
+    TOKEN_NOT_FOUND(UNAUTHORIZED, "AUTH-002", "토큰이 전달되지 않았습니다."),
     JWT_CREATE_INVALID_INPUT(UNAUTHORIZED, "AUTH-003", "토큰 발급 과정에서 문제가 발생했습니다."),
-    TOKEN_NOT_VALID(UNAUTHORIZED, "AUTH-005", "유효하지 않은 토큰입니다."),
-    TOKEN_NOT_FOUND(UNAUTHORIZED, "AUTH-006", "토큰이 전달되지 않았습니다."),
-    TOKEN_EXPIRED(UNAUTHORIZED, "AUTH-007", "토큰이 만료되었습니다."),
+    KAKAO_AUTHENTICATION_FAILED(UNAUTHORIZED, "AUTH-100", "카카오 인증 과정에서 문제가 발생했습니다."),
+    KAKAO_ID_TOKEN_DECODE_FAILED(UNAUTHORIZED, "AUTH-101", "카카오 인증 과정에서 문제가 발생했습니다."),
 
     /**
      * Member
      */
-    MEMBER_FORBIDDEN_ERROR(FORBIDDEN, "MEMBER-000", "사용자의 접근 권한이 없습니다."),
-    MEMBER_NOT_FOUND(NOT_FOUND, "MEMBER-001", "사용자가 존재하지 않습니다."),
+    MEMBER_NOT_FOUND(NOT_FOUND, "MEMBER-000", "사용자가 존재하지 않습니다."),
 
     /**
      * Image
@@ -38,8 +37,8 @@ public enum ErrorCode {
     /**
      * Restaurant
      */
-    RESTAURANT_FORBIDDEN_ERROR(FORBIDDEN, "RESTAURANT-000", "식당에 대한 접근 권한이 없습니다."),
-    RESTAURANT_NOT_FOUND(NOT_FOUND, "RESTAURANT-001", "식당이 존재하지 않습니다."),
+    RESTAURANT_NOT_FOUND(NOT_FOUND, "RESTAURANT-000", "식당이 존재하지 않습니다."),
+    RESTAURANT_UNAUTHORIZED(FORBIDDEN, "RESTAURANT-001", "식당에 대한 접근 권한이 없습니다."),
 
     /**
      * Receipt

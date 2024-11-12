@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,9 +42,10 @@ public class RestaurantController {
                     content = @Content)
     })
     @GetMapping("/{id}")
-    public ResponseEntity<?> getRestaurant(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getRestaurant(@AuthenticationPrincipal String currentMemberEmail,
+                                           @PathVariable("id") Long id) {
         CommonResponse<Object> response = CommonResponse.builder()
-                .data(restaurantService.getRestaurant(id))
+                .data(restaurantService.getRestaurant(currentMemberEmail, id))
                 .message("식당 정보 조회에 성공했습니다.")
                 .build();
 
@@ -63,9 +65,10 @@ public class RestaurantController {
                     content = @Content)
     })
     @GetMapping("/{id}/member")
-    public ResponseEntity<?> getRestaurantMembers(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getRestaurantMembers(@AuthenticationPrincipal String currentMemberEmail,
+                                                  @PathVariable("id") Long id) {
         CommonResponse<Object> response = CommonResponse.builder()
-                .data(restaurantService.getRestaurantMembers(id))
+                .data(restaurantService.getRestaurantMembers(currentMemberEmail, id))
                 .message("식당에 속한 사용자 목록 조회에 성공했습니다.")
                 .build();
 
@@ -83,11 +86,10 @@ public class RestaurantController {
                     content = @Content)
     })
     @PostMapping
-    public ResponseEntity<?> createRestaurant(@RequestBody RestaurantRequest request) {
-        // TODO: 식당을 등록한 사용자의 정보도 함께 저장해야 한다.
-
+    public ResponseEntity<?> createRestaurant(@AuthenticationPrincipal String currentMemberEmail,
+                                              @RequestBody RestaurantRequest request) {
         CommonResponse<Object> response = CommonResponse.builder()
-                .data(restaurantService.createRestaurant(request))
+                .data(restaurantService.createRestaurant(currentMemberEmail, request))
                 .message("식당 등록에 성공했습니다.")
                 .build();
 
@@ -106,9 +108,10 @@ public class RestaurantController {
                     content = @Content)
     })
     @PostMapping("/{id}/member/{memberId}")
-    public ResponseEntity<?> addRestaurantMember(@PathVariable("id") Long id,
-                                                 @PathVariable("memberId") Long memberId) {
-        restaurantService.addRestaurantMember(id, memberId);
+    public ResponseEntity<?> addRestaurantMember(@AuthenticationPrincipal String currentMemberEmail,
+                                                 @PathVariable("id") Long id,
+                                                 @PathVariable("memberId") Long newMemberId) {
+        restaurantService.addRestaurantMember(currentMemberEmail, id, newMemberId);
 
         CommonResponse<Object> response = CommonResponse.builder()
                 .message("식당에 사용자를 추가했습니다.")

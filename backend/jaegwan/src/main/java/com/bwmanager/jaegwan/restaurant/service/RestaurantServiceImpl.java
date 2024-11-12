@@ -31,8 +31,14 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     @Transactional(readOnly = true)
-    public RestaurantResponse getRestaurant(Long id) {
-        // 식당 ID에 해당하는 식당을 가져온다. 그러한 식당이 없다면 예외를 발생시킨다.
+    public RestaurantResponse getRestaurant(String currentMemberEmail, Long id) {
+        // 현재 사용자 정보를 가져온다.
+        Member currentMember = memberRepository.findByEmail(currentMemberEmail);
+
+        // 식당에 현재 사용자가 등록되어 있는지 검증한다.
+        checkRestaurantAuthorized(currentMember.getId(), id);
+
+        // 식당 정보를 가져온다.
         Restaurant restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new RestaurantException(ErrorCode.RESTAURANT_NOT_FOUND));
 
@@ -42,43 +48,69 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<MemberResponse> getRestaurantMembers(Long id) {
-        // 식당 ID에 해당하는 식당이 없다면 예외를 발생시킨다.
+    public List<MemberResponse> getRestaurantMembers(String currentMemberEmail, Long id) {
+        // 현재 사용자 정보를 가져온다.
+        Member currentMember = memberRepository.findByEmail(currentMemberEmail);
+
+        // 식당에 현재 사용자가 등록되어 있는지 검증한다.
+        checkRestaurantAuthorized(currentMember.getId(), id);
+
+        // 식당 ID에 해당하는 식당이 존재하는지 검증한다.
         if (!restaurantRepository.existsById(id)) {
             throw new RestaurantException(ErrorCode.RESTAURANT_NOT_FOUND);
         }
 
-        // 식당에 속한 사용자 목록을 가져와서 반환한다.
+        // 식당에 속한 사용자 목록을 반환한다.
         return restaurantMemberRepository.findMembersByRestaurantId(id)
                 .stream().map(MemberResponse::from)
                 .toList();
     }
 
     @Override
-    public RestaurantResponse createRestaurant(RestaurantRequest request) {
-        // TODO: 식당을 저장하고 식당에 사용자 등록 로직 추가
+    public RestaurantResponse createRestaurant(String currentMemberEmail, RestaurantRequest request) {
+        // 현재 사용자 정보를 가져온다.
+        Member currentMember = memberRepository.findByEmail(currentMemberEmail);
 
-        // 주어진 식당 정보를 통해 식당을 생성한다.
+        // 식당 정보를 통해 식당을 생성한다.
         Restaurant restaurant = Restaurant.of(request.getName(), request.getRegisterNumber());
         restaurantRepository.save(restaurant);
 
-        // 생성된 식당의 정보를 반환한다.
+        // 생성된 식당에 사용자를 추가한다.
+        restaurantMemberRepository.save(RestaurantMember.of(restaurant, currentMember));
+
+        // 생성한 식당의 정보를 반환한다.
         return RestaurantResponse.from(restaurant);
     }
 
     @Override
-    public void addRestaurantMember(Long id, Long memberId) {
-        // 식당 ID에 해당하는 식당을 가져온다. 그러한 식당이 없다면 예외를 발생시킨다.
+    public void addRestaurantMember(String currentMemberEmail, Long id, Long newMemberId) {
+        // 현재 사용자 정보를 가져온다.
+        Member currentMember = memberRepository.findByEmail(currentMemberEmail);
+
+        // 식당에 현재 사용자가 등록되어 있는지 검증한다.
+        checkRestaurantAuthorized(currentMember.getId(), id);
+
+        // 식당 정보를 가져온다.
         Restaurant restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new RestaurantException(ErrorCode.RESTAURANT_NOT_FOUND));
 
-        // 사용자 ID에 해당하는 사용자를 가져온다. 그러한 사용자가 없다면 예외를 발생시킨다.
-        Member member = memberRepository.findById(id)
+        // 추가할 사용자 정보를 가져온다.
+        Member newMember = memberRepository.findById(newMemberId)
                 .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 식당-사용자 관계를 생성한다.
-        RestaurantMember restaurantMember = RestaurantMember.of(restaurant, member);
-        restaurantMemberRepository.save(restaurantMember);
+        restaurantMemberRepository.save(RestaurantMember.of(restaurant, newMember));
+    }
+
+    /**
+     * 식당에 사용자가 등록되어 있는지 검증한다.
+     * @param memberId 사용자 ID
+     * @param restaurantId 식당 ID
+     */
+    private void checkRestaurantAuthorized(Long memberId, Long restaurantId) {
+        if (!restaurantMemberRepository.existsByMemberIdAndRestaurantId(memberId, restaurantId)) {
+            throw new RestaurantException(ErrorCode.RESTAURANT_UNAUTHORIZED);
+        }
     }
 
 }
