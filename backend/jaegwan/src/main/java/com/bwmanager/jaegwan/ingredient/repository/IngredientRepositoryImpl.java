@@ -18,7 +18,6 @@ public class IngredientRepositoryImpl implements IngredientCustomRepository {
 
     private final JPAQueryFactory queryFactory;
 
-
     @Override
     public List<IngredientAutoCompleteResponse> getAutoCompleteResult(Long restaurantId, String word) {
         NumberExpression<Integer> nameRank = new CaseBuilder()
@@ -34,7 +33,5 @@ public class IngredientRepositoryImpl implements IngredientCustomRepository {
                         ingredient.name.contains(word))
                 .orderBy(nameRank.asc())
                 .fetch();
-
-
     }
 }
