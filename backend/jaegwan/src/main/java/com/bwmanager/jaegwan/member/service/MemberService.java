@@ -9,6 +9,13 @@ public interface MemberService {
      * @param id 사용자 ID
      * @return 사용자 ID에 해당하는 사용자 정보
      */
-    public MemberResponse getMember(final Long id);
+    MemberResponse getMember(Long id);
+
+    /**
+     * 이메일을 통해 사용자 정보를 조회한다.
+     * @param email 사용자 이메일
+     * @return 사용자 이메일에 해당하는 사용자 정보
+     */
+    MemberResponse getMemberByEmail(String email);
 
 }
