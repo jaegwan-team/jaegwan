@@ -81,7 +81,7 @@ public class ReceiptController {
     @PostMapping("/detail")
     public ResponseEntity<?> getReceiptsInfo(@RequestBody ReceiptRequest request) {
         CommonResponse<Object> response = CommonResponse.builder()
-                .data(receiptService.getReceiptsInfo(request.getRestaurantId()))
+                .data(receiptService.getReceiptsInfo(request.getRestaurantId(), request.isAll()))
                 .message("구매 내역 조회에 성공했습니다.")
                 .build();
 
