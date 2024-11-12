@@ -37,7 +37,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @Operation(summary = "카카오 OAuth 인증", description = "카카오 OAuth를 통해 회원가입 또는 로그인을 진행합니다.")
+    @Operation(summary = "카카오 로그인 페이지 연결", description = "카카오 로그인 페이지로 연결합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "302", description = "카카오 OAuth 인증을 위해 카카오 로그인 페이지로 리다이렉트되었습니다.",
                     content = @Content)
@@ -91,8 +91,6 @@ public class AuthController {
     })
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(@RequestParam String refreshToken) {
-        // TODO: 헤더와 쿠키에 토큰을 저장한 후 리다이렉트하는 방식으로 변경할지 고민해야 한다. (프론트 상황 고려)
-
         // 액세스 토큰과 리프레시 토큰을 재발급한다.
         CommonResponse<Object> response = CommonResponse.builder()
                 .data(authService.reissue(refreshToken))
