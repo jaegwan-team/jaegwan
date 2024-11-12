@@ -38,5 +38,5 @@ public interface IngredientService {
      * @param word 검색 단어
      * @return 자동완성된 재료 이름들
      */
-    IngredientAutoCompleteResponse getAutoCompleteResult(Long restaurantId, String word);
+    List<IngredientAutoCompleteResponse> getAutoCompleteResult(Long restaurantId, String word);
 }
