@@ -5,6 +5,7 @@ import com.bwmanager.jaegwan.global.auth.service.AuthService;
 import com.bwmanager.jaegwan.global.dto.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.Cookie;
@@ -65,6 +66,7 @@ public class AuthController {
         // Authorization 헤더에 액세스 토큰을 저장한다.
 //        response.setHeader("Authorization", authResponse.getAccessToken());
 
+        // 쿠키에 액세스 토큰을 저장한다.
         Cookie cookie = new Cookie("accessToken", authResponse.getAccessToken());
         cookie.setHttpOnly(false);
         cookie.setMaxAge((int) (long) accessExpiration);
@@ -85,7 +87,8 @@ public class AuthController {
     @Operation(summary = "토큰 재발급", description = "기존 리프레시 토큰을 통해 액세스 토큰과 리프레시 토큰을 재발급받습니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "사용자 인증에 성공하여 토큰이 재발급되었습니다.",
-                    content = @Content),
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = AuthResponse.class))),
             @ApiResponse(responseCode = "401", description = "사용자 인증에 실패하여 토큰이 재발급되지 않았습니다.",
                     content = @Content)
     })

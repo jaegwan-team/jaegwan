@@ -1,6 +1,5 @@
 package com.bwmanager.jaegwan.global.auth.dto;
 
-import com.bwmanager.jaegwan.member.entity.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Schema(description = "토큰과 사용자 정보 DTO")
+@Schema(description = "토큰 DTO")
 public class AuthResponse {
 
     @Schema(description = "액세스 토큰", example = "aCcesSTokEn")
