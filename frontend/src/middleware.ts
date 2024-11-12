@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const PUBLIC_PATHS = ["/login"];
-const BACKEND_BASE_URL = process.env.NEXT_PUBLIC_ADDRESS;
+const BACKEND_BASE_URL = "https://k11a501.p.ssafy.io";
 
 async function validateToken(token: string) {
   try {
