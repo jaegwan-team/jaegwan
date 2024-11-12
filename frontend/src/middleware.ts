@@ -1,29 +1,68 @@
-// middleware.ts (프로젝트 루트에 위치)
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// 인증이 필요하지 않은 경로들
 const PUBLIC_PATHS = ["/login"];
+const BACKEND_BASE_URL = process.env.NEXT_PUBLIC_ADDRESS;
 
-// 미들웨어 함수
-export function middleware(request: NextRequest) {
+async function validateToken(token: string) {
+  try {
+    const response = await fetch(`${BACKEND_BASE_URL}/api/auth/kakao/login`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.ok;
+  } catch (error) {
+    return false;
+  }
+}
+
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // 공개 경로는 그대로 진행
+  // 공개 경로는 그대로 통과
   if (PUBLIC_PATHS.includes(pathname)) {
     return NextResponse.next();
   }
 
-  // 쿠키에서 인증 토큰 확인
-  const token = request.cookies.get("authToken")?.value;
-
-  // 인증되지 않은 경우 로그인 페이지로 리다이렉트
-  if (!token) {
+  // accessToken 확인
+  const accessToken = request.cookies.get("authToken")?.value;
+  if (!accessToken) {
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
   }
 
-  return NextResponse.next();
+  // accessToken 유효성 검증
+  const isValidToken = await validateToken(accessToken);
+  if (isValidToken) {
+    return NextResponse.next();
+  }
+
+  // accessToken이 유효하지 않은 경우, refreshToken으로 재발급 시도
+  const refreshToken = request.cookies.get("refreshToken")?.value;
+  if (!refreshToken) {
+    const loginUrl = new URL("/login", request.url);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  try {
+    const response = await fetch(`${BACKEND_BASE_URL}/auth/reissue`, {
+      headers: {
+        Authorization: `${refreshToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      const loginUrl = new URL("/login", request.url);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    return NextResponse.next();
+  } catch (error) {
+    const loginUrl = new URL("/login", request.url);
+    return NextResponse.redirect(loginUrl);
+  }
 }
 
 export const config = {
