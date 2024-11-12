@@ -33,9 +33,10 @@ public interface ReceiptService {
      * 영수증으로 등록된 구매 내역을 조회한다.
      *
      * @param restaurantId 식당 ID
+     * @param isAll true: 모든 구매 내역 조회, false: 확정되지 않은 구매 내역 조회
      * @return 구매 내역 정보
      */
-    List<ReceiptResponse> getReceiptsInfo(Long restaurantId);
+    List<ReceiptResponse> getReceiptsInfo(Long restaurantId, boolean isAll);
 
     /**
      * 확정된 구매 내역 상세를 조회한다.
