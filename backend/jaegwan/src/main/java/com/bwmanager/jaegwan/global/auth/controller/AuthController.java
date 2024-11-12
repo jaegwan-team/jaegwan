@@ -29,8 +29,11 @@ public class AuthController {
     @Value("${home-uri}")
     private String homeUri;
 
+    @Value("${jwt.access.expiration}")
+    private Long accessExpiration;
+
     @Value("${jwt.refresh.expiration}")
-    private long refreshExpiration;
+    private Long refreshExpiration;
 
     private final AuthService authService;
 
@@ -60,14 +63,20 @@ public class AuthController {
         AuthResponse authResponse = authService.loginOrRegister(code);
 
         // Authorization 헤더에 액세스 토큰을 저장한다.
-        response.setHeader("Authorization", authResponse.getAccessToken());
+//        response.setHeader("Authorization", authResponse.getAccessToken());
 
-        // 쿠키에 리프레시 토큰을 저장한다.
-        Cookie cookie = new Cookie("refreshToken", authResponse.getRefreshToken());
+        Cookie cookie = new Cookie("accessToken", authResponse.getAccessToken());
         cookie.setHttpOnly(false);
-        cookie.setMaxAge((int) refreshExpiration);
+        cookie.setMaxAge((int) (long) accessExpiration);
         cookie.setPath("/");
         response.addCookie(cookie);
+
+        // 쿠키에 리프레시 토큰을 저장한다.
+        Cookie cookie2 = new Cookie("refreshToken", authResponse.getRefreshToken());
+        cookie2.setHttpOnly(false);
+        cookie2.setMaxAge((int) (long) refreshExpiration);
+        cookie2.setPath("/");
+        response.addCookie(cookie2);
 
         // 메인 페이지로 리다이렉트한다.
         response.sendRedirect(homeUri);
