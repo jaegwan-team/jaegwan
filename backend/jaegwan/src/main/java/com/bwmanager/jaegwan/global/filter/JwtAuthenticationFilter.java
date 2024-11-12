@@ -48,9 +48,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String json = "";
 
             if (e instanceof AuthException authException) {
-                json = gson.toJson(Map.of("error", e.getMessage(), "code", authException.getErrorCode()));
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                json = gson.toJson(Map.of("code", authException.getErrorCode(), "message", e.getMessage()));
             } else {
-                json = gson.toJson(Map.of("error", e.getMessage()));
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                json = gson.toJson(Map.of("message", e.getMessage()));
             }
 
             response.setContentType("application/json; charset=UTF-8");
