@@ -41,10 +41,25 @@ public class SignificantController {
     @PostMapping("/list")
     public ResponseEntity<?> getSignificantsByRestaurantId(@RequestBody
                                                            SignificantReadRequest significantReadRequest) {
-        System.out.println(significantReadRequest.getRestaurantId());
         CommonResponse<Object> response = CommonResponse.builder()
                 .data(significantService.getSignificants(significantReadRequest))
                 .message("정상적으로 식당별 특이사항 리스트를 응답")
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "확인되지 않은 특이사항 리스트 조회", description = "식당별 모든 확인되지 않은 특이사항을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "정상적으로 확인되지 않은 특이사항 리스트를 응답",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class)))
+    })
+    @PostMapping("/list/uncheck")
+    public ResponseEntity<?> getUncheckedSignificantsByRestaurantId(@RequestBody
+                                                                    SignificantReadRequest significantReadRequest) {
+        CommonResponse<Object> response = CommonResponse.builder()
+                .data(significantService.getUncheckedSignificants(significantReadRequest))
+                .message("정상적으로 식당별 확인되지 않은 특이사항 리스트를 응답")
                 .build();
         return ResponseEntity.ok(response);
     }

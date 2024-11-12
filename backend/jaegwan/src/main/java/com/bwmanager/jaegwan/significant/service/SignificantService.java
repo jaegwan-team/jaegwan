@@ -47,4 +47,6 @@ public interface SignificantService {
      * @param significantConfirmRequest 어떤 특이사항을 제거할지에 대한 특이사항 id 값
      */
     void deleteBySignificant(SignificantConfirmRequest significantConfirmRequest);
+
+    List<SignificantReadResponse> getUncheckedSignificants(SignificantReadRequest significantReadRequest);
 }

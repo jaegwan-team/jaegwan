@@ -42,6 +42,13 @@ public class SignificantServiceImpl implements SignificantService {
     }
 
     @Override
+    public List<SignificantReadResponse> getUncheckedSignificants(SignificantReadRequest significantReadRequest) {
+        return significantRepository.findAllByRestaurantIdAndIsConfirmed(significantReadRequest.getRestaurantId(),
+                        false)
+                .stream().map(SignificantReadResponse::fromEntity).toList();
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<SignificantDetailReadResponse> getSignificant(Long significantId) {
         Significant significant = significantRepository.findById(significantId)
