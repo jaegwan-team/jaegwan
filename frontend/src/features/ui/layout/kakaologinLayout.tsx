@@ -10,24 +10,8 @@ const BACKEND_BASE_URL = "https://k11a501.p.ssafy.io";
 const LoginLayout = () => {
   const router = useRouter();
 
-  const doLogin = async () => {
-    try {
-      const response = await fetch(`${BACKEND_BASE_URL}/api/auth/kakao/login`, {
-        method: "GET",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
-      });
-      if (!response.ok) {
-        console.log("여기");
-        router.push("/login");
-      }
-      router.push("/main");
-    } catch (error) {
-      console.log(error);
-      router.push("/login");
-    }
+  const doLogin = () => {
+    window.location.href = `${BACKEND_BASE_URL}/api/auth/kakao/login`;
   };
 
   return (
