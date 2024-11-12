@@ -8,6 +8,7 @@ import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -23,8 +24,8 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
     private final JwtUtil jwtUtil;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
-        super(null);
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
+        super(authenticationManager);
         this.jwtUtil = jwtUtil;
     }
 
@@ -60,7 +61,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         } catch (Exception e) {
             // 예외가 발생한 경우 예외에 대한 메시지를 JSON 형식으로 응답한다.
             Gson gson = new Gson();
-            String json = "";
+            String json;
 
             if (e instanceof AuthException authException) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
