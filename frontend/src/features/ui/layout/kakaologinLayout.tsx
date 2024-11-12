@@ -3,7 +3,7 @@ import Image from "next/image";
 import "../../../../styles/globals.css";
 import kaka from "../../../../public/kakao_login_large_narrow.png";
 import lolo from "../../../../public/logo.png";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const BACKEND_BASE_URL = process.env.NEXT_PUBLIC_ADDRESS;
 
