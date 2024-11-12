@@ -5,5 +5,8 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SignificantRepository extends JpaRepository<Significant, Long> {
+
     List<Significant> findAllByRestaurantId(Long restaurantId);
+
+    List<Significant> findAllByRestaurantIdAndIsConfirmed(Long restaurantId, boolean confirmed);
 }
