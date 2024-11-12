@@ -5,7 +5,7 @@ import kaka from "../../../../public/kakao_login_large_narrow.png";
 import lolo from "../../../../public/logo.png";
 import { useRouter } from "next/navigation";
 
-const BACKEND_BASE_URL = process.env.NEXT_PUBLIC_ADDRESS;
+const BACKEND_BASE_URL = "https://k11a501.p.ssafy.io";
 
 const LoginLayout = () => {
   const router = useRouter();
@@ -19,10 +19,12 @@ const LoginLayout = () => {
         },
       });
       if (!response.ok) {
+        console.log("여기");
         router.push("/login");
       }
       router.push("/main");
     } catch (error) {
+      console.log(error);
       router.push("/login");
     }
   };
