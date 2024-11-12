@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "../../styles/globals.css";
-import { AppProvider } from "./provider";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "재관둥이",
@@ -15,7 +15,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-pretendard">
-        <AppProvider>{children}</AppProvider></body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
