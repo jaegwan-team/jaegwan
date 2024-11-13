@@ -3,6 +3,7 @@ package com.bwmanager.jaegwan.receipt.repository;
 import com.bwmanager.jaegwan.receipt.dto.QReceiptResponse;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptResponse;
 import com.bwmanager.jaegwan.receipt.entity.QReceiptIngredient;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -20,14 +21,14 @@ import static com.querydsl.jpa.JPAExpressions.select;
 @Repository
 public class ReceiptCustomRepositoryImpl implements ReceiptCustomRepository {
 
-    private final JPAQueryFactory jpaQueryFactory;
+    private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ReceiptResponse> getReceiptsInfoByRestaurantId(Long restaurantId) {
+    public List<ReceiptResponse> getReceiptsInfoByRestaurantId(Long restaurantId, boolean isAll) {
 
         QReceiptIngredient receiptIngredientSub = new QReceiptIngredient("receiptIngredientSub");
 
-        return jpaQueryFactory
+        return queryFactory
                 .select(new QReceiptResponse(
                         receipt.id,
                         new CaseBuilder()
@@ -55,13 +56,23 @@ public class ReceiptCustomRepositoryImpl implements ReceiptCustomRepository {
                 .from(receiptIngredient)
                 .rightJoin(receiptIngredient.receipt, receipt)
                 .join(receipt.restaurant, restaurant)
+                .where(isConfirmed(isAll))
                 .groupBy(receipt.id, receipt.createdDate)
                 .fetch();
     }
 
+    //전체를 불러올지, 확정되지 않은 구매내역만 불러올지를 결정한다.
+    private BooleanExpression isConfirmed(Boolean isAll) {
+        return isAll? null: select(receiptIngredient.count())
+                .from(receiptIngredient)
+                .where(receiptIngredient.receipt.id.eq(receipt.id),
+                        receiptIngredient.isConfirmed.eq(true))
+                .eq(0L);
+    }
+
     @Override
     public Optional<String> getImageUrlById(Long id) {
-        String imageUrl = jpaQueryFactory
+        String imageUrl = queryFactory
                 .select(receipt.imageUrl)
                 .from(receipt)
                 .where(receipt.id.eq(id))
