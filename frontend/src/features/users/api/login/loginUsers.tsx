@@ -33,7 +33,7 @@ export default function UserProvider({ children }: { children: ReactNode }) {
       const response = await getUserInfo();
       console.log("Raw response:", response); // 전체 응답
       console.log("User data:", response.data); // 실제 데이터
-      setUser(response.data);
+      setUser(response.data.data);
     } catch (error) {
       console.error("Failed to fetch user data:", error);
       // 에러 상세 정보 출력
@@ -56,9 +56,7 @@ export default function UserProvider({ children }: { children: ReactNode }) {
     isLoading,
   };
 
-  return (
-    <UserContext.Provider value={value}>{children}</UserContext.Provider>
-  );
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }
 
 export const useUser = () => {

@@ -19,6 +19,7 @@ import { Bar } from "react-chartjs-2";
 
 import { useEffect } from "react";
 import { getIngredientList, getReceiptList } from "@/services/api";
+import { useUser } from "@/features/users/api/login/loginUsers";
 
 ChartJS.register(
   CategoryScale,
@@ -35,6 +36,8 @@ export default function MainPage() {
   const month = today.getMonth() + 1;
   const date = today.getDate();
 
+  const { user } = useUser();
+  
   // 요일 계산
   const days = ["일", "월", "화", "수", "목", "금", "토"];
   const dayName = days[today.getDay()];
@@ -106,7 +109,7 @@ export default function MainPage() {
   const fetchIngredientList = async () => {
 
     const data: Record<string, number> = {
-      "restaurantId": 1,
+      "restaurantId": user!.restaurants[0].id,
     }
 
     const response = await getIngredientList(data);
@@ -117,7 +120,7 @@ export default function MainPage() {
     const fetchgetReceiptList = async () => {
 
       const data: Record<string, number | boolean> = {
-        "restaurantId": 1,
+        "restaurantId": user!.restaurants[0].id,
         "all": false,
       }
 
