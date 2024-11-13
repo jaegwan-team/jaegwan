@@ -113,7 +113,7 @@ export default function MainPage() {
 
   const getIngredientList = async () => {
 
-    const token = getCookie('token');
+    const token = getCookie('accessToken');
     console.log(token)
 
     const response = await fetch(`${BACKEND_BASE_URL}/api/receipt/detail`, {
