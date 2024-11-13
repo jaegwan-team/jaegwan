@@ -29,6 +29,26 @@ public class RestaurantController {
 
     private final RestaurantService restaurantService;
 
+    @Operation(summary = "나의 식당 목록 조회", description = "내가 속해있는 식당의 목록을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "나의 식당 목록 조회에 성공했습니다.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RestaurantResponse.class))),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 요청 데이터입니다.",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 내부 에러가 발생했습니다.",
+                    content = @Content)
+    })
+    @GetMapping
+    public ResponseEntity<?> getMyRestaurants(@AuthenticationPrincipal String currentMemberEmail) {
+        CommonResponse<Object> response = CommonResponse.builder()
+                .data(restaurantService.getMyRestaurants(currentMemberEmail))
+                .message("나의 식당 목록 조회에 성공했습니다.")
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @Operation(summary = "식당 정보 조회", description = "식당 ID에 해당하는 식당의 정보를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "식당 정보 조회에 성공했습니다.",
