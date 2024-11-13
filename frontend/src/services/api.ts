@@ -1,4 +1,5 @@
 import { axiosClient } from "./axios";
+import { ReceiptListParams, SignificantListParams } from "@/types/mainType";
 
 // user
 export const getUserInfo = async () => {
@@ -54,12 +55,6 @@ export const registRestaurantMember = (id: number, memberId: number) => {
 };
 
 // receipt
-
-type ReceiptListParams = {
-  restaurantId: number | undefined;
-  isAll: boolean;
-};
-
 export const getReceiptList = (restaurant: ReceiptListParams) => {
   return axiosClient.post(`/api/receipt/detail`, restaurant);
 };
@@ -77,3 +72,8 @@ export const deleteReceiptDetail = (receiptIngredientId: number) => {
 };
 
 // significant
+export const getSignificantListUnchecked = (
+  restaurant: SignificantListParams
+) => {
+  return axiosClient.post(`/significant/list/uncheck`, restaurant);
+};

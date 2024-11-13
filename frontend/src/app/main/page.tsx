@@ -19,7 +19,9 @@ import { Bar } from "react-chartjs-2";
 import { useUser } from "@/features/users/api/login/loginUsers";
 import { ReceiptProps } from "@/types/receiptType";
 import { useCallback, useEffect, useState } from "react";
-import { getReceiptList } from "@/services/api";
+import { getReceiptList, getSignificantListUnchecked } from "@/services/api";
+import { ReceiptListParams, SignificantListParams } from "@/types/mainType";
+import { SignificantProps } from "@/types/significantType";
 
 ChartJS.register(
   CategoryScale,
@@ -108,26 +110,34 @@ export default function MainPage() {
     ReceiptProps[] | undefined
   >();
 
-  const fetchReceipt = useCallback(async () => {
-    if (!user?.restaurants?.[0]?.id) return;
+  const [uncheckedSignificants, setUncheckedSignificants] = useState<
+    SignificantProps[] | undefined
+  >();
 
-    type ReceiptListParams = {
-      restaurantId: number | undefined;
-      isAll: boolean;
-    };
+  const fetchData = useCallback(async () => {
+    if (!user?.restaurants?.[0]?.id) return;
 
     const params: ReceiptListParams = {
       restaurantId: user.restaurants[0].id,
       isAll: false,
     };
+
+    const sparams: SignificantListParams = {
+      restaurantId: user.restaurants[0].id,
+    };
+
     const response = await getReceiptList(params);
     console.log(response);
     setUncheckedReceipts(response.data.data);
+
+    const sresponse = await getSignificantListUnchecked(sparams);
+    console.log(sresponse);
+    setUncheckedSignificants(sresponse.data.data);
   }, [user?.restaurants]);
 
   useEffect(() => {
-    fetchReceipt();
-  }, [fetchReceipt]);
+    fetchData();
+  }, [fetchData]);
 
   return (
     <div className={styles.content}>
@@ -201,7 +211,10 @@ export default function MainPage() {
             {" "}
             <div className={styles.listtitle}>
               <div>
-                특이 사항 <span className={styles.newlist}>(신규 1건)</span>
+                특이 사항{" "}
+                <span className={styles.newlist}>
+                  (신규 {uncheckedSignificants?.length}건)
+                </span>
               </div>
               <div>
                 <Image src={ArrowSVG} alt="checked" width={20} height={20} />
@@ -213,30 +226,33 @@ export default function MainPage() {
                 <div className={styles.tableheaditem}>상세</div>
                 <div className={styles.tableheadcheck}>확인 여부</div>
               </div>
-              <div className={styles.tabledetail}>
-                <div className={styles.tableheaddate}>2024/10/29 13:25</div>
-                <div className={styles.tableheaditem}>까르보나라 조리 실수</div>
-                <div className={styles.tableheadcheck}>
-                  <Image
-                    src={UncheckedSVG}
-                    alt="checked"
-                    width={15}
-                    height={15}
-                  />
-                </div>
-              </div>
-              <div className={styles.tabledetail}>
-                <div className={styles.tableheaddate}>2024/10/29 13:25</div>
-                <div className={styles.tableheaditem}>밀가루 터져서 폐기</div>
-                <div className={styles.tableheadcheck}>
-                  <Image
-                    src={CheckedSVG}
-                    alt="checked"
-                    width={15}
-                    height={15}
-                  />
-                </div>
-              </div>
+              {(uncheckedSignificants || [])
+                .slice(0, 3)
+                .map((significant: SignificantProps) => {
+                  return (
+                    <div
+                      className={styles.tabledetail}
+                      key={significant.significantId}
+                    >
+                      <div className={styles.tableheaddate}>
+                        {significant.date}
+                      </div>
+                      <div className={styles.tableheaditem}>
+                        {significant.detail}
+                      </div>
+                      <div className={styles.tableheadcheck}>
+                        <Image
+                          src={
+                            significant.confirmed ? CheckedSVG : UncheckedSVG
+                          }
+                          alt={significant.confirmed ? "checked" : "unchecked"}
+                          width={15}
+                          height={15}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
             </div>
           </div>
         </div>

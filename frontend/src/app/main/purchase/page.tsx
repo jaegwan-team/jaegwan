@@ -9,6 +9,7 @@ import ReceiptModal from "../../../features/receipt/receiptmodal";
 import { getReceiptList } from "@/services/api";
 import { useUser } from "@/features/users/api/login/loginUsers";
 import { ReceiptProps } from "@/types/receiptType";
+import { ReceiptListParams } from "@/types/mainType";
 
 export default function PurchasePage() {
   const { user } = useUser();
@@ -17,11 +18,6 @@ export default function PurchasePage() {
   >();
   const fetchReceipt = useCallback(async () => {
     if (!user?.restaurants?.[0]?.id) return;
-
-    type ReceiptListParams = {
-      restaurantId: number | undefined;
-      isAll: boolean;
-    };
 
     const params: ReceiptListParams = {
       restaurantId: user.restaurants[0].id,
