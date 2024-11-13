@@ -60,26 +60,15 @@ public class AuthController {
     })
     @GetMapping("/kakao/callback")
     public void loginOrRegister(@RequestParam String code, HttpServletResponse response) throws IOException {
+        // 카카오 인증 코드를 통해 사용자 정보를 확인 후 토큰을 발급한다.
+        // 등록되지 않은 사용자라면 회원가입 진행 후 토큰을 발급한다.
         AuthResponse authResponse = authService.loginOrRegister(code);
 
         // Authorization 헤더에 액세스 토큰을 저장한다.
 //        response.setHeader("Authorization", authResponse.getAccessToken());
 
-        // 액세스 토큰 쿠키를 설정한다.
-        Cookie accessTokenCookie = new Cookie("accessToken", authResponse.getAccessToken());
-        accessTokenCookie.setHttpOnly(false);
-        accessTokenCookie.setMaxAge(accessExpiration.intValue());
-        accessTokenCookie.setPath("/");
-
-        // 리프레시 토큰 쿠키를 설정한다.
-        Cookie refreshTokenCookie = new Cookie("refreshToken", authResponse.getRefreshToken());
-        refreshTokenCookie.setHttpOnly(false);
-        refreshTokenCookie.setMaxAge(refreshExpiration.intValue());
-        refreshTokenCookie.setPath("/");
-
-        // 응답에 쿠키를 추가한다.
-        response.addCookie(accessTokenCookie);
-        response.addCookie(refreshTokenCookie);
+        // 쿠키에 액세스 토큰과 리프레시 토큰을 추가한다.
+        addTokensToCookie(response, authResponse);
 
         // 메인 페이지로 리다이렉트한다.
         response.sendRedirect(homeUri);
@@ -94,8 +83,25 @@ public class AuthController {
     })
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(@RequestParam String refreshToken, HttpServletResponse response) {
+        // 액세스 토큰과 리프레시 토큰을 재발급한다.
         AuthResponse authResponse = authService.reissue(refreshToken);
 
+        // 쿠키에 액세스 토큰과 리프레시 토큰을 추가한다.
+        addTokensToCookie(response, authResponse);
+
+        CommonResponse<Object> commonResponse = CommonResponse.builder()
+                .message("액세스 토큰 재발급에 성공했습니다.")
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
+    }
+
+    /**
+     * 쿠키에 액세스 토큰과 리프레시 토큰을 추가한다.
+     * @param response 클라이언트에 전송할 응답
+     * @param authResponse 액세스 토큰과 리프레시 토큰 DTO
+     */
+    private void addTokensToCookie(HttpServletResponse response, AuthResponse authResponse) {
         // 액세스 토큰 쿠키를 설정한다.
         Cookie accessTokenCookie = new Cookie("accessToken", authResponse.getAccessToken());
         accessTokenCookie.setHttpOnly(false);
@@ -111,13 +117,6 @@ public class AuthController {
         // 응답에 쿠키를 추가한다.
         response.addCookie(accessTokenCookie);
         response.addCookie(refreshTokenCookie);
-
-        // 액세스 토큰과 리프레시 토큰을 재발급한다.
-        CommonResponse<Object> commonResponse = CommonResponse.builder()
-                .message("액세스 토큰 재발급에 성공했습니다.")
-                .build();
-
-        return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
     }
 
 }
