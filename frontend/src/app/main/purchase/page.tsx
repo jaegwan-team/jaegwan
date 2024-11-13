@@ -1,17 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styles from "../../../../styles/lists.module.css";
 import Image from "next/image";
 import CheckedSVG from "../../../../public/Check circle.svg";
 import UncheckedSVG from "../../../../public/check_indeterminate_small.svg";
 import ReceiptModal from "../../../features/receipt/receiptmodal";
-import { useReceiptList } from "@/features/receipt/api/get-receipt-list";
+import { getReceiptList } from "@/services/api";
+import { useUser } from "@/features/users/api/login/loginUsers";
+import { ReceiptProps } from "@/types/receiptType";
 
 export default function PurchasePage() {
-  const { data: purchaseData } = useReceiptList({
-    restaurantId: 1,
-  });
+  const { user } = useUser();
+  const [purchaseData, setPurchasedata] = useState<
+    ReceiptProps[] | undefined
+  >();
+  const fetchReceipt = useCallback(async () => {
+    if (!user?.restaurants?.[0]?.id) return;
+
+    type ReceiptListParams = {
+      restaurantId: number | undefined;
+      all: boolean;
+    };
+
+    const params: ReceiptListParams = {
+      restaurantId: user.restaurants[0].id,
+      all: false,
+    };
+    const response = await getReceiptList(params);
+    setPurchasedata(response.data);
+  }, [user?.restaurants]);
+
+  useEffect(() => {
+    fetchReceipt();
+  }, [fetchReceipt]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 

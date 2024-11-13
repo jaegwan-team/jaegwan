@@ -10,7 +10,7 @@ import {
 } from "react";
 import { getUserInfo } from "../../../../services/api";
 import type { UserProps } from "@/types/user";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 type UserContextType = {
   user: UserProps | null;

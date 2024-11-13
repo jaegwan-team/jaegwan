@@ -16,9 +16,7 @@ export default function MainTemplate({
       <div className={styles.layout}>
         <TabNavigation />
         {children}
-      </div>  
+      </div>
     </UserProvider>
-      
-
   );
 }

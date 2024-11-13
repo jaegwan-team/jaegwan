@@ -1,4 +1,6 @@
 import { axiosClient } from "./axios";
+import { AxiosResponse } from "axios";
+import { ReceiptProps } from "@/types/receiptType";
 
 // user
 export const getUserInfo = async () => {
@@ -54,9 +56,15 @@ export const registRestaurantMember = (id: number, memberId: number) => {
 };
 
 // receipt
+
+type ReceiptListParams = {
+  restaurantId: number | undefined;
+  all: boolean;
+};
+
 export const getReceiptList = (
-  restaurant: Record<string, number | boolean>
-) => {
+  restaurant: ReceiptListParams
+): Promise<AxiosResponse<ReceiptProps[]>> => {
   return axiosClient.post(`/api/receipt/detail`, restaurant);
 };
 
