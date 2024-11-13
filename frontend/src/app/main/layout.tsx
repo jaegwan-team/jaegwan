@@ -3,6 +3,7 @@ import "../../../styles/globals.css";
 import Header from "@/features/ui/header";
 import styles from "../../../styles/main.module.css";
 import TabNavigation from "../../features/ui/TabNavigation";
+import { Providers } from "../providers";
 
 export const metadata: Metadata = {
   title: "재관둥이",
@@ -17,11 +18,13 @@ export default function MainLayout({
   return (
     <html lang="en">
       <body className="font-pretendard">
-        <Header />
-        <div className={styles.layout}>
-          <TabNavigation />
-          {children}
-        </div>
+        <Providers>
+          <Header />
+          <div className={styles.layout}>
+            <TabNavigation />
+            {children}
+          </div>
+        </Providers>
       </body>
     </html>
   );
