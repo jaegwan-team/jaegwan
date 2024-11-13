@@ -63,4 +63,12 @@ public interface RestaurantService {
      */
     void addRestaurantMember(String currentMemberEmail, Long id, Long newMemberId);
 
+    /**
+     * 식당에서 사용자를 제외한다.
+     * @param currentMemberEmail 현재 사용자 이메일
+     * @param id 식당 ID
+     * @param memberDeleteId 제외할 사용자 ID
+     */
+    void removeRestaurantMember(String currentMemberEmail, Long id, Long memberDeleteId);
+
 }

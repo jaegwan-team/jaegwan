@@ -39,6 +39,8 @@ public enum ErrorCode {
      */
     RESTAURANT_NOT_FOUND(NOT_FOUND, "RESTAURANT-000", "식당이 존재하지 않습니다."),
     RESTAURANT_UNAUTHORIZED(FORBIDDEN, "RESTAURANT-001", "식당에 대한 접근 권한이 없습니다."),
+    RESTAURANT_MEMBER_NOT_FOUND(NOT_FOUND, "RESTAURANT-002", "식당에 등록되지 않은 사용자입니다."),
+    RESTAURANT_MEMBER_DUPLICATED(BAD_REQUEST, "RESTAURANT-003", "이미 등록된 사용자입니다."),
 
     /**
      * Receipt

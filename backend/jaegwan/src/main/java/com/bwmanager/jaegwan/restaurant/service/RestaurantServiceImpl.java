@@ -154,6 +154,32 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurantMemberRepository.save(RestaurantMember.of(restaurant, newMember));
     }
 
+    @Override
+    public void removeRestaurantMember(String currentMemberEmail, Long id, Long memberDeleteId) {
+        // 현재 사용자 정보를 가져온다.
+        Member currentMember = memberRepository.findByEmail(currentMemberEmail)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+
+        // 식당에 현재 사용자가 등록되어 있는지 검증한다.
+        checkRestaurantAuthorized(currentMember.getId(), id);
+
+        // 식당 정보를 가져온다.
+        Restaurant restaurant = restaurantRepository.findById(id)
+                .orElseThrow(() -> new RestaurantException(ErrorCode.RESTAURANT_NOT_FOUND));
+
+        // 제외할 사용자 정보를 가져온다.
+        Member memberDelete = memberRepository.findById(memberDeleteId)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+
+        // 제거할 식당-사용자 관계를 가져온다.
+        RestaurantMember restaurantMemberDelete = restaurantMemberRepository
+                .findByMemberAndRestaurant(memberDelete,restaurant)
+                .orElseThrow(() -> new RestaurantException(ErrorCode.RESTAURANT_MEMBER_NOT_FOUND));
+
+        // 식당 사용자 관계를 제거한다.
+        restaurantMemberRepository.delete(restaurantMemberDelete);
+    }
+
     /**
      * 식당에 사용자가 등록되어 있는지 검증한다.
      * @param memberId 사용자 ID

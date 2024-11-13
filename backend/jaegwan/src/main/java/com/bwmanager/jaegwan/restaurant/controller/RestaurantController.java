@@ -215,8 +215,7 @@ public class RestaurantController {
     public ResponseEntity<?> removeRestaurantMember(@AuthenticationPrincipal String currentMemberEmail,
                                                     @PathVariable("id") Long id,
                                                     @PathVariable("memberId") Long memberDeleteId) {
-        // TODO: restaurantService.removeRestaurantMember 구현
-//        restaurantService.removeRestaurantMember(currentMemberEmail, id, memberDeleteId);
+        restaurantService.removeRestaurantMember(currentMemberEmail, id, memberDeleteId);
 
         CommonResponse<Object> response = CommonResponse.builder()
                 .message("식당에서 사용자를 제외했습니다.")
