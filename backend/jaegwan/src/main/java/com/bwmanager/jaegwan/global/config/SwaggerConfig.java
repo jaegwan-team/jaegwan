@@ -2,12 +2,17 @@ package com.bwmanager.jaegwan.global.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.servers.Server;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Arrays;
 
 @OpenAPIDefinition(servers = {@Server(url = "https://k11a501.p.ssafy.io/api", description = "Default Server URL"),
                                 @Server(url = "http://localhost:8080/api", description = "Local Server URL")})
@@ -31,21 +36,19 @@ public class SwaggerConfig {
                 );
 
         // JWT 보안 스키마 정의
-//        SecurityScheme securityScheme = new SecurityScheme()
-//                .type(SecurityScheme.Type.HTTP)
-//                .scheme("bearer")
-//                .bearerFormat("JWT")
-//                .in(SecurityScheme.In.HEADER)
-//                .name("Authorization");
+        SecurityScheme securityScheme = new SecurityScheme()
+                .type(SecurityScheme.Type.APIKEY) // 'apiKey'로 설정
+                .in(SecurityScheme.In.HEADER)
+                .name("Authorization");
 
         // 전역 보안 요구사항 정의
-//        SecurityRequirement securityRequirement = new SecurityRequirement().addList("bearerAuth");
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList("bearerAuth");
 //
 //        Server server = new Server();
 //        server.setUrl("https://k11a501.p.ssafy.io/");
         return new OpenAPI()
-//                .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
-//                .security(Arrays.asList(securityRequirement))
+                .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
+                .security(Arrays.asList(securityRequirement))
                 .info(info);
     }
 
