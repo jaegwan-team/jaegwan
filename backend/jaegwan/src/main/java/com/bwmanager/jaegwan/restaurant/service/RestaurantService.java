@@ -49,6 +49,13 @@ public interface RestaurantService {
     RestaurantResponse updateRestaurant(String currentMemberEmail, Long id, RestaurantRequest request);
 
     /**
+     * 식당을 삭제한다.
+     * @param currentMemberEmail 현재 사용자 이메일
+     * @param id 식당 ID
+     */
+    void deleteRestaurant(String currentMemberEmail, Long id);
+
+    /**
      * 식당에 사용자를 추가한다.
      * @param currentMemberEmail 현재 사용자 이메일
      * @param id 식당 ID

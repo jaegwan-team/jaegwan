@@ -163,8 +163,7 @@ public class RestaurantController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteRestaurant(@AuthenticationPrincipal String currentMemberEmail,
                                               @PathVariable("id") Long id) {
-        // TODO: restaurantService.deleteRestaurant 구현
-//        restaurantService.deleteRestaurant(currentMemberEmail, id);
+        restaurantService.deleteRestaurant(currentMemberEmail, id);
 
         CommonResponse<Object> response = CommonResponse.builder()
                 .message("식당을 삭제했습니다.")
