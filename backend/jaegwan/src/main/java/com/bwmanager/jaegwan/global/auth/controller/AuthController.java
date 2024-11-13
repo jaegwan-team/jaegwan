@@ -5,7 +5,6 @@ import com.bwmanager.jaegwan.global.auth.service.AuthService;
 import com.bwmanager.jaegwan.global.dto.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.Cookie;
@@ -66,19 +65,21 @@ public class AuthController {
         // Authorization 헤더에 액세스 토큰을 저장한다.
 //        response.setHeader("Authorization", authResponse.getAccessToken());
 
-        // 쿠키에 액세스 토큰을 저장한다.
-        Cookie cookie = new Cookie("accessToken", authResponse.getAccessToken());
-        cookie.setHttpOnly(false);
-        cookie.setMaxAge((int) (long) accessExpiration);
-        cookie.setPath("/");
-        response.addCookie(cookie);
+        // 액세스 토큰 쿠키를 설정한다.
+        Cookie accessTokenCookie = new Cookie("accessToken", authResponse.getAccessToken());
+        accessTokenCookie.setHttpOnly(false);
+        accessTokenCookie.setMaxAge(accessExpiration.intValue());
+        accessTokenCookie.setPath("/");
 
-        // 쿠키에 리프레시 토큰을 저장한다.
-        Cookie cookie2 = new Cookie("refreshToken", authResponse.getRefreshToken());
-        cookie2.setHttpOnly(false);
-        cookie2.setMaxAge((int) (long) refreshExpiration);
-        cookie2.setPath("/");
-        response.addCookie(cookie2);
+        // 리프레시 토큰 쿠키를 설정한다.
+        Cookie refreshTokenCookie = new Cookie("refreshToken", authResponse.getRefreshToken());
+        refreshTokenCookie.setHttpOnly(false);
+        refreshTokenCookie.setMaxAge(refreshExpiration.intValue());
+        refreshTokenCookie.setPath("/");
+
+        // 응답에 쿠키를 추가한다.
+        response.addCookie(accessTokenCookie);
+        response.addCookie(refreshTokenCookie);
 
         // 메인 페이지로 리다이렉트한다.
         response.sendRedirect(homeUri);
@@ -87,20 +88,36 @@ public class AuthController {
     @Operation(summary = "토큰 재발급", description = "기존 리프레시 토큰을 통해 액세스 토큰과 리프레시 토큰을 재발급받습니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "사용자 인증에 성공하여 토큰이 재발급되었습니다.",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = AuthResponse.class))),
+                    content = @Content),
             @ApiResponse(responseCode = "401", description = "사용자 인증에 실패하여 토큰이 재발급되지 않았습니다.",
                     content = @Content)
     })
     @PostMapping("/reissue")
-    public ResponseEntity<?> reissue(@RequestParam String refreshToken) {
+    public ResponseEntity<?> reissue(@RequestParam String refreshToken, HttpServletResponse response) {
+        AuthResponse authResponse = authService.reissue(refreshToken);
+
+        // 액세스 토큰 쿠키를 설정한다.
+        Cookie accessTokenCookie = new Cookie("accessToken", authResponse.getAccessToken());
+        accessTokenCookie.setHttpOnly(false);
+        accessTokenCookie.setMaxAge(accessExpiration.intValue());
+        accessTokenCookie.setPath("/");
+
+        // 리프레시 토큰 쿠키를 설정한다.
+        Cookie refreshTokenCookie = new Cookie("refreshToken", authResponse.getRefreshToken());
+        refreshTokenCookie.setHttpOnly(false);
+        refreshTokenCookie.setMaxAge(refreshExpiration.intValue());
+        refreshTokenCookie.setPath("/");
+
+        // 응답에 쿠키를 추가한다.
+        response.addCookie(accessTokenCookie);
+        response.addCookie(refreshTokenCookie);
+
         // 액세스 토큰과 리프레시 토큰을 재발급한다.
-        CommonResponse<Object> response = CommonResponse.builder()
-                .data(authService.reissue(refreshToken))
+        CommonResponse<Object> commonResponse = CommonResponse.builder()
                 .message("액세스 토큰 재발급에 성공했습니다.")
                 .build();
 
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
     }
 
 }
