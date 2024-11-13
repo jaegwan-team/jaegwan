@@ -1,6 +1,4 @@
 import { axiosClient } from "./axios";
-import { AxiosResponse } from "axios";
-import { ReceiptProps } from "@/types/receiptType";
 
 // user
 export const getUserInfo = async () => {
@@ -62,9 +60,7 @@ type ReceiptListParams = {
   isAll: boolean;
 };
 
-export const getReceiptList = (
-  restaurant: ReceiptListParams
-): Promise<AxiosResponse<ReceiptProps[]>> => {
+export const getReceiptList = (restaurant: ReceiptListParams) => {
   return axiosClient.post(`/api/receipt/detail`, restaurant);
 };
 

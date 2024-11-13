@@ -122,7 +122,7 @@ export default function MainPage() {
     };
     const response = await getReceiptList(params);
     console.log(response);
-    setUncheckedReceipts(response.data);
+    setUncheckedReceipts(response.data.data);
   }, [user?.restaurants]);
 
   useEffect(() => {
