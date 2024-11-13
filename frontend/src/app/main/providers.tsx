@@ -7,8 +7,8 @@ import UserProvider from "../../features/users/api/login/loginUsers";
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <UserProvider>
-      <Header />
       <div className={styles.layout}>
+        <Header />
         <TabNavigation />
         {children}
       </div>

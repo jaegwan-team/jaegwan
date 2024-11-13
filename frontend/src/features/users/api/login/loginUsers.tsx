@@ -5,6 +5,7 @@ import {
   useContext,
   useEffect,
   useState,
+  useCallback,
   ReactNode,
 } from "react";
 import { getUserInfo } from "../../../../services/api";
@@ -26,7 +27,7 @@ export default function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserProps | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
     try {
       console.log("Fetching user data..."); // 요청 시작
       const response = await getUserInfo();
@@ -42,12 +43,12 @@ export default function UserProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     console.log("UserProvider mounted");
     fetchUserData();
-  }, []);
+  }, [fetchUserData]);
 
   const value = {
     user,
