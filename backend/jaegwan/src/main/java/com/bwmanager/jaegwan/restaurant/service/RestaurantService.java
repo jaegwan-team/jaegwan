@@ -33,6 +33,15 @@ public interface RestaurantService {
     RestaurantResponse createRestaurant(String currentMemberEmail, RestaurantRequest request);
 
     /**
+     * 식당 정보를 수정한다.
+     * @param currentMemberEmail 현재 사용자 이메일
+     * @param id 식당 ID
+     * @param request 식당 정보
+     * @return 수정된 식당 정보
+     */
+    RestaurantResponse updateRestaurant(String currentMemberEmail, Long id, RestaurantRequest request);
+
+    /**
      * 식당에 사용자를 추가한다.
      * @param currentMemberEmail 현재 사용자 이메일
      * @param id 식당 ID

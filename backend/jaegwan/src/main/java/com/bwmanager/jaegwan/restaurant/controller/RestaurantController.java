@@ -120,8 +120,7 @@ public class RestaurantController {
                                               @PathVariable("id") Long id,
                                               @RequestBody RestaurantRequest request) {
         CommonResponse<Object> response = CommonResponse.builder()
-                // TODO: restaurantService.updateRestaurant 구현
-//                .data(restaurantService.updateRestaurant(currentMemberEmail, id, request))
+                .data(restaurantService.updateRestaurant(currentMemberEmail, id, request))
                 .message("식당 정보를 수정했습니다.")
                 .build();
 

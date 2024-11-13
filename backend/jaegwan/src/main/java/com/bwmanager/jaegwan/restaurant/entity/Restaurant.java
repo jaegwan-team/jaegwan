@@ -37,4 +37,9 @@ public class Restaurant {
         return new Restaurant(name, registerNumber);
     }
 
+    public void updateRestaurant(String name, String registerNumber) {
+        this.name = name;
+        this.registerNumber = registerNumber;
+    }
+
 }
