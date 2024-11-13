@@ -20,7 +20,7 @@ axiosClient.interceptors.request.use(
   (config) => {
     const accessToken = getCookie("accessToken");
     if (accessToken) {
-      config.headers.Authorization = `${accessToken}`; // 또는 `Bearer ${accessToken}`
+      config.headers.Authorization = `${accessToken}`;
     }
     return config;
   },
@@ -41,6 +41,7 @@ axiosClient.interceptors.response.use(
       try {
         const refreshToken = getCookie("refreshToken");
         const response = await fetch(`${BASE_URL}/auth/reissue`, {
+          method: "POST",
           headers: {
             Authorization: `${refreshToken}`,
           },
@@ -48,10 +49,7 @@ axiosClient.interceptors.response.use(
 
         if (response.ok) {
           const data = await response.json();
-          // 새로운 accessToken을 쿠키에 저장
-          document.cookie = `accessToken=${data.accessToken}`;
 
-          // 실패했던 요청 재시도
           originalRequest.headers.Authorization = `${data.accessToken}`;
           return axiosClient(originalRequest);
         }
