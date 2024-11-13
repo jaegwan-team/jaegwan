@@ -16,8 +16,8 @@ import {
   ChartOptions,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { useEffect } from "react";
-import { getIngredientList } from "@/services/api";
+// import { useEffect } from "react";
+// import { getIngredientList } from "@/services/api";
 
 ChartJS.register(
   CategoryScale,
@@ -102,21 +102,21 @@ export default function MainPage() {
 
   /* <임시> 구매 내역 API */
 
-  const fetchIngredientList = async () => {
-    
-    const data: Record<string, number> = {
-      "restaurantId": 1,
-    }
+  // const fetchIngredientList = async () => {
 
-    const response = await getIngredientList(data);
+  //   const data: Record<string, number> = {
+  //     "restaurantId": 1,
+  //   }
 
-    const res = await response.data;
-    console.log(res);
-  }
+  //   const response = await getIngredientList(data);
 
-  useEffect(() => {
-    fetchIngredientList();
-  }, []);
+  //   const res = await response.data;
+  //   console.log(res);
+  // }
+
+  // useEffect(() => {
+  //   fetchIngredientList();
+  // }, []);
 
   /* <임시> 구매 내역 API */
 
@@ -145,7 +145,6 @@ export default function MainPage() {
         </div>
 
         <div className={styles.lists}>
-          
           <div className={styles.listbox}>
             <div className={styles.listtitle}>
               <div>

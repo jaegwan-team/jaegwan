@@ -1,6 +1,9 @@
 import { axiosClient } from "./axios";
 
 // user
+export const getUserInfo = () => {
+  return axiosClient.get("/api/member/me");
+};
 
 // ingredient
 export const getIngredientList = (restaurant: Record<string, number>) => {
