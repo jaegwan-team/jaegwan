@@ -4,7 +4,7 @@ import { axiosClient } from "./axios";
 export const getUserInfo = async () => {
   try {
     console.log("Sending request to /api/member/me"); // 요청 시작 로그
-    const response = await axiosClient.get("/api/member/me");
+    const response = await axiosClient.get("/api/member/top");
     console.log("Response received:", response); // 응답 로그
     return response;
   } catch (error) {
@@ -54,7 +54,9 @@ export const registRestaurantMember = (id: number, memberId: number) => {
 };
 
 // receipt
-export const getReceiptList = (restaurant: Record<string, number | boolean>) => {
+export const getReceiptList = (
+  restaurant: Record<string, number | boolean>
+) => {
   return axiosClient.post(`/api/receipt/detail`, restaurant);
 };
 

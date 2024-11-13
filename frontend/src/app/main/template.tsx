@@ -11,13 +11,12 @@ export default function MainTemplate({
   children: React.ReactNode;
 }) {
   return (
-    <div className={styles.layout}>
-    
-      <UserProvider>
+    <UserProvider>
+      <div className={styles.layout}>
         <Header />
         <TabNavigation />
         {children}
-      </UserProvider>
       </div>
+    </UserProvider>
   );
 }
