@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import "../../../styles/globals.css";
-import Header from "@/features/ui/header";
-import styles from "../../../styles/main.module.css";
-import TabNavigation from "../../features/ui/TabNavigation";
 import { Providers } from "../providers";
+import MainTemplate from "./template";
 
 export const metadata: Metadata = {
   title: "재관둥이",
@@ -12,18 +10,14 @@ export const metadata: Metadata = {
 
 export default function MainLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body className="font-pretendard">
         <Providers>
-          <Header />
-          <div className={styles.layout}>
-            <TabNavigation />
-            {children}
-          </div>
+          <MainTemplate>{children}</MainTemplate>
         </Providers>
       </body>
     </html>
