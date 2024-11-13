@@ -79,7 +79,9 @@ export async function middleware(request: NextRequest) {
   console.log("===========isValidToken==========")
   console.log(isValidToken);
   if (isValidToken) {
-    return NextResponse.next();
+    const response = NextResponse.next();
+    response.headers.set('Authorization', accessToken);
+    return response;
   }
 
   // accessToken이 유효하지 않은 경우, refreshToken으로 재발급 시도
@@ -101,7 +103,9 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
-    return NextResponse.next();
+    const res = NextResponse.next();
+    res.headers.set('Authorization', accessToken);
+    return res;
   } catch (error) {
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);

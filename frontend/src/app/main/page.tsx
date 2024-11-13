@@ -101,18 +101,8 @@ export default function MainPage() {
   };
 
   /* <임시> 구매 내역 API */
-  // const getCookie = (name: string): string | undefined => {
-  //   const value = `; ${document.cookie}`;
-  //   console.log("=== cookie value ===")
-  //   console.log(value)
-  //   const parts = value.split(`; ${name}=`);
-  //   if (parts.length === 2) return parts.pop()?.split(';').shift();
-  //   return undefined;
-  // }
 
   const fetchIngredientList = async () => {
-    // const token = getCookie('accessToken');
-    // console.log(token)
     
     const data: Record<string, number> = {
       "restaurantId": 1,
