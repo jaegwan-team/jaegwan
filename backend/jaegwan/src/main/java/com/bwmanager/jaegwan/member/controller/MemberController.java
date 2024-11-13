@@ -1,6 +1,7 @@
 package com.bwmanager.jaegwan.member.controller;
 
 import com.bwmanager.jaegwan.global.dto.CommonResponse;
+import com.bwmanager.jaegwan.member.dto.MemberAndRestaurantsResponse;
 import com.bwmanager.jaegwan.member.dto.MemberResponse;
 import com.bwmanager.jaegwan.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,6 +44,16 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @Operation(summary = "상단바 정보 조회", description = "상단바 정보를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "상단바 정보 조회에 성공했습니다.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MemberAndRestaurantsResponse.class))),
+            @ApiResponse(responseCode = "404", description = "사용자 정보가 존재하지 않습니다.",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 내부 에러가 발생했습니다.",
+                    content = @Content)
+    })
     @GetMapping("/top")
     public ResponseEntity<?> getTopInfo(@AuthenticationPrincipal String email) {
         CommonResponse<Object> response = CommonResponse.builder()
