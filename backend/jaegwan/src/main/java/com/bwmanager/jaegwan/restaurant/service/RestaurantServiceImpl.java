@@ -33,9 +33,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Transactional(readOnly = true)
     public List<RestaurantResponse> getMyRestaurants(String currentMemberEmail) {
         // 현재 사용자 정보를 가져온다.
-        // TODO: 56번 브랜치 병합 이후 주석 처리 해제 필요
-        Member currentMember = memberRepository.findByEmail(currentMemberEmail);
-//                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+        Member currentMember = memberRepository.findByEmail(currentMemberEmail)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
         return restaurantMemberRepository.findRestaurantsByMemberId(currentMember.getId())
                 .stream().map(RestaurantResponse::from)
@@ -46,7 +45,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Transactional(readOnly = true)
     public RestaurantResponse getRestaurant(String currentMemberEmail, Long id) {
         // 현재 사용자 정보를 가져온다.
-        Member currentMember = memberRepository.findByEmail(currentMemberEmail);
+        Member currentMember = memberRepository.findByEmail(currentMemberEmail)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 식당에 현재 사용자가 등록되어 있는지 검증한다.
         checkRestaurantAuthorized(currentMember.getId(), id);
@@ -63,7 +63,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Transactional(readOnly = true)
     public List<MemberResponse> getRestaurantMembers(String currentMemberEmail, Long id) {
         // 현재 사용자 정보를 가져온다.
-        Member currentMember = memberRepository.findByEmail(currentMemberEmail);
+        Member currentMember = memberRepository.findByEmail(currentMemberEmail)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 식당에 현재 사용자가 등록되어 있는지 검증한다.
         checkRestaurantAuthorized(currentMember.getId(), id);
@@ -82,7 +83,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public RestaurantResponse createRestaurant(String currentMemberEmail, RestaurantRequest request) {
         // 현재 사용자 정보를 가져온다.
-        Member currentMember = memberRepository.findByEmail(currentMemberEmail);
+        Member currentMember = memberRepository.findByEmail(currentMemberEmail)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 식당 정보를 통해 식당을 생성한다.
         Restaurant restaurant = Restaurant.of(request.getName(), request.getRegisterNumber());
@@ -96,9 +98,46 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    public RestaurantResponse updateRestaurant(String currentMemberEmail, Long id, RestaurantRequest request) {
+        // 현재 사용자 정보를 가져온다.
+        Member currentMember = memberRepository.findByEmail(currentMemberEmail)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+
+        // 식당에 현재 사용자가 등록되어 있는지 검증한다.
+        checkRestaurantAuthorized(currentMember.getId(), id);
+
+        // 식당 정보를 가져온다.
+        Restaurant restaurant = restaurantRepository.findById(id)
+                .orElseThrow(() -> new RestaurantException(ErrorCode.RESTAURANT_NOT_FOUND));
+
+        // 식당 정보를 업데이트한다.
+        restaurant.updateRestaurant(request.getName(), request.getRegisterNumber());
+
+        // 수정한 식당 정보를 반환한다.
+        return RestaurantResponse.from(restaurant);
+    }
+
+    @Override
+    public void deleteRestaurant(String currentMemberEmail, Long id) {
+        // 현재 사용자 정보를 가져온다.
+        Member currentMember = memberRepository.findByEmail(currentMemberEmail)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+
+        // 식당에 현재 사용자가 등록되어 있는지 검증한다.
+        checkRestaurantAuthorized(currentMember.getId(), id);
+
+        // 식당 정보를 가져온다.
+        Restaurant restaurant = restaurantRepository.findById(id)
+                .orElseThrow(() -> new RestaurantException(ErrorCode.RESTAURANT_NOT_FOUND));
+
+        restaurantRepository.delete(restaurant);
+    }
+
+    @Override
     public void addRestaurantMember(String currentMemberEmail, Long id, Long newMemberId) {
         // 현재 사용자 정보를 가져온다.
-        Member currentMember = memberRepository.findByEmail(currentMemberEmail);
+        Member currentMember = memberRepository.findByEmail(currentMemberEmail)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 식당에 현재 사용자가 등록되어 있는지 검증한다.
         checkRestaurantAuthorized(currentMember.getId(), id);
@@ -111,8 +150,39 @@ public class RestaurantServiceImpl implements RestaurantService {
         Member newMember = memberRepository.findById(newMemberId)
                 .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
+        // 식당에 등록되지 않은 사용자인지 검증한다.
+        if (restaurantMemberRepository.existsByMemberAndRestaurant(newMember, restaurant)) {
+            throw new RestaurantException(ErrorCode.RESTAURANT_MEMBER_DUPLICATED);
+        }
+
         // 식당-사용자 관계를 생성한다.
         restaurantMemberRepository.save(RestaurantMember.of(restaurant, newMember));
+    }
+
+    @Override
+    public void removeRestaurantMember(String currentMemberEmail, Long id, Long memberDeleteId) {
+        // 현재 사용자 정보를 가져온다.
+        Member currentMember = memberRepository.findByEmail(currentMemberEmail)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+
+        // 식당에 현재 사용자가 등록되어 있는지 검증한다.
+        checkRestaurantAuthorized(currentMember.getId(), id);
+
+        // 식당 정보를 가져온다.
+        Restaurant restaurant = restaurantRepository.findById(id)
+                .orElseThrow(() -> new RestaurantException(ErrorCode.RESTAURANT_NOT_FOUND));
+
+        // 제외할 사용자 정보를 가져온다.
+        Member memberDelete = memberRepository.findById(memberDeleteId)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+
+        // 제거할 식당-사용자 관계를 가져온다.
+        RestaurantMember restaurantMemberDelete = restaurantMemberRepository
+                .findByMemberAndRestaurant(memberDelete,restaurant)
+                .orElseThrow(() -> new RestaurantException(ErrorCode.RESTAURANT_MEMBER_NOT_FOUND));
+
+        // 식당 사용자 관계를 제거한다.
+        restaurantMemberRepository.delete(restaurantMemberDelete);
     }
 
     /**

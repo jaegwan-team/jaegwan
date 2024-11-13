@@ -5,6 +5,7 @@ import com.bwmanager.jaegwan.global.auth.dto.KakaoProfileResponse;
 import com.bwmanager.jaegwan.global.auth.dto.KakaoTokenResponse;
 import com.bwmanager.jaegwan.global.error.ErrorCode;
 import com.bwmanager.jaegwan.global.error.exception.AuthException;
+import com.bwmanager.jaegwan.global.error.exception.MemberException;
 import com.bwmanager.jaegwan.global.util.JwtUtil;
 import com.bwmanager.jaegwan.global.util.KakaoUtil;
 import com.bwmanager.jaegwan.member.entity.Member;
@@ -36,12 +37,8 @@ public class AuthServiceImpl implements AuthService {
 
         // 추출한 이메일 정보를 통해 사용자를 조회한다.
         String email = decodedIdToken[1];
-        Member member = memberRepository.findByEmail(email);
-
-        // 사용자 정보가 없다면 회원가입을 진행한 후 회원 정보를 가져온다.
-        if (member == null) {
-            member = register(kakaoToken);
-        }
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 사용자 정보를 통해 액세스 토큰과 리프레시 토큰을 생성한다.
         return createTokens(member);
@@ -53,17 +50,13 @@ public class AuthServiceImpl implements AuthService {
         String email = jwtUtil.validateTokenAndgetClaims(refreshToken).get("email", String.class);
 
         // 이메일 정보가 유효하지 않다면 토큰이 유효하지 않은 것으로 판단하여 예외를 발생시킨다.
-        if (email == null || email.isEmpty()) {
+        if (email == null || email.isBlank()) {
             throw new AuthException(ErrorCode.TOKEN_NOT_VALID);
         }
 
         // 추출한 이메일 정보를 통해 사용자를 조회한다.
-        Member member = memberRepository.findByEmail(email);
-
-        // 일치하는 사용자 정보가 없다면 리프레시 토큰이 유효하지 않은 것으로 판단하여 예외를 발생시킨다.
-        if (member == null) {
-            throw new AuthException(ErrorCode.TOKEN_NOT_VALID);
-        }
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 사용자 정보를 통해 액세스 토큰과 리프레시 토큰을 재발급한다.
         return createTokens(member);

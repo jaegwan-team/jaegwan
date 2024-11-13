@@ -8,12 +8,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RestaurantMemberRepository extends JpaRepository<RestaurantMember, Long> {
 
     boolean existsByMemberIdAndRestaurantId(Long memberId, Long restaurantId);
 
     boolean existsByMemberAndRestaurant(Member member, Restaurant restaurant);
+
+    Optional<RestaurantMember> findByMemberAndRestaurant(Member member, Restaurant restaurant);
 
     @Query("SELECT rm.member " +
             "FROM RestaurantMember rm " +

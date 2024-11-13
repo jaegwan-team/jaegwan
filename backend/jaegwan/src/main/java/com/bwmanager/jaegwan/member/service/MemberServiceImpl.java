@@ -36,11 +36,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public MemberResponse getMemberByEmail(String email) {
-        Member member = memberRepository.findByEmail(email);
-
-        if (member == null) {
-            throw new MemberException(ErrorCode.MEMBER_NOT_FOUND);
-        }
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
         return MemberResponse.from(member);
     }
@@ -48,8 +45,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public MemberAndRestaurantsResponse getMemberAndRestaurantsByEmail(String email) {
-        // TODO: 56번 브랜치 병합 이후 Optional로 변경
-        Member member = memberRepository.findByEmail(email);
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
         if (member == null) {
             throw new MemberException(ErrorCode.MEMBER_NOT_FOUND);
