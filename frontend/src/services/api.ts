@@ -75,5 +75,5 @@ export const deleteReceiptDetail = (receiptIngredientId: number) => {
 export const getSignificantListUnchecked = (
   restaurant: SignificantListParams
 ) => {
-  return axiosClient.post(`/significant/list/uncheck`, restaurant);
+  return axiosClient.post(`/api/significant/list/uncheck`, restaurant);
 };
