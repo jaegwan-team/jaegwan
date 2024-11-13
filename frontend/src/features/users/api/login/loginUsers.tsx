@@ -10,6 +10,7 @@ import {
 } from "react";
 import { getUserInfo } from "../../../../services/api";
 import type { UserProps } from "@/types/user";
+import { useRouter } from "next/router";
 
 type UserContextType = {
   user: UserProps | null;
@@ -26,6 +27,7 @@ const UserContext = createContext<UserContextType>({
 export default function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserProps | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   const fetchUserData = useCallback(async () => {
     try {
@@ -33,7 +35,14 @@ export default function UserProvider({ children }: { children: ReactNode }) {
       const response = await getUserInfo();
       console.log("Raw response:", response); // 전체 응답
       console.log("User data:", response.data); // 실제 데이터
-      setUser(response.data.data);
+      const userData = response.data.data;
+      setUser(userData);
+
+      if (userData.restaurants.length === 0) {
+        console.log("No restaurants found, redirecting to register page...");
+        router.push("/register");
+        return;
+      }
     } catch (error) {
       console.error("Failed to fetch user data:", error);
       // 에러 상세 정보 출력
@@ -43,7 +52,7 @@ export default function UserProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     console.log("UserProvider mounted");
