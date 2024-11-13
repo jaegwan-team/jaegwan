@@ -113,12 +113,12 @@ export default function MainPage() {
 
     type ReceiptListParams = {
       restaurantId: number | undefined;
-      all: boolean;
+      isAll: boolean;
     };
 
     const params: ReceiptListParams = {
       restaurantId: user.restaurants[0].id,
-      all: false,
+      isAll: false,
     };
     const response = await getReceiptList(params);
     setUncheckedReceipts(response.data);

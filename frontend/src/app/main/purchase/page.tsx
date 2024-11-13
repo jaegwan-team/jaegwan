@@ -20,12 +20,12 @@ export default function PurchasePage() {
 
     type ReceiptListParams = {
       restaurantId: number | undefined;
-      all: boolean;
+      isAll: boolean;
     };
 
     const params: ReceiptListParams = {
       restaurantId: user.restaurants[0].id,
-      all: false,
+      isAll: false,
     };
     const response = await getReceiptList(params);
     setPurchasedata(response.data);
