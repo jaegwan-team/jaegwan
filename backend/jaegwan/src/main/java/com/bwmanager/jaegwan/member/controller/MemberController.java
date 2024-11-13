@@ -35,12 +35,22 @@ public class MemberController {
     })
     @GetMapping("/me")
     public ResponseEntity<?> getMyInfo(@AuthenticationPrincipal String email) {
-        CommonResponse<Object> commonResponse = CommonResponse.builder()
+        CommonResponse<Object> response = CommonResponse.builder()
                 .data(memberService.getMemberByEmail(email))
                 .message("내 정보 조회에 성공했습니다.")
                 .build();
 
-        return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/top")
+    public ResponseEntity<?> getTopInfo(@AuthenticationPrincipal String email) {
+        CommonResponse<Object> response = CommonResponse.builder()
+                .data(memberService.getMemberAndRestaurantsByEmail(email))
+                .message("상단바 정보 조회에 성공했습니다.")
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }
