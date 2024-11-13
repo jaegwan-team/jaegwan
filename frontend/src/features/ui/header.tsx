@@ -4,7 +4,12 @@ import styles from "../../../styles/header.module.css";
 import { useUser } from "../users/api/login/loginUsers";
 
 export default function Header() {
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <header className={styles.layout}>
       <div className={styles.headerbox}>
