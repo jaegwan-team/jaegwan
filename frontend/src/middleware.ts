@@ -42,7 +42,8 @@ export async function middleware(request: NextRequest) {
     }
 
     try {
-      const response = await fetch(`${BACKEND_BASE_URL}/auth/reissue`, {
+      const response = await fetch(`${BACKEND_BASE_URL}/api/auth/reissue`, {
+        method: "POST",
         headers: {
           Authorization: `${refreshToken}`,
         },
@@ -90,7 +91,8 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    const response = await fetch(`${BACKEND_BASE_URL}/auth/reissue`, {
+    const response = await fetch(`${BACKEND_BASE_URL}/api/auth/reissue`, {
+      method: "POST",
       headers: {
         Authorization: `${refreshToken}`,
       },

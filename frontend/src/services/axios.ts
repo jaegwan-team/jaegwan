@@ -40,7 +40,7 @@ axiosClient.interceptors.response.use(
 
       try {
         const refreshToken = getCookie("refreshToken");
-        const response = await fetch(`${BASE_URL}/auth/reissue`, {
+        const response = await fetch(`${BASE_URL}/api/auth/reissue`, {
           method: "POST",
           headers: {
             Authorization: `${refreshToken}`,
