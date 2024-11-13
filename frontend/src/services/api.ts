@@ -1,8 +1,16 @@
 import { axiosClient } from "./axios";
 
 // user
-export const getUserInfo = () => {
-  return axiosClient.get("/api/member/me");
+export const getUserInfo = async () => {
+  try {
+    console.log("Sending request to /api/member/me"); // 요청 시작 로그
+    const response = await axiosClient.get("/api/member/me");
+    console.log("Response received:", response); // 응답 로그
+    return response;
+  } catch (error) {
+    console.error("getUserInfo error:", error); // 자세한 에러 로그
+    throw error;
+  }
 };
 
 // ingredient

@@ -22,7 +22,7 @@ const UserContext = createContext<UserContextType>({
   isLoading: true,
 });
 
-export function UserProvider({ children }: { children: ReactNode }) {
+export default function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserProps | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -45,6 +45,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    console.log("UserProvider mounted");
     fetchUserData();
   }, []);
 
