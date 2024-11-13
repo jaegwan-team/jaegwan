@@ -6,13 +6,13 @@ import UserProvider from "../../features/users/api/login/loginUsers";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <div className={styles.layout}>
-    
-      <UserProvider>
+    <UserProvider>
+      <div className={styles.layout}>
         <Header />
         <TabNavigation />
         {children}
-      </UserProvider>
-      </div>
+      </div>  
+    </UserProvider>
+      
   );
 }
