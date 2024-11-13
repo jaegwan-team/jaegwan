@@ -73,12 +73,10 @@ export async function middleware(request: NextRequest) {
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
   }
-  console.log("===========accessToken==========");
-  console.log(accessToken);
+
   // accessToken 유효성 검증
   const isValidToken = await validateToken(accessToken);
-  console.log("===========isValidToken==========");
-  console.log(isValidToken);
+
   if (isValidToken) {
     return NextResponse.next();
   }
