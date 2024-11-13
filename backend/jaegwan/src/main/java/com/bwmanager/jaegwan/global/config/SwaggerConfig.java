@@ -97,7 +97,7 @@ public class SwaggerConfig {
                 .build();
     }
 
-    // ! ingredient 관련 API 모음
+    // ! significant 관련 API 모음
     @Bean
     public GroupedOpenApi significantApi() {
         return GroupedOpenApi.builder()
