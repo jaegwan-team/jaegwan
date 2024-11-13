@@ -16,6 +16,7 @@ import {
   ChartOptions,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import { useEffect } from "react";
 
 ChartJS.register(
   CategoryScale,
@@ -25,6 +26,8 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+
+const BACKEND_BASE_URL = "https://k11a501.p.ssafy.io";
 
 export default function MainPage() {
   const today = new Date();
@@ -98,6 +101,41 @@ export default function MainPage() {
     },
   };
 
+  /* <임시> 구매 내역 API */
+  const getCookie = (name: string): string | undefined => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(';').shift();
+    return undefined;
+  }
+
+  const getIngredientList = async () => {
+
+    const token = getCookie('token');
+
+    const response = await fetch(`${BACKEND_BASE_URL}/api/receipt/detail`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // JSON 데이터를 보낼 경우 헤더 설정
+        'Authorization': `Bearer ${token}`,
+      },
+      credentials: 'include', // 쿠키를 포함하여 서버로 전송
+      body: JSON.stringify({
+        restaurantId: "1",
+        all : "false",
+      }),
+    });
+
+    const data = await response.json();
+    console.log(data);
+  }
+
+  useEffect(() => {
+    getIngredientList();
+  }, []);
+
+  /* <임시> 구매 내역 API */
+
   return (
     <div className={styles.content}>
       <div className={styles.maincontent}>
@@ -121,7 +159,9 @@ export default function MainPage() {
             <Bar options={options} data={data} />
           </div>
         </div>
+
         <div className={styles.lists}>
+          
           <div className={styles.listbox}>
             <div className={styles.listtitle}>
               <div>
@@ -163,6 +203,7 @@ export default function MainPage() {
               </div>
             </div>
           </div>
+
           <div className={styles.listbox}>
             {" "}
             <div className={styles.listtitle}>
