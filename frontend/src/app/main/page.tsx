@@ -114,9 +114,8 @@ export default function MainPage() {
     // const token = getCookie('accessToken');
     // console.log(token)
     
-    const data: Record<string, number | boolean> = {
+    const data: Record<string, number> = {
       "restaurantId": 1,
-      "all": true,
     }
 
     const response = await getIngredientList(data);

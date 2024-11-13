@@ -3,12 +3,8 @@ import { axiosClient } from "./axios";
 // user
 
 // ingredient
-export const getIngredientList = (restaurant: Record<string, number | boolean>) => {
-  return axiosClient.post("/api/ingredient", restaurant, {
-    headers: {
-      "Requires-Auth": true,
-    },
-  });
+export const getIngredientList = (restaurant: Record<string, number>) => {
+  return axiosClient.post("/api/ingredient", restaurant);
 };
 
 export const getIngredientDetail = (id: number) => {
