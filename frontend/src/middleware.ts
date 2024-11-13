@@ -12,6 +12,7 @@ async function validateToken(token: string) {
         Authorization: `${token}`,
       },
     });
+    console.log(response);
     return response.ok;
   } catch (error) {
     return false;
