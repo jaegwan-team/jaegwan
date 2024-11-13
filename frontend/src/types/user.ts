@@ -1,13 +1,12 @@
-
 export interface LoginProps {
-    email: string,
-    password: string,
+  email: string;
+  password: string;
 }
 
-export interface UserProps {
-    email: string,
-    role: string,
-    name: string,
-    phone_number: string,
-    image_url: string,
-}
+export type UserProps = {
+  id: number;
+  name: string;
+  role: string;
+  email: string;
+  imageUrl: string;
+};
