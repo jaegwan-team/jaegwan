@@ -13,9 +13,9 @@ public class ReceiptRequest {
     private Long restaurantId;
 
     @Schema(description = "true: 모든 구매 내역 조회, false: 확정되지 않은 구매 내역 조회", example = "true")
-    private boolean isAll;
+    private Boolean isAll;
 
-    public ReceiptRequest(Long restaurantId, boolean isAll) {
+    public ReceiptRequest(Long restaurantId, Boolean isAll) {
         this.restaurantId = restaurantId;
         this.isAll = isAll;
     }
