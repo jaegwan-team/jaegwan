@@ -9,6 +9,13 @@ import java.util.List;
 public interface RestaurantService {
 
     /**
+     * 현재 사용자가 속해있는 식당 목록을 조회합니다.
+     * @param currentMemberEmail 현재 사용자 이메일
+     * @return 식당 목록
+     */
+    List<RestaurantResponse> getMyRestaurants(String currentMemberEmail);
+
+    /**
      * 식당 ID에 해당하는 식당의 정보를 조회한다.
      * @param currentMemberEmail 현재 사용자 이메일
      * @param id 식당 ID

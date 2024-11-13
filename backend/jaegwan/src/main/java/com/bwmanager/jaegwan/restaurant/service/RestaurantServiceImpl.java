@@ -31,6 +31,19 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<RestaurantResponse> getMyRestaurants(String currentMemberEmail) {
+        // 현재 사용자 정보를 가져온다.
+        // TODO: 56번 브랜치 병합 이후 주석 처리 해제 필요
+        Member currentMember = memberRepository.findByEmail(currentMemberEmail);
+//                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+
+        return restaurantMemberRepository.findRestaurantsByMemberId(currentMember.getId())
+                .stream().map(RestaurantResponse::from)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public RestaurantResponse getRestaurant(String currentMemberEmail, Long id) {
         // 현재 사용자 정보를 가져온다.
         Member currentMember = memberRepository.findByEmail(currentMemberEmail)

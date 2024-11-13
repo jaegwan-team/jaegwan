@@ -20,4 +20,9 @@ public interface RestaurantMemberRepository extends JpaRepository<RestaurantMemb
             "WHERE rm.restaurant.id = :restaurantId")
     List<Member> findMembersByRestaurantId(@Param("restaurantId") Long restaurantId);
 
+    @Query("SELECT rm.restaurant " +
+            "FROM RestaurantMember rm " +
+            "WHERE rm.member.id = :memberId")
+    List<Restaurant> findRestaurantsByMemberId(@Param("memberId") Long memberId);
+
 }
