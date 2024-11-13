@@ -104,6 +104,8 @@ export default function MainPage() {
   /* <임시> 구매 내역 API */
   const getCookie = (name: string): string | undefined => {
     const value = `; ${document.cookie}`;
+    console.log("=== cookie value ===")
+    console.log(value)
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop()?.split(';').shift();
     return undefined;
@@ -112,6 +114,7 @@ export default function MainPage() {
   const getIngredientList = async () => {
 
     const token = getCookie('token');
+    console.log(token)
 
     const response = await fetch(`${BACKEND_BASE_URL}/api/receipt/detail`, {
       method: 'POST',
