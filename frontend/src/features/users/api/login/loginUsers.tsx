@@ -28,11 +28,17 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const fetchUserData = async () => {
     try {
+      console.log("Fetching user data..."); // 요청 시작
       const response = await getUserInfo();
-      console.log(response.data);
+      console.log("Raw response:", response); // 전체 응답
+      console.log("User data:", response.data); // 실제 데이터
       setUser(response.data);
     } catch (error) {
       console.error("Failed to fetch user data:", error);
+      // 에러 상세 정보 출력
+      if (error instanceof Error) {
+        console.error("Error details:", error.message);
+      }
     } finally {
       setIsLoading(false);
     }
