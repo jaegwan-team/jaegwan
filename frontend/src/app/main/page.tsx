@@ -17,6 +17,7 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { useEffect } from "react";
+import { getIngredientList } from "@/services/api";
 
 ChartJS.register(
   CategoryScale,
@@ -26,8 +27,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-const BACKEND_BASE_URL = "https://k11a501.p.ssafy.io";
 
 export default function MainPage() {
   const today = new Date();
@@ -111,30 +110,23 @@ export default function MainPage() {
     return undefined;
   }
 
-  const getIngredientList = async () => {
+  const fetchIngredientList = async () => {
+    // const token = getCookie('accessToken');
+    // console.log(token)
+    
+    const data: Record<string, number | boolean> = {
+      "restaurantId": 1,
+      "all": true,
+    }
 
-    const token = getCookie('accessToken');
-    console.log(token)
+    const response = await getIngredientList(data);
 
-    const response = await fetch(`${BACKEND_BASE_URL}/api/receipt/detail`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json', // JSON 데이터를 보낼 경우 헤더 설정
-        'Authorization': `Bearer ${token}`,
-      },
-      credentials: 'include', // 쿠키를 포함하여 서버로 전송
-      body: JSON.stringify({
-        restaurantId: "1",
-        all : "false",
-      }),
-    });
-
-    const data = await response.json();
-    console.log(data);
+    const res = await response.data;
+    console.log(res);
   }
 
   useEffect(() => {
-    getIngredientList();
+    fetchIngredientList();
   }, []);
 
   /* <임시> 구매 내역 API */
