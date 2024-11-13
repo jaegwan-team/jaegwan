@@ -16,13 +16,9 @@ export default function MainTemplate({
         <Header />
         <TabNavigation />
         {children}
-<<<<<<< HEAD:frontend/src/app/main/providers.tsx
       </div>  
     </UserProvider>
       
-=======
-      </div>
-    </UserProvider>
->>>>>>> 9ce8e581082a55c51ae2e829176c6a9501b06133:frontend/src/app/main/template.tsx
+
   );
 }
