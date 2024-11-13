@@ -59,7 +59,7 @@ export const registRestaurantMember = (id: number, memberId: number) => {
 
 type ReceiptListParams = {
   restaurantId: number | undefined;
-  all: boolean;
+  isAll: boolean;
 };
 
 export const getReceiptList = (
