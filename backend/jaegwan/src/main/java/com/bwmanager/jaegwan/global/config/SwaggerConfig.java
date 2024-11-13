@@ -97,4 +97,13 @@ public class SwaggerConfig {
                 .build();
     }
 
+    // ! significant 관련 API 모음
+    @Bean
+    public GroupedOpenApi significantApi() {
+        return GroupedOpenApi.builder()
+                .group("significant")
+                .pathsToMatch("/significant/**")
+                .build();
+    }
+
 }
