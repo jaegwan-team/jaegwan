@@ -1,3 +1,5 @@
+"use client";
+
 import styles from "../../../styles/header.module.css";
 import { useUser } from "../users/api/login/loginUsers";
 
