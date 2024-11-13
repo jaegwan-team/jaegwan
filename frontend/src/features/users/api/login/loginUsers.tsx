@@ -29,6 +29,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const fetchUserData = async () => {
     try {
       const response = await getUserInfo();
+      console.log(response.data);
       setUser(response.data);
     } catch (error) {
       console.error("Failed to fetch user data:", error);
