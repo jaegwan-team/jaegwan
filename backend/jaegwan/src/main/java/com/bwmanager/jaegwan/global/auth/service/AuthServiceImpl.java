@@ -52,6 +52,11 @@ public class AuthServiceImpl implements AuthService {
         // 리프레시 토큰을 검증하고, 검증이 끝나면 리프레시 토큰에서 이메일 정보를 추출한다.
         String email = jwtUtil.validateTokenAndgetClaims(refreshToken).get("email", String.class);
 
+        // 이메일 정보가 유효하지 않다면 토큰이 유효하지 않은 것으로 판단하여 예외를 발생시킨다.
+        if (email == null || email.isEmpty()) {
+            throw new AuthException(ErrorCode.TOKEN_NOT_VALID);
+        }
+
         // 추출한 이메일 정보를 통해 사용자를 조회한다.
         Member member = memberRepository.findByEmail(email);
 
@@ -99,10 +104,10 @@ public class AuthServiceImpl implements AuthService {
         return AuthResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .name(member.getName())
-                .role(member.getRole())
-                .email(member.getEmail())
-                .imageUrl(member.getImageUrl())
+//                .name(member.getName())
+//                .role(member.getRole())
+//                .email(member.getEmail())
+//                .imageUrl(member.getImageUrl())
                 .build();
     }
 
