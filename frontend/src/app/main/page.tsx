@@ -121,6 +121,7 @@ export default function MainPage() {
       isAll: false,
     };
     const response = await getReceiptList(params);
+    console.log(response);
     setUncheckedReceipts(response.data);
   }, [user?.restaurants]);
 
@@ -171,26 +172,28 @@ export default function MainPage() {
                 <div className={styles.tableheaditem}>품목</div>
                 <div className={styles.tableheadcheck}>확인 여부</div>
               </div>
-              {uncheckedReceipts?.slice(0, 3)?.map((receipt: ReceiptProps) => {
-                return (
-                  <div className={styles.tabledetail} key={receipt.id}>
-                    <div className={styles.tableheaddate}>
-                      {receipt.createdDate}
+              {(uncheckedReceipts || [])
+                .slice(0, 3)
+                .map((receipt: ReceiptProps) => {
+                  return (
+                    <div className={styles.tabledetail} key={receipt.id}>
+                      <div className={styles.tableheaddate}>
+                        {receipt.createdDate}
+                      </div>
+                      <div className={styles.tableheaditem}>
+                        {`${receipt.mainIngredientName} 외 ${receipt.leftCount}개 품목`}
+                      </div>
+                      <div className={styles.tableheadcheck}>
+                        <Image
+                          src={receipt.confirmed ? CheckedSVG : UncheckedSVG}
+                          alt={receipt.confirmed ? "checked" : "unchecked"}
+                          width={15}
+                          height={15}
+                        />
+                      </div>
                     </div>
-                    <div className={styles.tableheaditem}>
-                      {`${receipt.mainIngredientName} 외 ${receipt.leftCount}개 품목`}
-                    </div>
-                    <div className={styles.tableheadcheck}>
-                      <Image
-                        src={receipt.confirmed ? CheckedSVG : UncheckedSVG}
-                        alt={receipt.confirmed ? "checked" : "unchecked"}
-                        width={15}
-                        height={15}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
           </div>
 
