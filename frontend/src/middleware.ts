@@ -9,7 +9,7 @@ async function validateToken(token: string) {
   try {
     const response = await fetch(`${BACKEND_BASE_URL}/api/auth/kakao/login`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `${token}`,
       },
     });
     return response.ok;
