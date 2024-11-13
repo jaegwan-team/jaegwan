@@ -43,12 +43,8 @@ export const registRestaurantMember = (id: number, memberId: number) => {
 };
 
 // receipt
-export const getReceiptList = (restaurant: Record<string, number>) => {
-  return axiosClient.post(`/api/receipt/detail`, restaurant, {
-    headers: {
-      "Requires-Auth": true,
-    },
-  });
+export const getReceiptList = (restaurant: Record<string, number | boolean>) => {
+  return axiosClient.post(`/api/receipt/detail`, restaurant);
 };
 
 export const confirmReceipt = (content: Record<string, unknown>) => {

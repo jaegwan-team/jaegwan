@@ -17,7 +17,7 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { useEffect } from "react";
-import { getIngredientList } from "@/services/api";
+import { getIngredientList, getReceiptList } from "@/services/api";
 
 ChartJS.register(
   CategoryScale,
@@ -114,11 +114,23 @@ export default function MainPage() {
     console.log(res);
   }
 
+  /* <임시> 구매 내역 API */
+  const fetchgetReceiptList = async () => {
+
+    const data: Record<string, number | boolean> = {
+      "restaurantId": 1,
+      "all" : false,
+    }
+
+    const response = await getReceiptList(data);
+    console.log(response);
+
+  }
+
   useEffect(() => {
     fetchIngredientList();
+    fetchgetReceiptList();
   }, []);
-
-  /* <임시> 구매 내역 API */
 
   return (
     <div className={styles.content}>
