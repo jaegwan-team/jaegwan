@@ -150,6 +150,11 @@ public class RestaurantServiceImpl implements RestaurantService {
         Member newMember = memberRepository.findById(newMemberId)
                 .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
+        // 식당에 등록되지 않은 사용자인지 검증한다.
+        if (restaurantMemberRepository.existsByMemberAndRestaurant(newMember, restaurant)) {
+            throw new RestaurantException(ErrorCode.RESTAURANT_MEMBER_DUPLICATED);
+        }
+
         // 식당-사용자 관계를 생성한다.
         restaurantMemberRepository.save(RestaurantMember.of(restaurant, newMember));
     }
