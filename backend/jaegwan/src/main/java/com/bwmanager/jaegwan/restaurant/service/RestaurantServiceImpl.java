@@ -33,7 +33,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Transactional(readOnly = true)
     public RestaurantResponse getRestaurant(String currentMemberEmail, Long id) {
         // 현재 사용자 정보를 가져온다.
-        Member currentMember = memberRepository.findByEmail(currentMemberEmail);
+        Member currentMember = memberRepository.findByEmail(currentMemberEmail)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 식당에 현재 사용자가 등록되어 있는지 검증한다.
         checkRestaurantAuthorized(currentMember.getId(), id);
@@ -50,7 +51,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Transactional(readOnly = true)
     public List<MemberResponse> getRestaurantMembers(String currentMemberEmail, Long id) {
         // 현재 사용자 정보를 가져온다.
-        Member currentMember = memberRepository.findByEmail(currentMemberEmail);
+        Member currentMember = memberRepository.findByEmail(currentMemberEmail)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 식당에 현재 사용자가 등록되어 있는지 검증한다.
         checkRestaurantAuthorized(currentMember.getId(), id);
@@ -69,7 +71,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public RestaurantResponse createRestaurant(String currentMemberEmail, RestaurantRequest request) {
         // 현재 사용자 정보를 가져온다.
-        Member currentMember = memberRepository.findByEmail(currentMemberEmail);
+        Member currentMember = memberRepository.findByEmail(currentMemberEmail)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 식당 정보를 통해 식당을 생성한다.
         Restaurant restaurant = Restaurant.of(request.getName(), request.getRegisterNumber());
@@ -85,7 +88,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public void addRestaurantMember(String currentMemberEmail, Long id, Long newMemberId) {
         // 현재 사용자 정보를 가져온다.
-        Member currentMember = memberRepository.findByEmail(currentMemberEmail);
+        Member currentMember = memberRepository.findByEmail(currentMemberEmail)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 식당에 현재 사용자가 등록되어 있는지 검증한다.
         checkRestaurantAuthorized(currentMember.getId(), id);

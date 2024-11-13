@@ -30,11 +30,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public MemberResponse getMemberByEmail(String email) {
-        Member member = memberRepository.findByEmail(email);
-
-        if (member == null) {
-            throw new MemberException(ErrorCode.MEMBER_NOT_FOUND);
-        }
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
         return MemberResponse.from(member);
     }
