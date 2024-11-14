@@ -23,6 +23,7 @@ public class ReceiptIngredientCustomRepositoryImpl implements ReceiptIngredientC
                         receiptIngredient.id,
                         receiptIngredient.ingredient.name,
                         receiptIngredient.ingredient.category,
+                        receiptIngredient.price,
                         receiptIngredient.amount,
                         receiptIngredient.ingredient.unit,
                         receiptIngredient.expirationDate
