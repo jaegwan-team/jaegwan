@@ -17,6 +17,7 @@ export default function InventoryPage() {
   const [ingredientDetails, setIngredientDetails] = useState<
     Record<number, IngredientDetailType[]>
   >({});
+  const [loadingDetails, setLoadingDetails] = useState<Set<number>>(new Set());
 
   const fetchIngredientList = useCallback(async () => {
     const params = {
@@ -30,14 +31,20 @@ export default function InventoryPage() {
 
   const fetchIngredeintDetails = useCallback(async (itemId: number) => {
     try {
+      setLoadingDetails((prev) => new Set([...prev, itemId]));
       const response = await getIngredientDetail(itemId);
-      console.log(response);
       setIngredientDetails((prev) => ({
         ...prev,
         [itemId]: response.data.data,
       }));
     } catch (error) {
       console.error(`Failed to fetch details for item ${itemId}:`, error);
+    } finally {
+      setLoadingDetails((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(itemId);
+        return newSet;
+      });
     }
   }, []);
 
@@ -89,8 +96,17 @@ export default function InventoryPage() {
                     {item.totalAmount}
                     {item.unit}
                   </div>
-                  <div className={styles.itemexpiredate}>
-                    D{item.leftExpirationDay * -1}
+                  <div
+                    className={`
+                              ${styles.itemexpiredate} 
+                              ${
+                                item.leftExpirationDay < 0 ? styles.expired : ""
+                              }
+                            `}
+                  >
+                    {item.leftExpirationDay >= 0
+                      ? `D-${item.leftExpirationDay}`
+                      : `D+${Math.abs(item.leftExpirationDay)}`}
                   </div>
                   <div className={styles.itemarrow}>
                     <Image
@@ -105,21 +121,40 @@ export default function InventoryPage() {
                 </div>
                 {expandedItems.has(item.id) && (
                   <div className={styles.itemDetails}>
-                    {ingredientDetails[item.id].map((detail, index) => (
-                      <div key={index} className={styles.detailRow}>
-                        <div className={styles.itemname}></div>
-                        <div className={styles.itemname}>
-                          구매일: {detail.purchaseDate}
+                    {loadingDetails.has(item.id) ? (
+                      <div className={styles.detailRow}>로딩 중...</div>
+                    ) : ingredientDetails[item.id] ? (
+                      ingredientDetails[item.id].map((detail, index) => (
+                        <div key={index} className={styles.detailRow}>
+                          <div className={styles.itemname}></div>
+                          <div className={styles.itemname}>
+                            구매일: {detail.purchaseDate}
+                          </div>
+                          <div className={styles.itemamount}>
+                            {detail.amount}
+                            {item.unit}
+                          </div>
+                          <div
+                            className={`
+                              ${styles.itemexpiredate} 
+                              ${
+                                detail.leftExpirationDay < 0
+                                  ? styles.expired
+                                  : ""
+                              }
+                            `}
+                          >
+                            {detail.leftExpirationDay >= 0
+                              ? `D-${detail.leftExpirationDay}`
+                              : `D+${Math.abs(detail.leftExpirationDay)}`}
+                          </div>
                         </div>
-                        <div className={styles.itemamount}>
-                          {detail.amount}
-                          {item.unit}
-                        </div>
-                        <div className={styles.itemexpiredate}>
-                          D{detail.leftExpirationDay * -1}
-                        </div>
+                      ))
+                    ) : (
+                      <div className={styles.detailRow}>
+                        데이터를 불러오는데 실패했습니다.
                       </div>
-                    ))}
+                    )}
                   </div>
                 )}
               </div>

@@ -60,7 +60,12 @@ export const getReceiptList = (restaurant: ReceiptListParams) => {
   return axiosClient.post(`/api/receipt/detail`, restaurant);
 };
 
-export const confirmReceipt = (content: UpdatedReceiptDetailTypes[]) => {
+interface ConfirmRequest {
+  receiptId: number;
+  receiptIngredientConfirmData: UpdatedReceiptDetailTypes[];
+}
+
+export const confirmReceipt = (content: ConfirmRequest) => {
   return axiosClient.post(`/api/receipt/confirm`, content);
 };
 

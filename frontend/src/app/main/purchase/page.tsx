@@ -14,19 +14,27 @@ import { ReceiptListParams } from "@/types/mainType";
 export default function PurchasePage() {
   const { user } = useUser();
   const [receiptId, setReceiptId] = useState<number>(-1);
+  const [isLoading, setIsLoading] = useState(true);
   const [purchaseData, setPurchasedata] = useState<
     ReceiptProps[] | undefined
   >();
 
   const fetchReceipt = useCallback(async () => {
-    if (!user?.restaurants?.[0]?.id) return;
+    try {
+      setIsLoading(true);
+      if (!user?.restaurants?.[0]?.id) return;
 
-    const params: ReceiptListParams = {
-      restaurantId: user.restaurants[0].id,
-      isAll: true,
-    };
-    const response = await getReceiptList(params);
-    setPurchasedata(response.data.data);
+      const params: ReceiptListParams = {
+        restaurantId: user.restaurants[0].id,
+        isAll: true,
+      };
+      const response = await getReceiptList(params);
+      setPurchasedata(response.data.data);
+    } catch (error) {
+      console.error("Failed to fetch receipts:", error);
+    } finally {
+      setIsLoading(false); // 데이터 가져온 후 로딩 종료
+    }
   }, [user?.restaurants]);
 
   useEffect(() => {
@@ -49,47 +57,53 @@ export default function PurchasePage() {
     <div className={styles.content}>
       <div className={styles.container}>
         <h1 className={styles.title}>구매 내역</h1>
+        {isLoading ? (
+          <div className={styles.loading}>로딩 중...</div>
+        ) : (
+          <div className={styles.table}>
+            <div className={styles.tableHeader}>
+              <div className={styles.dateColumn}>일자</div>
+              <div className={styles.itemColumn}>품목</div>
+              <div className={styles.checkColumn}>확인 여부</div>
+            </div>
 
-        <div className={styles.table}>
-          <div className={styles.tableHeader}>
-            <div className={styles.dateColumn}>일자</div>
-            <div className={styles.itemColumn}>품목</div>
-            <div className={styles.checkColumn}>확인 여부</div>
-          </div>
-
-          <div className={styles.tableBody}>
-            {purchaseData?.map((purchase) => (
-              <div
-                key={purchase.id}
-                className={styles.tableRow}
-                onClick={() => handleDetailClick(purchase.id)}
-              >
-                <div className={styles.dateColumn}>{purchase.createdDate}</div>
-                <div className={styles.itemColumn}>
-                  {purchase.mainIngredientName}
-                  {purchase.leftCount > 0 && ` 외 ${purchase.leftCount}개 품목`}
+            <div className={styles.tableBody}>
+              {purchaseData?.map((purchase) => (
+                <div
+                  key={purchase.id}
+                  className={styles.tableRow}
+                  onClick={() => handleDetailClick(purchase.id)}
+                >
+                  <div className={styles.dateColumn}>
+                    {purchase.createdDate}
+                  </div>
+                  <div className={styles.itemColumn}>
+                    {purchase.mainIngredientName}
+                    {purchase.leftCount > 0 &&
+                      ` 외 ${purchase.leftCount}개 품목`}
+                  </div>
+                  <div className={styles.checkColumn}>
+                    {purchase.confirmed ? (
+                      <Image
+                        src={CheckedSVG}
+                        alt="checked"
+                        width={15}
+                        height={15}
+                      />
+                    ) : (
+                      <Image
+                        src={UncheckedSVG}
+                        alt="checked"
+                        width={15}
+                        height={15}
+                      />
+                    )}
+                  </div>
                 </div>
-                <div className={styles.checkColumn}>
-                  {purchase.confirmed ? (
-                    <Image
-                      src={CheckedSVG}
-                      alt="checked"
-                      width={15}
-                      height={15}
-                    />
-                  ) : (
-                    <Image
-                      src={UncheckedSVG}
-                      alt="checked"
-                      width={15}
-                      height={15}
-                    />
-                  )}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
       {isModalOpen && (
         <ReceiptModal receiptId={receiptId} onClose={handleCloseModal} />
