@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.bwmanager.jaegwan.receipt.entity.QReceipt.receipt;
 import static com.bwmanager.jaegwan.receipt.entity.QReceiptIngredient.receiptIngredient;
 
 @RequiredArgsConstructor
@@ -29,7 +28,7 @@ public class ReceiptIngredientCustomRepositoryImpl implements ReceiptIngredientC
                         receiptIngredient.expirationDate
                 ))
                 .from(receiptIngredient)
-                .join(receiptIngredient.receipt, receipt)
+                .where(receiptIngredient.receipt.id.eq(receiptId))
                 .fetch();
     }
 }
