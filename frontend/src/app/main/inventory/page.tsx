@@ -1,52 +1,64 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styles from "../../../../styles/inventory.module.css";
 import Image from "next/image";
 import DropdownSVG from "../../../../public/drop_down.svg";
 import DroprightSVG from "../../../../public/drop_right.svg";
 import CategoryLabels from "@/features/ingredient/categorylabels";
-import { CategoryType } from "@/types/category";
-
-const inventoryData = [
-  {
-    id: 1,
-    name: "양파",
-    category: CategoryType.Vegetables,
-    totalAmount: "2kg",
-    expireDate: "D-2",
-    details: [
-      { purchaseDate: "2024-03-01", amount: "1kg", expireDate: "2024-03-10" },
-      { purchaseDate: "2024-03-05", amount: "1kg", expireDate: "2024-03-15" },
-    ],
-  },
-  {
-    id: 2,
-    name: "양고기",
-    category: CategoryType.Meat,
-    totalAmount: "2kg",
-    expireDate: "D-2",
-    details: [
-      { purchaseDate: "2024-03-02", amount: "1.5kg", expireDate: "2024-03-09" },
-      { purchaseDate: "2024-03-04", amount: "0.5kg", expireDate: "2024-03-11" },
-    ],
-  },
-];
+import { getIngredientDetail, getIngredientList } from "@/services/api";
+import { useUser } from "@/features/users/api/login/loginUsers";
+import { IngredientDetailType, IngredientType } from "@/types/itemType";
 
 export default function InventoryPage() {
-  const [expandedItems, setExpandedItems] = useState(new Set());
+  const { user } = useUser();
+  const [ingredientList, setIngredientList] = useState<IngredientType[]>([]);
+  const [expandedItems, setExpandedItems] = useState(new Set<number>());
+  const [ingredientDetails, setIngredientDetails] = useState<
+    Record<number, IngredientDetailType[]>
+  >({});
 
-  const toggleExpand = (itemId: number) => {
+  const fetchIngredientList = useCallback(async () => {
+    const params = {
+      restaurantId: user!.restaurants[0]!.id,
+    };
+    const response = await getIngredientList(params);
+    console.log(response.data);
+    setIngredientList(response.data.data);
+    return response;
+  }, [user]);
+
+  const fetchIngredeintDetails = useCallback(async (itemId: number) => {
+    try {
+      const response = await getIngredientDetail(itemId);
+      console.log(response);
+      setIngredientDetails((prev) => ({
+        ...prev,
+        [itemId]: response.data.data,
+      }));
+    } catch (error) {
+      console.error(`Failed to fetch details for item ${itemId}:`, error);
+    }
+  }, []);
+
+  const toggleExpand = async (itemId: number) => {
     setExpandedItems((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(itemId)) {
         newSet.delete(itemId);
       } else {
         newSet.add(itemId);
+        if (!ingredientDetails[itemId]) {
+          fetchIngredeintDetails(itemId);
+        }
       }
       return newSet;
     });
   };
+
+  useEffect(() => {
+    fetchIngredientList();
+  }, [fetchIngredientList]);
 
   return (
     <div className={styles.content}>
@@ -63,7 +75,7 @@ export default function InventoryPage() {
             <div className={styles.itemexpiredate}>유통기한</div>
           </div>
           <div className={styles.tabledetails}>
-            {inventoryData.map((item) => (
+            {ingredientList.map((item) => (
               <div key={item.id}>
                 <div
                   className={styles.tabledetail}
@@ -73,8 +85,13 @@ export default function InventoryPage() {
                   <div className={styles.itemcategory}>
                     <CategoryLabels category={item.category} />
                   </div>
-                  <div className={styles.itemamount}>{item.totalAmount}</div>
-                  <div className={styles.itemexpiredate}>{item.expireDate}</div>
+                  <div className={styles.itemamount}>
+                    {item.totalAmount}
+                    {item.unit}
+                  </div>
+                  <div className={styles.itemexpiredate}>
+                    D{item.leftExpirationDay * -1}
+                  </div>
                   <div className={styles.itemarrow}>
                     <Image
                       src={
@@ -88,15 +105,18 @@ export default function InventoryPage() {
                 </div>
                 {expandedItems.has(item.id) && (
                   <div className={styles.itemDetails}>
-                    {item.details.map((detail, index) => (
+                    {ingredientDetails[item.id].map((detail, index) => (
                       <div key={index} className={styles.detailRow}>
                         <div className={styles.itemname}></div>
                         <div className={styles.itemname}>
                           구매일: {detail.purchaseDate}
                         </div>
-                        <div className={styles.itemamount}>{detail.amount}</div>
+                        <div className={styles.itemamount}>
+                          {detail.amount}
+                          {item.unit}
+                        </div>
                         <div className={styles.itemexpiredate}>
-                          유통기한: {detail.expireDate}
+                          유통기한: D{detail.leftExpirationDay * -1}
                         </div>
                       </div>
                     ))}

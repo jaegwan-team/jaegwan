@@ -31,3 +31,10 @@
   transform: translateY(-0.2rem);
   box-shadow: 0 0.6rem 2rem rgba(0, 0, 0, 0.3);
 }
+
+.profile {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}

@@ -2,12 +2,17 @@ export type CheckStatus = "Yet" | "Checked" | "Deleted";
 
 export type UnitStatus = "kg" | "g" | "l" | "ml" | "개";
 
-export type ItemType = {
-  receiptIngredientId?: number;
-  name?: string;
-  unit?: UnitStatus;
-  amount?: number;
-  expirationDate?: string;
-  isChecked?: CheckStatus;
-  category?: number;
+export type IngredientType = {
+  id: number;
+  name: string;
+  category: string;
+  totalAmount: number;
+  unit: UnitStatus;
+  leftExpirationDay: number;
+};
+
+export type IngredientDetailType = {
+  purchaseDate: string;
+  amount: number;
+  leftExpirationDay: number;
 };
