@@ -22,7 +22,7 @@ public class IngredientResponse {
     private String name;
 
     @Schema(description = "재료 카테고리", example = "육류")
-    private Category category;
+    private String category;
 
     @Schema(description = "재료 총량", example = "100")
     private double totalAmount;
@@ -37,7 +37,7 @@ public class IngredientResponse {
     public IngredientResponse(Long id, String name, Category category, double totalAmount, Unit unit, LocalDateTime expirationDate) {
         this.id = id;
         this.name = name;
-        this.category = category;
+        this.category = category.getDesc();
         this.totalAmount = totalAmount;
         this.unit = unit.getDesc();
         this.leftExpirationDay = (int) ChronoUnit.DAYS.between(LocalDateTime.now(), expirationDate);;
