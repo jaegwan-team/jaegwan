@@ -16,6 +16,7 @@ public class ReceiptDetailResponse {
     private Long id;
     private String name;
     private String category;
+    private int price;
     private double amount;
     private String unit;
 
@@ -23,10 +24,11 @@ public class ReceiptDetailResponse {
     private LocalDate expirationDate;
 
     @QueryProjection
-    public ReceiptDetailResponse(Long id, String name, Category category, double amount, Unit unit, LocalDate expirationDate) {
+    public ReceiptDetailResponse(Long id, String name, Category category, int price, double amount, Unit unit, LocalDate expirationDate) {
         this.id = id;
         this.name = name;
         this.category = category.getDesc();
+        this.price = price;
         this.amount = amount;
         this.unit = unit.getDesc();
         this.expirationDate = expirationDate;
