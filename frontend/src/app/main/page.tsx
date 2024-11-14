@@ -22,6 +22,7 @@ import { useCallback, useEffect, useState } from "react";
 import { getReceiptList, getSignificantListUnchecked } from "@/services/api";
 import { ReceiptListParams, SignificantListParams } from "@/types/mainType";
 import { SignificantProps } from "@/types/significantType";
+import { useRouter } from "next/navigation";
 
 ChartJS.register(
   CategoryScale,
@@ -106,13 +107,23 @@ export default function MainPage() {
     },
   };
 
-  const [uncheckedReceipts, setUncheckedReceipts] = useState<
-    ReceiptProps[] | undefined
-  >();
+  const router = useRouter();
+
+  const handleGotoPurchase = () => {
+    router.push("/main/purchase");
+  };
+
+  const handleGotoSignificant = () => {
+    router.push("/main/significant");
+  };
+
+  const [uncheckedReceipts, setUncheckedReceipts] = useState<ReceiptProps[]>(
+    []
+  );
 
   const [uncheckedSignificants, setUncheckedSignificants] = useState<
-    SignificantProps[] | undefined
-  >();
+    SignificantProps[]
+  >([]);
 
   const fetchData = useCallback(async () => {
     if (!user?.restaurants?.[0]?.id) return;
@@ -164,7 +175,7 @@ export default function MainPage() {
         </div>
 
         <div className={styles.lists}>
-          <div className={styles.listbox}>
+          <div className={styles.listbox} onClick={handleGotoPurchase}>
             <div className={styles.listtitle}>
               <div>
                 구매 내역{" "}
@@ -207,7 +218,7 @@ export default function MainPage() {
             </div>
           </div>
 
-          <div className={styles.listbox}>
+          <div className={styles.listbox} onClick={handleGotoSignificant}>
             {" "}
             <div className={styles.listtitle}>
               <div>

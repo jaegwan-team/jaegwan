@@ -54,7 +54,6 @@ axiosClient.interceptors.response.use(
           return axiosClient(originalRequest);
         }
       } catch (refreshError) {
-        // 리프레시 토큰도 만료된 경우
         console.log(refreshError);
         window.location.href = "/login";
       }

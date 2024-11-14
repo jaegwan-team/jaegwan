@@ -77,3 +77,7 @@ export const getSignificantListUnchecked = (
 ) => {
   return axiosClient.post(`/api/significant/list/uncheck`, restaurant);
 };
+
+export const getSignificantList = (restaurant: SignificantListParams) => {
+  return axiosClient.post(`/api/significant/list`, restaurant);
+};

@@ -4,9 +4,9 @@ export interface LoginProps {
 }
 
 export type Restaurant = {
-  id: number | undefined;
-  name: string | undefined;
-  registerNumber: string | undefined;
+  id: number;
+  name: string;
+  registerNumber: string;
 };
 
 export type UserProps = {

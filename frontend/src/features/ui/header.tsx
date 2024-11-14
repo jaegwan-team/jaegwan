@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import styles from "../../../styles/header.module.css";
 import { useUser } from "../users/api/login/loginUsers";
 
@@ -13,8 +14,16 @@ export default function Header() {
   return (
     <header className={styles.layout}>
       <div className={styles.headerbox}>
-        <div>식당 이름</div>
-        <div>{user?.name}</div>
+        <div>{user?.restaurants[0]?.name}</div>
+        <div className={styles.profile}>
+          <Image
+            src={user!.imageUrl}
+            alt="kakaoprofile"
+            width={15}
+            height={15}
+          ></Image>
+          {user?.name}
+        </div>
       </div>
     </header>
   );
