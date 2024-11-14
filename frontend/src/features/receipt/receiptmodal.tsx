@@ -35,7 +35,7 @@ const formatDate = (date: Date): string => {
 
 // 새로운 아이템 생성을 위한 기본 값
 const DEFAULT_ITEM: NewReceiptDetailTypes = {
-  id: 1,
+  id: 0,
   name: "",
   unit: "개",
   amount: 0,
@@ -52,6 +52,7 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
   const [isAllProcessed, setIsAllProcessed] = useState(false);
   const [purchaseList, setPurchaseList] = useState<NewReceiptDetailTypes[]>([]);
   const [imageUrl, setImageUrl] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const checkAllProcessed = useCallback(() => {
     const allProcessed = purchaseList.every((item) => item.isChecked !== "Yet");
@@ -59,22 +60,26 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
   }, [purchaseList]);
 
   const fetchReceiptDetail = useCallback(async (receiptId: number) => {
-    const response = await getReceiptDetail(receiptId);
-    console.log(response.data);
+    try {
+      setIsLoading(true);
+      const response = await getReceiptDetail(receiptId);
 
-    if (response.data) {
-      const processedData = response.data.data.map(
-        (item: ReceiptDetailTypes) => ({
-          ...item,
-          //as const 추가해보기
-          isChecked: "Yet",
-        })
-      );
-      setPurchaseList(processedData);
+      if (response.data) {
+        const processedData = response.data.data.map(
+          (item: ReceiptDetailTypes) => ({
+            ...item,
+            isChecked: "Yet",
+          })
+        );
+        setPurchaseList(processedData);
 
-      const iresponse = await getReceiptImage(receiptId);
-      console.log(iresponse.data);
-      setImageUrl(iresponse.data.data);
+        const iresponse = await getReceiptImage(receiptId);
+        setImageUrl(iresponse.data.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch receipt details:", error);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -142,7 +147,11 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
 
   const fetchComfirm = useCallback(
     async (updatedItems: UpdatedReceiptDetailTypes[]) => {
-      const response = await confirmReceipt(updatedItems);
+      const params = {
+        receiptId: receiptId,
+        receiptIngredientConfirmData: updatedItems,
+      };
+      const response = await confirmReceipt(params);
       console.log(response);
     },
     []
@@ -185,206 +194,228 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContainer}>
-        <div className={styles.modalHeader}>
-          <h2 className={styles.modalTitle}>구매내역</h2>
-          <div className={styles.headerButtons}>
-            <button
-              onClick={() => setIsImageModalOpen(true)}
-              className={styles.iconButton}
-            >
-              <ImageIcon size={20} />
-              영수증 보기
-            </button>
-            <button onClick={onClose} className={styles.closeButton}>
-              <X size={24} />
-            </button>
-          </div>
-        </div>
-
-        <div className={styles.progressBar}>
-          {purchaseList.map((item, idx) => {
-            let statusClass = styles.incomplete;
-            if (idx === currentIndex) {
-              statusClass = styles.active;
-            } else if (item.isChecked === "Deleted") {
-              statusClass = styles.deleted;
-            } else if (item.isChecked === "Checked") {
-              statusClass = styles.completed;
-            }
-            return (
-              <div
-                key={idx}
-                className={`${styles.progressStep} ${statusClass}`}
-              />
-            );
-          })}
-        </div>
-
-        <div className={styles.formContainer}>
-          <div
-            key={currentIndex}
-            className={`${styles.formSlide} ${
-              slideDirection === "right" ? styles.slideRight : styles.slideLeft
-            }`}
-          >
-            <div className={styles.formGroup}>
-              <label className={styles.formLabel}>품목명:</label>
-              <input
-                type="text"
-                value={purchaseList[currentIndex].name}
-                onChange={(e) => handleChange("name", e.target.value)}
-                className={styles.formInput}
-                disabled={purchaseList[currentIndex].isChecked === "Deleted"}
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label className={styles.formLabel}>카테고리:</label>
-              <select
-                value={purchaseList[currentIndex].category}
-                onChange={(e) => handleChange("category", e.target.value)}
-                className={styles.unitSelect}
-                disabled={purchaseList[currentIndex].isChecked === "Deleted"}
-              >
-                {Object.entries(CategoryLabel).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className={styles.formGroup}>
-              <label className={styles.formLabel}>수량:</label>
-              <div className={styles.amountInputGroup}>
-                <input
-                  type="number"
-                  value={purchaseList[currentIndex].amount}
-                  onChange={(e) =>
-                    handleChange("amount", Number(e.target.value))
-                  }
-                  className={styles.amountInput}
-                  disabled={purchaseList[currentIndex].isChecked === "Deleted"}
-                />
-                <select
-                  value={purchaseList[currentIndex].unit}
-                  onChange={(e) =>
-                    handleChange("unit", e.target.value as UnitStatus)
-                  }
-                  className={styles.unitSelect}
-                  disabled={purchaseList[currentIndex].isChecked === "Deleted"}
+        {isLoading ? (
+          <div className={styles.loading}>로딩 중...</div>
+        ) : (
+          <>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>구매내역</h2>
+              <div className={styles.headerButtons}>
+                <button
+                  onClick={() => setIsImageModalOpen(true)}
+                  className={styles.iconButton}
                 >
-                  {UNITS.map((u) => (
-                    <option key={u} value={u}>
-                      {u}
-                    </option>
-                  ))}
-                </select>
+                  <ImageIcon size={20} />
+                  영수증 보기
+                </button>
+                <button onClick={onClose} className={styles.closeButton}>
+                  <X size={24} />
+                </button>
               </div>
             </div>
 
-            <div className={styles.formGroup}>
-              <label className={styles.formLabel}>유통기한:</label>
-              <input
-                type="date"
-                value={purchaseList[currentIndex].expirationDate}
-                onChange={(e) => handleChange("expirationDate", e.target.value)}
-                className={styles.formInput}
-                disabled={purchaseList[currentIndex].isChecked === "Deleted"}
-                min={formatDate(new Date())}
-              />
+            <div className={styles.progressBar}>
+              {purchaseList.map((item, idx) => {
+                let statusClass = styles.incomplete;
+                if (idx === currentIndex) {
+                  statusClass = styles.active;
+                } else if (item.isChecked === "Deleted") {
+                  statusClass = styles.deleted;
+                } else if (item.isChecked === "Checked") {
+                  statusClass = styles.completed;
+                }
+                return (
+                  <div
+                    key={idx}
+                    className={`${styles.progressStep} ${statusClass}`}
+                  />
+                );
+              })}
             </div>
 
-            <div className={styles.actionButtons}>
-              <button
-                onClick={handleCheckItem}
-                className={`${styles.actionButton} ${
-                  purchaseList[currentIndex].isChecked === "Checked"
-                    ? styles.checked
-                    : ""
-                }`}
-                disabled={purchaseList[currentIndex].isChecked === "Deleted"}
-              >
-                <Check size={20} />
-                확인
-              </button>
-              <button
-                onClick={handleDeleteItem}
-                className={`${styles.actionButton} ${
-                  purchaseList[currentIndex].isChecked === "Deleted"
-                    ? styles.deleted
-                    : ""
+            <div className={styles.formContainer}>
+              <div
+                key={currentIndex}
+                className={`${styles.formSlide} ${
+                  slideDirection === "right"
+                    ? styles.slideRight
+                    : styles.slideLeft
                 }`}
               >
-                <Trash2 size={20} />
-                삭제
-              </button>
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>품목명:</label>
+                  <input
+                    type="text"
+                    value={purchaseList[currentIndex].name}
+                    onChange={(e) => handleChange("name", e.target.value)}
+                    className={styles.formInput}
+                    disabled={
+                      purchaseList[currentIndex].isChecked === "Deleted"
+                    }
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>카테고리:</label>
+                  <select
+                    value={purchaseList[currentIndex].category}
+                    onChange={(e) => handleChange("category", e.target.value)}
+                    className={styles.unitSelect}
+                    disabled={
+                      purchaseList[currentIndex].isChecked === "Deleted"
+                    }
+                  >
+                    {Object.entries(CategoryLabel).map(([value, label]) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>수량:</label>
+                  <div className={styles.amountInputGroup}>
+                    <input
+                      type="number"
+                      value={purchaseList[currentIndex].amount}
+                      onChange={(e) =>
+                        handleChange("amount", Number(e.target.value))
+                      }
+                      className={styles.amountInput}
+                      disabled={
+                        purchaseList[currentIndex].isChecked === "Deleted"
+                      }
+                    />
+                    <select
+                      value={purchaseList[currentIndex].unit}
+                      onChange={(e) =>
+                        handleChange("unit", e.target.value as UnitStatus)
+                      }
+                      className={styles.unitSelect}
+                      disabled={
+                        purchaseList[currentIndex].isChecked === "Deleted"
+                      }
+                    >
+                      {UNITS.map((u) => (
+                        <option key={u} value={u}>
+                          {u}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>유통기한:</label>
+                  <input
+                    type="date"
+                    value={purchaseList[currentIndex].expirationDate}
+                    onChange={(e) =>
+                      handleChange("expirationDate", e.target.value)
+                    }
+                    className={styles.formInput}
+                    disabled={
+                      purchaseList[currentIndex].isChecked === "Deleted"
+                    }
+                    min={formatDate(new Date())}
+                  />
+                </div>
+
+                <div className={styles.actionButtons}>
+                  <button
+                    onClick={handleCheckItem}
+                    className={`${styles.actionButton} ${
+                      purchaseList[currentIndex].isChecked === "Checked"
+                        ? styles.checked
+                        : ""
+                    }`}
+                    disabled={
+                      purchaseList[currentIndex].isChecked === "Deleted"
+                    }
+                  >
+                    <Check size={20} />
+                    확인
+                  </button>
+                  <button
+                    onClick={handleDeleteItem}
+                    className={`${styles.actionButton} ${
+                      purchaseList[currentIndex].isChecked === "Deleted"
+                        ? styles.deleted
+                        : ""
+                    }`}
+                  >
+                    <Trash2 size={20} />
+                    삭제
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div className={styles.navigationButtons}>
-          <button
-            onClick={handlePrevious}
-            disabled={currentIndex === 0}
-            className={styles.navButton}
-          >
-            <ChevronLeft size={24} />
-          </button>
+            <div className={styles.navigationButtons}>
+              <button
+                onClick={handlePrevious}
+                disabled={currentIndex === 0}
+                className={styles.navButton}
+              >
+                <ChevronLeft size={24} />
+              </button>
 
-          {currentIndex === purchaseList.length - 1 ? (
-            <button
-              onClick={handleComplete}
-              disabled={!isAllProcessed}
-              className={`${styles.completeButton} ${
-                isAllProcessed ? styles.active : ""
-              }`}
-            >
-              완료
-            </button>
-          ) : (
-            <button
-              onClick={handleNext}
-              disabled={currentIndex === purchaseList.length - 1}
-              className={styles.navButton}
-            >
-              <ChevronRight size={24} />
-            </button>
-          )}
-        </div>
-        <div className={styles.navigationButtons}>
-          <button
-            onClick={handlePrevious}
-            disabled={currentIndex === 0}
-            className={styles.navButton}
-          >
-            <ChevronLeft size={24} />
-          </button>
+              {currentIndex === purchaseList.length - 1 ? (
+                <button
+                  onClick={handleComplete}
+                  disabled={!isAllProcessed}
+                  className={`${styles.completeButton} ${
+                    isAllProcessed ? styles.active : ""
+                  }`}
+                >
+                  완료
+                </button>
+              ) : (
+                <button
+                  onClick={handleNext}
+                  disabled={currentIndex === purchaseList.length - 1}
+                  className={styles.navButton}
+                >
+                  <ChevronRight size={24} />
+                </button>
+              )}
+            </div>
+            <div className={styles.navigationButtons}>
+              <button
+                onClick={handlePrevious}
+                disabled={currentIndex === 0}
+                className={styles.navButton}
+              >
+                <ChevronLeft size={24} />
+              </button>
 
-          <button onClick={handleAddItem} className={styles.addButton}>
-            <Plus size={20} />새 품목 추가
-          </button>
+              <button onClick={handleAddItem} className={styles.addButton}>
+                <Plus size={20} />새 품목 추가
+              </button>
 
-          {currentIndex === purchaseList.length - 1 ? (
-            <button
-              onClick={handleComplete}
-              disabled={!isAllProcessed}
-              className={`${styles.completeButton} ${
-                isAllProcessed ? styles.active : ""
-              }`}
-            >
-              완료
-            </button>
-          ) : (
-            <button
-              onClick={handleNext}
-              disabled={currentIndex === purchaseList.length - 1}
-              className={styles.navButton}
-            >
-              <ChevronRight size={24} />
-            </button>
-          )}
-        </div>
+              {currentIndex === purchaseList.length - 1 ? (
+                <button
+                  onClick={handleComplete}
+                  disabled={!isAllProcessed}
+                  className={`${styles.completeButton} ${
+                    isAllProcessed ? styles.active : ""
+                  }`}
+                >
+                  완료
+                </button>
+              ) : (
+                <button
+                  onClick={handleNext}
+                  disabled={currentIndex === purchaseList.length - 1}
+                  className={styles.navButton}
+                >
+                  <ChevronRight size={24} />
+                </button>
+              )}
+            </div>
+          </>
+        )}
       </div>
 
       {isImageModalOpen && <ImageModal />}

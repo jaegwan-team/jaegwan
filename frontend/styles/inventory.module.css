@@ -87,6 +87,10 @@
   gap: 0.5rem;
 }
 
+.expired {
+  color: #ff0000;
+}
+
 .itemarrow {
   width: 5%;
   height: 100%;
