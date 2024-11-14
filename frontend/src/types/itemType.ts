@@ -1,5 +1,3 @@
-export type CheckStatus = "Yet" | "Checked" | "Deleted";
-
 export type UnitStatus = "kg" | "g" | "l" | "ml" | "개";
 
 export type IngredientType = {
