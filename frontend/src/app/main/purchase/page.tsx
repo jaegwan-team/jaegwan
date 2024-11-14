@@ -13,18 +13,20 @@ import { ReceiptListParams } from "@/types/mainType";
 
 export default function PurchasePage() {
   const { user } = useUser();
+  const [receiptId, setReceiptId] = useState<number>(-1);
   const [purchaseData, setPurchasedata] = useState<
     ReceiptProps[] | undefined
   >();
+
   const fetchReceipt = useCallback(async () => {
     if (!user?.restaurants?.[0]?.id) return;
 
     const params: ReceiptListParams = {
       restaurantId: user.restaurants[0].id,
-      isAll: false,
+      isAll: true,
     };
     const response = await getReceiptList(params);
-    setPurchasedata(response.data);
+    setPurchasedata(response.data.data);
   }, [user?.restaurants]);
 
   useEffect(() => {
@@ -33,11 +35,13 @@ export default function PurchasePage() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleDetailClick = () => {
+  const handleDetailClick = (receiptId: number) => {
+    setReceiptId(receiptId);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
+    setReceiptId(-1);
     setIsModalOpen(false);
   };
 
@@ -58,7 +62,7 @@ export default function PurchasePage() {
               <div
                 key={purchase.id}
                 className={styles.tableRow}
-                onClick={() => handleDetailClick()}
+                onClick={() => handleDetailClick(purchase.id)}
               >
                 <div className={styles.dateColumn}>{purchase.createdDate}</div>
                 <div className={styles.itemColumn}>
@@ -87,7 +91,9 @@ export default function PurchasePage() {
           </div>
         </div>
       </div>
-      {isModalOpen && <ReceiptModal receiptId={1} onClose={handleCloseModal} />}
+      {isModalOpen && (
+        <ReceiptModal receiptId={receiptId} onClose={handleCloseModal} />
+      )}
     </div>
   );
 }

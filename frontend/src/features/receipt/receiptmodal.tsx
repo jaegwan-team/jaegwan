@@ -8,56 +8,89 @@ import {
   Plus,
   Image as ImageIcon,
 } from "lucide-react";
-import { useReceiptDetail } from "./api/get-receipt-detail";
 import styles from "../../../styles/modals.module.css";
-import { ItemType, UnitStatus } from "@/types/itemType";
+import { UnitStatus } from "@/types/itemType";
 import { ModalProps } from "@/types/modalType";
 import { CategoryLabel } from "@/types/category";
+import {
+  confirmReceipt,
+  getReceiptDetail,
+  getReceiptImage,
+} from "@/services/api";
+import {
+  NewReceiptDetailTypes,
+  ReceiptDetailTypes,
+  UpdatedReceiptDetailTypes,
+} from "@/types/receiptType";
+import Image from "next/image";
 
-const UNITS: UnitStatus[] = ["kg", "g", "l", "ml", "개"];
+const UNITS: UnitStatus[] = ["kg", "g", "ml", "l", "개"];
+
+const formatDate = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 // 새로운 아이템 생성을 위한 기본 값
-const DEFAULT_ITEM: ItemType = {
+const DEFAULT_ITEM: NewReceiptDetailTypes = {
+  id: 1,
   name: "",
   unit: "개",
   amount: 0,
-  expirationDate: new Date().toISOString().split("T")[0],
-  category: 1,
+  price: 0,
+  expirationDate: formatDate(new Date()),
+  category: "육류",
   isChecked: "Yet",
 };
 
 export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
-  const { data: receiptDetail } = useReceiptDetail(receiptId);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [slideDirection, setSlideDirection] = useState("right");
   const [isAllProcessed, setIsAllProcessed] = useState(false);
-  const [purchaseList, setPurchaseList] = useState<ItemType[]>([]);
-
-  // 데이터 초기화
-  useEffect(() => {
-    if (receiptDetail) {
-      // 받아온 데이터에 isChecked 추가
-      const processedData = receiptDetail.map((item: ItemType) => ({
-        ...item,
-        isChecked: "Yet" as const,
-      }));
-      setPurchaseList(processedData);
-    }
-  }, [receiptDetail]);
+  const [purchaseList, setPurchaseList] = useState<NewReceiptDetailTypes[]>([]);
+  const [imageUrl, setImageUrl] = useState<string>("");
 
   const checkAllProcessed = useCallback(() => {
     const allProcessed = purchaseList.every((item) => item.isChecked !== "Yet");
     setIsAllProcessed(allProcessed);
   }, [purchaseList]);
 
-  useEffect(() => {
-    checkAllProcessed();
-  }, [checkAllProcessed]);
+  const fetchReceiptDetail = useCallback(async (receiptId: number) => {
+    const response = await getReceiptDetail(receiptId);
+    console.log(response.data);
 
-  const handleChange = <K extends keyof ItemType>(
+    if (response.data) {
+      const processedData = response.data.data.map(
+        (item: ReceiptDetailTypes) => ({
+          ...item,
+          //as const 추가해보기
+          isChecked: "Yet",
+        })
+      );
+      setPurchaseList(processedData);
+
+      const iresponse = await getReceiptImage(receiptId);
+      console.log(iresponse.data);
+      setImageUrl(iresponse.data.data);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchReceiptDetail(receiptId);
+  }, [receiptId, fetchReceiptDetail]);
+
+  useEffect(() => {
+    if (purchaseList.length > 0) {
+      checkAllProcessed();
+    }
+  }, [purchaseList, checkAllProcessed]);
+
+  const handleChange = <K extends keyof NewReceiptDetailTypes>(
     field: K,
-    value: ItemType[K]
+    value: NewReceiptDetailTypes[K]
   ) => {
     setPurchaseList((prevList) => {
       const newList = [...prevList];
@@ -101,7 +134,34 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
     checkAllProcessed();
   };
 
-  // 이미지 모달
+  const handleAddItem = () => {
+    setPurchaseList((prev) => [...prev, { ...DEFAULT_ITEM }]);
+    setCurrentIndex(purchaseList.length);
+    setSlideDirection("right");
+  };
+
+  const fetchComfirm = useCallback(
+    async (updatedItems: UpdatedReceiptDetailTypes[]) => {
+      const response = await confirmReceipt(updatedItems);
+      console.log(response);
+    },
+    []
+  );
+
+  const handleComplete = () => {
+    const updatedItems: UpdatedReceiptDetailTypes[] = purchaseList
+      .filter((item) => item.isChecked !== "Deleted")
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .map(({ isChecked, id, ...rest }) => ({
+        ...rest,
+        receiptIngredientId: id,
+      }));
+
+    console.log("Updated items:", updatedItems);
+    fetchComfirm(updatedItems);
+    onClose();
+  };
+
   const ImageModal = () => (
     <div
       className={styles.imageModalOverlay}
@@ -111,11 +171,7 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
         className={styles.imageModalContent}
         onClick={(e) => e.stopPropagation()}
       >
-        <img
-        // src={`/api/receipt/image/${receiptId}`}
-        // alt="영수증"
-        // className={styles.receiptImage}
-        />
+        <Image src={imageUrl} alt="영수증" className={styles.receiptImage} />
         <button
           onClick={() => setIsImageModalOpen(false)}
           className={styles.closeButton}
@@ -125,24 +181,6 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
       </div>
     </div>
   );
-
-  // 새 아이템 추가
-  const handleAddItem = () => {
-    setPurchaseList((prev) => [...prev, { ...DEFAULT_ITEM }]);
-    setCurrentIndex(purchaseList.length);
-    setSlideDirection("right");
-  };
-
-  const handleComplete = () => {
-    const updatedItems = purchaseList
-      .filter((item) => item.isChecked !== "Deleted")
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .map(({ isChecked, ...item }) => item);
-
-    console.log("Updated items:", updatedItems);
-    // API 호출 로직 추가 필요
-    onClose();
-  };
 
   return (
     <div className={styles.modalOverlay}>
@@ -203,10 +241,8 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
             <div className={styles.formGroup}>
               <label className={styles.formLabel}>카테고리:</label>
               <select
-                value={String(purchaseList[currentIndex].category)}
-                onChange={(e) =>
-                  handleChange("category", Number(e.target.value))
-                }
+                value={purchaseList[currentIndex].category}
+                onChange={(e) => handleChange("category", e.target.value)}
                 className={styles.unitSelect}
                 disabled={purchaseList[currentIndex].isChecked === "Deleted"}
               >
@@ -255,6 +291,7 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
                 onChange={(e) => handleChange("expirationDate", e.target.value)}
                 className={styles.formInput}
                 disabled={purchaseList[currentIndex].isChecked === "Deleted"}
+                min={formatDate(new Date())}
               />
             </div>
 

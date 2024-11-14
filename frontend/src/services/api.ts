@@ -1,3 +1,4 @@
+import { UpdatedReceiptDetailTypes } from "@/types/receiptType";
 import { axiosClient } from "./axios";
 import { ReceiptListParams, SignificantListParams } from "@/types/mainType";
 
@@ -59,7 +60,7 @@ export const getReceiptList = (restaurant: ReceiptListParams) => {
   return axiosClient.post(`/api/receipt/detail`, restaurant);
 };
 
-export const confirmReceipt = (content: Record<string, unknown>) => {
+export const confirmReceipt = (content: UpdatedReceiptDetailTypes[]) => {
   return axiosClient.post(`/api/receipt/confirm`, content);
 };
 
@@ -69,6 +70,10 @@ export const getReceiptDetail = (id: number) => {
 
 export const deleteReceiptDetail = (receiptIngredientId: number) => {
   return axiosClient.delete(`/api/receipt/detail/${receiptIngredientId}`);
+};
+
+export const getReceiptImage = (id: number) => {
+  return axiosClient.get(`/api/receipt/image/${id}`);
 };
 
 // significant

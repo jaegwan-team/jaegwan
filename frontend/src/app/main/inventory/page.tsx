@@ -116,7 +116,7 @@ export default function InventoryPage() {
                           {item.unit}
                         </div>
                         <div className={styles.itemexpiredate}>
-                          유통기한: D{detail.leftExpirationDay * -1}
+                          D{detail.leftExpirationDay * -1}
                         </div>
                       </div>
                     ))}
