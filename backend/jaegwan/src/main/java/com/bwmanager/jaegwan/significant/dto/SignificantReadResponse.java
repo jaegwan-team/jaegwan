@@ -1,8 +1,9 @@
 package com.bwmanager.jaegwan.significant.dto;
 
 import com.bwmanager.jaegwan.significant.entity.Significant;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,8 +25,9 @@ public class SignificantReadResponse {
     @Schema(description = "특이사항 확인 여부", example = "false")
     private boolean isConfirmed;
 
-    @Schema(description = "특이사항 생성 날짜", example = "2023-11-05")
-    private LocalDate date;
+    @Schema(description = "특이사항 생성 날짜", example = "2023-11-05 12:12")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+    private LocalDateTime date;
 
     public static SignificantReadResponse fromEntity(Significant significant) {
         return SignificantReadResponse.builder()

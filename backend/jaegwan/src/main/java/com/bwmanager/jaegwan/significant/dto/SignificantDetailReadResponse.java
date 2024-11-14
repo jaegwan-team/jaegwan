@@ -3,7 +3,7 @@ package com.bwmanager.jaegwan.significant.dto;
 import com.bwmanager.jaegwan.significant.entity.Significant;
 import com.bwmanager.jaegwan.significant.entity.SignificantIngredient;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +26,7 @@ public class SignificantDetailReadResponse {
     private boolean isConfirmed;
 
     @Schema(description = "특이사항 생성 날짜", example = "2023-11-05")
-    private LocalDate date;
+    private LocalDateTime date;
 
     @Schema(description = "특이사항 관련 재료 이름", example = "감자")
     private String ingredientName;
