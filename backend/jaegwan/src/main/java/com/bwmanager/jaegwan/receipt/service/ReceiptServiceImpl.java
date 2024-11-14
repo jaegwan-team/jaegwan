@@ -15,13 +15,9 @@ import com.bwmanager.jaegwan.ingredient.entity.Unit;
 import com.bwmanager.jaegwan.ingredient.exception.IngredientServiceException;
 import com.bwmanager.jaegwan.ingredient.repository.IngredientDetailRepository;
 import com.bwmanager.jaegwan.ingredient.repository.IngredientRepository;
-import com.bwmanager.jaegwan.receipt.dto.ImageUrlRequest;
-import com.bwmanager.jaegwan.receipt.dto.ReceiptDetailResponse;
-import com.bwmanager.jaegwan.receipt.dto.ReceiptIngredientConfirmRequest;
-import com.bwmanager.jaegwan.receipt.dto.ReceiptResponse;
+import com.bwmanager.jaegwan.receipt.dto.*;
 import com.bwmanager.jaegwan.receipt.entity.Receipt;
 import com.bwmanager.jaegwan.receipt.entity.ReceiptIngredient;
-import com.bwmanager.jaegwan.receipt.exception.ReceiptIngredientNotFoundException;
 import com.bwmanager.jaegwan.receipt.repository.ReceiptIngredientRepository;
 import com.bwmanager.jaegwan.receipt.repository.ReceiptRepository;
 import com.bwmanager.jaegwan.restaurant.entity.Restaurant;
@@ -106,28 +102,42 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     @Override
     public void confirmReceiptIngredient(ReceiptIngredientConfirmRequest request) {
+        //영수증과 식당 조회
+        Receipt receipt = receiptRepository.findById(request.getReceiptId())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.RECEIPT_NOT_FOUND));
+        Restaurant restaurant = receipt.getRestaurant();
 
-        ReceiptIngredient receiptIngredient = receiptIngredientRepository.findById(request.getReceiptIngredientId())
-                .orElseThrow(() -> new ReceiptIngredientNotFoundException(ErrorCode.RECEIPT_NOT_FOUND));
-        Restaurant restaurant = receiptIngredient.getReceipt().getRestaurant();
+        request.getReceiptIngredientConfirmData().forEach(data -> confirmReceipt(data, receipt, restaurant));
+    }
+
+    private void confirmReceipt(ReceiptIngredientConfirmData data, Receipt receipt, Restaurant restaurant) {
+        // 추가로 영수증-재료에 등록됐다면 데이터 저장
+        ReceiptIngredient receiptIngredient = receiptIngredientRepository.findById(data.getReceiptIngredientId())
+                .orElseGet(() -> receiptIngredientRepository.save(ReceiptIngredient.builder()
+                        .amount(data.getAmount())
+                        .price(data.getPrice())
+                        .expirationDate(data.getExpirationDate())
+                        .isConfirmed(true)
+                        .receipt(receipt)
+                        .build()));
 
         // 1. 재료 이름에 해당하는 재료가 존재하는지 여부 조회
-        String ingredientName = request.getName();
+        String ingredientName = data.getName();
         ingredientRepository
                 .findByRestaurantIdAndName(restaurant.getId(), ingredientName)
                 .ifPresentOrElse(
                         // 1-1. 존재하면 해당 재료를 연관 관계에 추가
-                        ingredient -> receiptIngredient.confirm(ingredient, request.getAmount(), request.getPrice(), request.getExpirationDate()),
+                        ingredient -> receiptIngredient.confirm(ingredient, data.getAmount(), data.getPrice(), data.getExpirationDate()),
                         // 1-2. 존재하지 않으면 재료이름으로 재료를 추가하고 연관 관계에 추가
                         () -> {
                             Ingredient savedIngredient = ingredientRepository.save(Ingredient.builder()
-                                    .name(request.getName())
-                                    .category(EnumValueConvertUtils.ofDesc(Category.class, ErrorCode.INGREDIENT_CATEGORY_NOT_FOUND, request.getCategory()))
-                                    .unit(EnumValueConvertUtils.ofDesc(Unit.class, ErrorCode.INGREDIENT_UNIT_NOT_FOUND, request.getUnit()))
+                                    .name(data.getName())
+                                    .category(EnumValueConvertUtils.ofDesc(Category.class, ErrorCode.INGREDIENT_CATEGORY_NOT_FOUND, data.getCategory()))
+                                    .unit(EnumValueConvertUtils.ofDesc(Unit.class, ErrorCode.INGREDIENT_UNIT_NOT_FOUND, data.getUnit()))
                                     .restaurant(restaurant)
                                     .build());
                             log.info("재료가 추가됨 - {}", savedIngredient.getName());
-                            receiptIngredient.confirm(savedIngredient, request.getAmount(), request.getPrice(), request.getExpirationDate());
+                            receiptIngredient.confirm(savedIngredient, data.getAmount(), data.getPrice(), data.getExpirationDate());
                         }
                 );
 
@@ -138,9 +148,9 @@ public class ReceiptServiceImpl implements ReceiptService {
 
         ingredientDetailRepository.save(IngredientDetail.builder()
                 .ingredient(ingredient)
-                .amount(request.getAmount())
+                .amount(data.getAmount())
                 .purchaseDate(receiptIngredient.getReceipt().getCreatedDate())
-                .expirationDate(request.getExpirationDate().atStartOfDay())
+                .expirationDate(data.getExpirationDate().atStartOfDay())
                 .build());
     }
 
