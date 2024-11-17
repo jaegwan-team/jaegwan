@@ -365,6 +365,10 @@
   z-index: 100;
 }
 
+.hidden {
+  display: none;
+}
+
 .imageModalContent {
   position: relative;
   width: 90vw;
@@ -372,6 +376,9 @@
   background-color: white;
   padding: 1rem;
   border-radius: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .receiptImage {
