@@ -53,6 +53,7 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
   const [purchaseList, setPurchaseList] = useState<NewReceiptDetailTypes[]>([]);
   const [imageUrl, setImageUrl] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const checkAllProcessed = useCallback(() => {
     const allProcessed = purchaseList.every((item) => item.isChecked !== "Yet");
@@ -145,16 +146,24 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
     setSlideDirection("right");
   };
 
-  const fetchComfirm = useCallback(
+  const fetchConfirm = useCallback(
     async (updatedItems: UpdatedReceiptDetailTypes[]) => {
-      const params = {
-        receiptId: receiptId,
-        receiptIngredientConfirmData: updatedItems,
-      };
-      const response = await confirmReceipt(params);
-      console.log(response);
+      setIsSubmitting(true);
+      try {
+        const params = {
+          receiptId: receiptId,
+          receiptIngredientConfirmData: updatedItems,
+        };
+        const response = await confirmReceipt(params);
+        console.log(response);
+        onClose();
+      } catch (error) {
+        console.error("Failed to confirm receipt:", error);
+      } finally {
+        setIsSubmitting(false);
+      }
     },
-    []
+    [receiptId, onClose]
   );
 
   const handleComplete = () => {
@@ -167,9 +176,25 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
       }));
 
     console.log("Updated items:", updatedItems);
-    fetchComfirm(updatedItems);
+    fetchConfirm(updatedItems);
     onClose();
   };
+
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (isMounted) {
+      fetchReceiptDetail(receiptId);
+    }
+  }, [isMounted, receiptId, fetchReceiptDetail]);
+
+  if (!isMounted) {
+    return null;
+  }
 
   const ImageModal = () => (
     <div
@@ -201,6 +226,9 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
             <div className={styles.modalHeader}>
               <h2 className={styles.modalTitle}>구매내역</h2>
               <div className={styles.headerButtons}>
+                <button onClick={handleAddItem} className={styles.addButton}>
+                  <Plus size={20} />새 품목 추가
+                </button>
                 <button
                   onClick={() => setIsImageModalOpen(true)}
                   className={styles.iconButton}
@@ -390,19 +418,15 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
                 <ChevronLeft size={24} />
               </button>
 
-              <button onClick={handleAddItem} className={styles.addButton}>
-                <Plus size={20} />새 품목 추가
-              </button>
-
               {currentIndex === purchaseList.length - 1 ? (
                 <button
                   onClick={handleComplete}
-                  disabled={!isAllProcessed}
+                  disabled={!isAllProcessed || isSubmitting}
                   className={`${styles.completeButton} ${
                     isAllProcessed ? styles.active : ""
                   }`}
                 >
-                  완료
+                  {isSubmitting ? "처리 중..." : "완료"}
                 </button>
               ) : (
                 <button

@@ -44,8 +44,18 @@ export default function PurchasePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDetailClick = (receiptId: number) => {
-    setReceiptId(receiptId);
-    setIsModalOpen(true);
+    const selectedReceipt = purchaseData?.find(
+      (purchase) => purchase.id === receiptId
+    );
+
+    if (selectedReceipt) {
+      if (selectedReceipt.confirmed) {
+        alert("이미 확인된 영수증입니다.");
+      } else {
+        setReceiptId(receiptId);
+        setIsModalOpen(true);
+      }
+    }
   };
 
   const handleCloseModal = () => {
