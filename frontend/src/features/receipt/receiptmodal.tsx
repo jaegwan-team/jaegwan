@@ -205,7 +205,13 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
         className={styles.imageModalContent}
         onClick={(e) => e.stopPropagation()}
       >
-        <Image src={imageUrl} alt="영수증" className={styles.receiptImage} />
+        <Image
+          src={imageUrl}
+          alt="영수증"
+          className={styles.receiptImage}
+          fill={true}
+          style={{ objectFit: "contain" }}
+        />
         <button
           onClick={() => setIsImageModalOpen(false)}
           className={styles.closeButton}
