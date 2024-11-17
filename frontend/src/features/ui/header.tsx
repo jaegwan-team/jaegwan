@@ -21,6 +21,7 @@ export default function Header() {
             alt="kakaoprofile"
             width={15}
             height={15}
+            unoptimized={true}
           ></Image>
           {user?.name}
         </div>
