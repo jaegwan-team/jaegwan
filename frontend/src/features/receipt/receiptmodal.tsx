@@ -196,32 +196,42 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
     return null;
   }
 
-  const ImageModal = () => (
-    <div
-      className={styles.imageModalOverlay}
-      onClick={() => setIsImageModalOpen(false)}
-    >
+  const ImageModal = () => {
+    const [imageLoading, setImageLoading] = useState(true);
+
+    return (
       <div
-        className={styles.imageModalContent}
-        onClick={(e) => e.stopPropagation()}
+        className={styles.imageModalOverlay}
+        onClick={() => setIsImageModalOpen(false)}
       >
-        <Image
-          src={imageUrl}
-          alt="영수증"
-          className={styles.receiptImage}
-          fill={true}
-          style={{ objectFit: "contain" }}
-          unoptimized={true}
-        />
-        <button
-          onClick={() => setIsImageModalOpen(false)}
-          className={styles.closeButton}
+        <div
+          className={styles.imageModalContent}
+          onClick={(e) => e.stopPropagation()}
         >
-          <X size={24} />
-        </button>
+          {imageLoading && (
+            <div className={styles.loading}>이미지 로딩 중...</div>
+          )}
+          <Image
+            src={imageUrl}
+            alt="영수증"
+            className={`${styles.receiptImage} ${
+              imageLoading ? styles.hidden : ""
+            }`}
+            fill={true}
+            style={{ objectFit: "contain" }}
+            unoptimized={true}
+            onLoadingComplete={() => setImageLoading(false)}
+          />
+          <button
+            onClick={() => setIsImageModalOpen(false)}
+            className={styles.closeButton}
+          >
+            <X size={24} />
+          </button>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className={styles.modalOverlay}>
