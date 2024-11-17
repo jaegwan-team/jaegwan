@@ -1,6 +1,7 @@
 import { UpdatedReceiptDetailTypes } from "@/types/receiptType";
 import { axiosClient } from "./axios";
 import { ReceiptListParams, SignificantListParams } from "@/types/mainType";
+import { SignificantParams } from "@/types/significantType";
 
 // user
 export const getUserInfo = async () => {
@@ -90,4 +91,12 @@ export const getSignificantListUnchecked = (
 
 export const getSignificantList = (restaurant: SignificantListParams) => {
   return axiosClient.post(`/api/significant/list`, restaurant);
+};
+
+export const confirmSignificant = (significant: SignificantParams) => {
+  return axiosClient.put(`api/significant`, significant);
+};
+
+export const deleteSignificant = (significant: SignificantParams) => {
+  return axiosClient.delete(`api/significant`, { data: significant });
 };

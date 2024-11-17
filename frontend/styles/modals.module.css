@@ -379,3 +379,20 @@
   max-height: calc(90vh - 2rem);
   object-fit: contain;
 }
+
+.significantModal {
+  height: auto !important;
+  min-height: 15rem;
+  max-height: 80vh;
+  width: 40rem;
+}
+
+.significantContent {
+  padding: 1.5rem;
+  background-color: rgb(243, 244, 246);
+  border-radius: 0.5rem;
+  min-height: 10rem;
+  margin: 1rem 0;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
