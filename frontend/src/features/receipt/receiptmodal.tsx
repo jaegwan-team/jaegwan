@@ -211,6 +211,7 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
           className={styles.receiptImage}
           fill={true}
           style={{ objectFit: "contain" }}
+          unoptimized={true}
         />
         <button
           onClick={() => setIsImageModalOpen(false)}
