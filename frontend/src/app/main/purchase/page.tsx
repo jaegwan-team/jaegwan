@@ -88,9 +88,10 @@ export default function PurchasePage() {
                     {purchase.createdDate}
                   </div>
                   <div className={styles.itemColumn}>
-                    {purchase.mainIngredientName}
-                    {purchase.leftCount > 0 &&
-                      ` 외 ${purchase.leftCount}개 품목`}
+                    {purchase.mainIngredientName
+                      ? `${purchase.mainIngredientName} 외 `
+                      : ``}
+                    {purchase.leftCount > 0 && `${purchase.leftCount}개 품목`}
                   </div>
                   <div className={styles.checkColumn}>
                     {purchase.confirmed ? (
