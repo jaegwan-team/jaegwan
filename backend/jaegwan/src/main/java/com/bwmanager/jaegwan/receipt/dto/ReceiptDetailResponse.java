@@ -1,5 +1,7 @@
 package com.bwmanager.jaegwan.receipt.dto;
 
+import com.bwmanager.jaegwan.ingredient.entity.Category;
+import com.bwmanager.jaegwan.ingredient.entity.Unit;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
@@ -22,13 +24,13 @@ public class ReceiptDetailResponse {
     private LocalDate expirationDate;
 
     @QueryProjection
-    public ReceiptDetailResponse(Long id, String name, String category, int price, double amount, String unit, LocalDate expirationDate) {
+    public ReceiptDetailResponse(Long id, String name, Category category, int price, double amount, Unit unit, LocalDate expirationDate) {
         this.id = id;
         this.name = name;
-        this.category = category;
+        this.category = category!=null?category.getDesc():null;
         this.price = price;
         this.amount = amount;
-        this.unit = unit;
+        this.unit = unit!=null?unit.getDesc():null;
         this.expirationDate = expirationDate;
     }
 }
