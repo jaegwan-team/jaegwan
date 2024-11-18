@@ -156,6 +156,9 @@ public class ReceiptServiceImpl implements ReceiptService {
                 .purchaseDate(receiptIngredient.getReceipt().getCreatedDate())
                 .expirationDate(data.getExpirationDate().atStartOfDay())
                 .build());
+
+        // 3. 삭제한 구매 내역 재료 삭제
+       receiptIngredientRepository.deleteAllByIsConfirmedFalseAndReceiptId(receipt.getId());
     }
 
     @Override
