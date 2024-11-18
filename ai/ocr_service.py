@@ -45,7 +45,7 @@ def analyze_image_with_ocr(image_url: str) -> str:
     return text
 
 
-def analyze_text_with_chatgpt(text: str) -> list:
+def analyze_text_with_chatgpt(text: str, max_retries: int = 3, current_retry: int = 0) -> list:
     # ChatGPT에 재료 정보를 분류 요청
     category = """
         Vegetables("채소", "1"),
@@ -77,20 +77,29 @@ def analyze_text_with_chatgpt(text: str) -> list:
     amount(영수증에 적힌 개수), price(할인 가격이 있다면 빼고 지불한 총 가격)가 담긴 객체 리스트로 반환해주세요.
     그리고 name은 무조건 식자재 관련된 거니깐 오타 있으면 알아서 수정해주세요.
     """
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": query}]
-    )
-    result_text = response['choices'][0]['message']['content']
 
-    # JSON 문자열을 파이썬 리스트로 변환
     try:
-        # 필요 없는 문자 제거
+        # ChatGPT API 호출
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": query}]
+        )
+        result_text = response['choices'][0]['message']['content']
+
+        # JSON 문자열을 파이썬 리스트로 변환
         result_text = result_text.strip("```json").strip("```").strip()
         result_data = json.loads(result_text)  # JSON 변환 시도
-    except json.JSONDecodeError:
-        # JSON 변환 실패 시 원본 반환
-        print("JSON 변환 실패:", result_text)  # 디버깅을 위해 출력
-        result_data = result_text
+        return result_data
 
-    return result_data
+    except json.JSONDecodeError as e:
+        print(f"JSON 변환 실패 (재시도 {current_retry + 1}/{max_retries}): {e}")
+        if current_retry < max_retries:
+            return analyze_text_with_chatgpt(text, max_retries, current_retry + 1)
+        else:
+            raise RuntimeError("JSON 변환 실패: 최대 재시도 횟수 초과")  # 최대 재시도 초과 시 예외 발생
+    except Exception as e:
+        print(f"API 호출 실패 (재시도 {current_retry + 1}/{max_retries}): {e}")
+        if current_retry < max_retries:
+            return analyze_text_with_chatgpt(text, max_retries, current_retry + 1)
+        else:
+            raise RuntimeError("API 호출 실패: 최대 재시도 횟수 초과")  # 최대 재시도 초과 시 예외 발생
