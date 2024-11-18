@@ -11,6 +11,7 @@ const CategoryMap: Record<string, number> = {
   향신료: 7,
   허브: 8,
   오일: 9,
+  음료: 10,
 };
 
 export default function CategoryLabels({ category }: { category: string }) {
