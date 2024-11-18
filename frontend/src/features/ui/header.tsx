@@ -19,8 +19,8 @@ export default function Header() {
           <Image
             src={user!.imageUrl}
             alt="kakaoprofile"
-            width={15}
-            height={15}
+            width={22}
+            height={22}
             unoptimized={true}
           ></Image>
           {user?.name}

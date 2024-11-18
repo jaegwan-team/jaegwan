@@ -68,13 +68,13 @@ export default function MainPage() {
     datasets: [
       {
         label: "점심 매출",
-        data: [450000, 380000, 520000, 490000, 600000, 750000, 430000],
+        data: [450000, 380000, 0, 0, 0, 0, 0],
         backgroundColor: "rgba(152, 251, 152, 0.7)",
         borderWidth: 1,
       },
       {
         label: "저녁 매출",
-        data: [380000, 200000, 100000, 400000, 500000, 320000, 102300],
+        data: [380000, 200000, 0, 0, 0, 0, 0],
         borderWidth: 1,
         backgroundColor: "rgba(162, 236, 216, 0.7)",
       },
