@@ -45,7 +45,7 @@ public class ReceiptCustomRepositoryImpl implements ReceiptCustomRepository {
                 .select(new QReceiptResponse(
                         receipt.id,
                         new CaseBuilder()
-                                .when(receiptIngredient.count().ne(0L)).then(select(receiptIngredientSub.ingredient.name)
+                                .when(receiptIngredient.count().ne(0L)).then(select(receiptIngredientSub.name)
                                         .from(receiptIngredientSub)
                                         .where(receiptIngredientSub.id.eq(
                                                 select(receiptIngredientSub.id.max())
