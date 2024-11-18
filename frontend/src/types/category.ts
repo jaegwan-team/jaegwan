@@ -8,4 +8,5 @@ export const CategoryLabel = [
   "향신료",
   "허브",
   "오일",
+  "음료",
 ] as const;
