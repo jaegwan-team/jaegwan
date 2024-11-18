@@ -1,5 +1,7 @@
 package com.bwmanager.jaegwan.receipt.repository;
 
+import com.bwmanager.jaegwan.ingredient.entity.Category;
+import com.bwmanager.jaegwan.ingredient.entity.Unit;
 import com.bwmanager.jaegwan.receipt.dto.QReceiptDetailResponse;
 import com.bwmanager.jaegwan.receipt.dto.ReceiptDetailResponse;
 import com.bwmanager.jaegwan.receipt.entity.QReceiptIngredient;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.bwmanager.jaegwan.receipt.entity.QReceiptIngredient.receiptIngredient;
+import static com.querydsl.core.types.dsl.Expressions.nullExpression;
 import static com.querydsl.jpa.JPAExpressions.select;
 
 @RequiredArgsConstructor
@@ -25,15 +28,15 @@ public class ReceiptIngredientCustomRepositoryImpl implements ReceiptIngredientC
 
         QReceiptIngredient receiptIngredientSub = new QReceiptIngredient("receiptIngredientSub");
 
-        JPQLQuery<String> categoryIfExist = select(new CaseBuilder()
-                .when(receiptIngredientSub.ingredient.isNotNull()).then(receiptIngredientSub.ingredient.category.toString())
-                .otherwise(""))
+        JPQLQuery<Category> categoryIfExist = select(new CaseBuilder()
+                .when(receiptIngredientSub.ingredient.isNotNull()).then(receiptIngredientSub.ingredient.category)
+                .otherwise(nullExpression()))
                 .from(receiptIngredientSub)
                 .where(receiptIngredient.id.eq(receiptIngredientSub.id));
 
-        JPQLQuery<String> unitIfExist = select(new CaseBuilder()
-                .when(receiptIngredientSub.ingredient.isNotNull()).then(receiptIngredientSub.ingredient.unit.toString())
-                .otherwise(""))
+        JPQLQuery<Unit> unitIfExist = select(new CaseBuilder()
+                .when(receiptIngredientSub.ingredient.isNotNull()).then(receiptIngredientSub.ingredient.unit)
+                .otherwise(nullExpression()))
                 .from(receiptIngredientSub)
                 .where(receiptIngredient.id.eq(receiptIngredientSub.id));
 

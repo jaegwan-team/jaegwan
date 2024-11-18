@@ -39,7 +39,7 @@ public class AbstractEnumAttributeConverter<E extends Enum<E> & CommonType> impl
 
     @Override
     public String convertToDatabaseColumn(E attribute) {
-        if (!nullable && attribute == null) {
+        if (attribute == null) {
             throw new IllegalArgumentException(String.format("%s(은)는 NULL로 저장할 수 없습니다.", enumName));
         }
         return EnumValueConvertUtils.toCode(attribute);
@@ -47,9 +47,8 @@ public class AbstractEnumAttributeConverter<E extends Enum<E> & CommonType> impl
 
     @Override
     public E convertToEntityAttribute(String dbData) {
-        if (!nullable && StringUtils.isBlank(dbData)) {
-            throw new IllegalArgumentException(String.format("%s(이)가 DB에 NULL 혹은 Empty로(%s) 저장되어 있습니다.",
-                    enumName, dbData));
+        if (StringUtils.isBlank(dbData)) {
+            return null;
         }
         return EnumValueConvertUtils.ofCode(targetEnumClass, errorCode, dbData);
     }
