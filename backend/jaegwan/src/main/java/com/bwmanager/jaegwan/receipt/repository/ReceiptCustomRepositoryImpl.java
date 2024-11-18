@@ -74,11 +74,15 @@ public class ReceiptCustomRepositoryImpl implements ReceiptCustomRepository {
 
     //전체를 불러올지, 확정되지 않은 구매내역만 불러올지를 결정한다.
     private BooleanExpression selectConfirmed(Boolean isAll) {
-        return isAll? null: select(receiptIngredient.count())
+        return isAll ? null : select(receiptIngredient.count())
                 .from(receiptIngredient)
                 .where(receiptIngredient.receipt.id.eq(receipt.id),
-                        receiptIngredient.isConfirmed.eq(true))
-                .eq(0L);
+                        receiptIngredient.isConfirmed.eq(false))
+                .ne(0L)
+                .or(select(receiptIngredient.count())
+                        .from(receiptIngredient)
+                        .where(receiptIngredient.receipt.id.eq(receipt.id))
+                        .eq(0L));
     }
 
     @Override
