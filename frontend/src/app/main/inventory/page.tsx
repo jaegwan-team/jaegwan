@@ -9,6 +9,7 @@ import CategoryLabels from "@/features/ingredient/categorylabels";
 import { getIngredientDetail, getIngredientList } from "@/services/api";
 import { useUser } from "@/features/users/api/login/loginUsers";
 import { IngredientDetailType, IngredientType } from "@/types/itemType";
+import { Loader2 } from "lucide-react";
 
 export default function InventoryPage() {
   const { user } = useUser();
@@ -89,7 +90,7 @@ export default function InventoryPage() {
                 >
                   <div className={styles.itemname}>{item.name}</div>
                   <div className={styles.itemcategory}>
-                    <CategoryLabels category={item.category || "미분류"} />
+                    <CategoryLabels category={item.category || "채소"} />
                   </div>
                   <div className={styles.itemamount}>
                     {item.totalAmount}
@@ -125,7 +126,12 @@ export default function InventoryPage() {
                 {expandedItems.has(item.id) && (
                   <div className={styles.itemDetails}>
                     {loadingDetails.has(item.id) ? (
-                      <div className={styles.detailRow}>로딩 중...</div>
+                      <div className={styles.detailRow}>
+                        {" "}
+                        <div className={styles.spinnerContainer}>
+                          <Loader2 className={styles.spinner} size={40} />
+                        </div>
+                      </div>
                     ) : ingredientDetails[item.id] ? (
                       ingredientDetails[item.id].map((detail, index) => (
                         <div key={index} className={styles.detailRow}>

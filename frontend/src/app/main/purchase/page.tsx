@@ -10,6 +10,7 @@ import { getReceiptList } from "@/services/api";
 import { useUser } from "@/features/users/api/login/loginUsers";
 import { ReceiptProps } from "@/types/receiptType";
 import { ReceiptListParams } from "@/types/mainType";
+import { Loader2 } from "lucide-react";
 
 export default function PurchasePage() {
   const { user } = useUser();
@@ -68,7 +69,9 @@ export default function PurchasePage() {
       <div className={styles.container}>
         <h1 className={styles.title}>구매 내역</h1>
         {isLoading ? (
-          <div className={styles.loading}>로딩 중...</div>
+          <div className={styles.spinnerContainer}>
+            <Loader2 className={styles.spinner} size={40} />
+          </div>
         ) : (
           <div className={styles.table}>
             <div className={styles.tableHeader}>
@@ -91,7 +94,9 @@ export default function PurchasePage() {
                     {purchase.mainIngredientName
                       ? `${purchase.mainIngredientName} 외 `
                       : ``}
-                    {purchase.leftCount > 0 && `${purchase.leftCount}개 품목`}
+                    {purchase.leftCount > 0
+                      ? `${purchase.leftCount}개 품목`
+                      : ``}
                   </div>
                   <div className={styles.checkColumn}>
                     {purchase.confirmed ? (

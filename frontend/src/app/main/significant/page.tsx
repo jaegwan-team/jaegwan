@@ -10,6 +10,7 @@ import { useUser } from "@/features/users/api/login/loginUsers";
 import { SignificantProps } from "@/types/significantType";
 import { SignificantListParams } from "@/types/mainType";
 import { getSignificantList } from "@/services/api";
+import { Loader2 } from "lucide-react";
 
 export default function SignificantPage() {
   const { user } = useUser();
@@ -68,7 +69,9 @@ export default function SignificantPage() {
       <div className={styles.container}>
         <div className={styles.title}>특이 사항</div>
         {isLoading ? (
-          <div>Loading...</div>
+          <div className={styles.spinnerContainer}>
+            <Loader2 className={styles.spinner} size={40} />
+          </div>
         ) : (
           <div className={styles.table}>
             <div className={styles.tableHeader}>

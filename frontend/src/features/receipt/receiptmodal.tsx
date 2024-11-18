@@ -7,6 +7,7 @@ import {
   Trash2,
   Plus,
   Image as ImageIcon,
+  Loader2,
 } from "lucide-react";
 import styles from "../../../styles/modals.module.css";
 import { UnitStatus } from "@/types/itemType";
@@ -40,7 +41,7 @@ const DEFAULT_ITEM: NewReceiptDetailTypes = {
   amount: 0,
   price: 0,
   expirationDate: formatDate(new Date()),
-  category: "육류",
+  category: "채소",
   isChecked: "Yet",
 };
 
@@ -227,7 +228,9 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
     <div className={styles.modalOverlay}>
       <div className={styles.modalContainer}>
         {isLoading ? (
-          <div className={styles.loading}>로딩 중...</div>
+          <div className={styles.spinnerContainer}>
+            <Loader2 className={styles.spinner} size={40} />
+          </div>
         ) : (
           <>
             <div className={styles.modalHeader}>
@@ -293,16 +296,16 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
                 <div className={styles.formGroup}>
                   <label className={styles.formLabel}>카테고리:</label>
                   <select
-                    value={purchaseList[currentIndex]?.category ?? "육류"}
+                    value={purchaseList[currentIndex]?.category ?? "채소"}
                     onChange={(e) => handleChange("category", e.target.value)}
                     className={styles.unitSelect}
                     disabled={
                       purchaseList[currentIndex]?.isChecked === "Deleted"
                     }
                   >
-                    {Object.entries(CategoryLabel).map(([value, label]) => (
-                      <option key={value} value={value}>
-                        {label}
+                    {CategoryLabel.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
                       </option>
                     ))}
                   </select>
