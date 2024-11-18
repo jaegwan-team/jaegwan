@@ -73,12 +73,13 @@ public class ReceiptServiceImpl implements ReceiptService {
     @Override
     public List<OcrResponse> imageOcr(ImageUrlRequest request) {
         List<OcrResponse> ocrResponses = ocrFeignClient.imageOcr(OcrRequest.builder().image_url(request.getImageUrl()).build());
-        log.info("ocrResponses: " + ocrResponses.size());
 
         for (OcrResponse ocrResponse : ocrResponses) {
             // 영수증-재료 저장
             ReceiptIngredient saved = receiptIngredientRepository.save(ReceiptIngredient.builder()
                     .amount(ocrResponse.getAmount())
+                    .name(ocrResponse.getName())
+                    .price(ocrResponse.getPrice())
                     .isConfirmed(false)
                     .receipt(receiptRepository.findByImageUrl(request.getImageUrl())
                             .orElseThrow(() -> new NotFoundException(ErrorCode.RECEIPT_NOT_FOUND)))

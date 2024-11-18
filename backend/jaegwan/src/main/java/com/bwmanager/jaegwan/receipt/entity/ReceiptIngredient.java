@@ -20,6 +20,9 @@ public class ReceiptIngredient {
     private Long id;
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private double amount;
 
     @Column(nullable = false)
