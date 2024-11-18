@@ -32,7 +32,7 @@ public class EnumValueConvertUtils {
         }
 
         return EnumSet.allOf(enumClass).stream()
-                .filter(v -> v.getCode().equals(desc))
+                .filter(v -> v.getDesc().equals(desc))
                 .findAny()
                 .orElseThrow(() -> new EnumException(errorCode));
     }
