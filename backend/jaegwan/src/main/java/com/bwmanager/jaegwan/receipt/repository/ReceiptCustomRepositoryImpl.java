@@ -5,6 +5,8 @@ import com.bwmanager.jaegwan.receipt.dto.ReceiptResponse;
 import com.bwmanager.jaegwan.receipt.entity.QReceiptIngredient;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -28,6 +30,17 @@ public class ReceiptCustomRepositoryImpl implements ReceiptCustomRepository {
 
         QReceiptIngredient receiptIngredientSub = new QReceiptIngredient("receiptIngredientSub");
 
+        SimpleExpression<Boolean> isConfirmed = new CaseBuilder()
+                .when(receiptIngredient.count().ne(0L)).then(select(receiptIngredientSub.count().eq(0L))
+                        .from(receiptIngredientSub)
+                        .where(receiptIngredientSub.receipt.id.eq(receipt.id),
+                                receiptIngredientSub.isConfirmed.eq(false)))
+                .otherwise(false);
+
+        NumberExpression<Integer> orderConfirmed = new CaseBuilder()
+                .when(isConfirmed.eq(false)).then(0)
+                .otherwise(1);
+
         return queryFactory
                 .select(new QReceiptResponse(
                         receipt.id,
@@ -46,23 +59,21 @@ public class ReceiptCustomRepositoryImpl implements ReceiptCustomRepository {
                                         .where(receiptIngredientSub.receipt.id.eq(receipt.id)))
                                 .otherwise(0),
                         receipt.createdDate,
-                        new CaseBuilder()
-                                .when(receiptIngredient.count().ne(0L)).then(select(receiptIngredientSub.count().eq(0L))
-                                        .from(receiptIngredientSub)
-                                        .where(receiptIngredientSub.receipt.id.eq(receipt.id),
-                                                receiptIngredientSub.isConfirmed.eq(false)))
-                                .otherwise(false)
+                        isConfirmed
                 ))
                 .from(receiptIngredient)
                 .rightJoin(receiptIngredient.receipt, receipt)
                 .join(receipt.restaurant, restaurant)
-                .where(isConfirmed(isAll))
+                .where(selectConfirmed(isAll),
+                        restaurant.id.eq(restaurantId))
                 .groupBy(receipt.id, receipt.createdDate)
+                .orderBy(orderConfirmed.asc(),
+                        receipt.createdDate.desc())
                 .fetch();
     }
 
     //전체를 불러올지, 확정되지 않은 구매내역만 불러올지를 결정한다.
-    private BooleanExpression isConfirmed(Boolean isAll) {
+    private BooleanExpression selectConfirmed(Boolean isAll) {
         return isAll? null: select(receiptIngredient.count())
                 .from(receiptIngredient)
                 .where(receiptIngredient.receipt.id.eq(receipt.id),
