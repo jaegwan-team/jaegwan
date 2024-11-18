@@ -17,6 +17,8 @@ import com.bwmanager.jaegwan.significant.entity.SignificantIngredient;
 import com.bwmanager.jaegwan.significant.repository.SignificantIngredientRepository;
 import com.bwmanager.jaegwan.significant.repository.SignificantRepository;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,9 +39,15 @@ public class SignificantServiceImpl implements SignificantService {
     @Transactional(readOnly = true)
     public List<SignificantReadResponse> getSignificants(
             SignificantReadRequest significantReadRequest) {
-        return significantRepository.findAllByRestaurantId(significantReadRequest.getRestaurantId())
-                .stream().map(SignificantReadResponse::fromEntity).toList();
+        ArrayList<SignificantReadResponse> result = new ArrayList<>(
+                significantRepository.findAllByRestaurantId(
+                                significantReadRequest.getRestaurantId())
+                        .stream()
+                        .map(SignificantReadResponse::fromEntity).toList());
+        Collections.reverse(result);
+        return result;
     }
+
 
     @Override
     public List<SignificantReadResponse> getUncheckedSignificants(SignificantReadRequest significantReadRequest) {
