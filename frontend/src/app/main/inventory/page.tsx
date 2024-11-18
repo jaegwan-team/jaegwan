@@ -72,7 +72,6 @@ export default function InventoryPage() {
       <div className={styles.inventorybox}>
         <div className={styles.inventoryheader}>
           <div className={styles.inventorytitle}>재고 현황</div>
-          <div>여기는 검색존</div>
         </div>
         <div className={styles.inventorytable}>
           <div className={styles.tablehead}>
@@ -90,7 +89,7 @@ export default function InventoryPage() {
                 >
                   <div className={styles.itemname}>{item.name}</div>
                   <div className={styles.itemcategory}>
-                    <CategoryLabels category={item.category} />
+                    <CategoryLabels category={item.category || "미분류"} />
                   </div>
                   <div className={styles.itemamount}>
                     {item.totalAmount}
@@ -98,15 +97,19 @@ export default function InventoryPage() {
                   </div>
                   <div
                     className={`
-                              ${styles.itemexpiredate} 
-                              ${
-                                item.leftExpirationDay < 0 ? styles.expired : ""
-                              }
-                            `}
+    ${styles.itemexpiredate} 
+    ${
+      item.leftExpirationDay != null && item.leftExpirationDay < 0
+        ? styles.expired
+        : ""
+    }
+  `}
                   >
-                    {item.leftExpirationDay >= 0
-                      ? `D-${item.leftExpirationDay}`
-                      : `D+${Math.abs(item.leftExpirationDay)}`}
+                    {item.leftExpirationDay != null
+                      ? item.leftExpirationDay >= 0
+                        ? `D-${item.leftExpirationDay}`
+                        : `D+${Math.abs(item.leftExpirationDay)}`
+                      : "유통기한 없음"}
                   </div>
                   <div className={styles.itemarrow}>
                     <Image
@@ -136,17 +139,19 @@ export default function InventoryPage() {
                           </div>
                           <div
                             className={`
-                              ${styles.itemexpiredate} 
-                              ${
-                                detail.leftExpirationDay < 0
-                                  ? styles.expired
-                                  : ""
-                              }
-                            `}
+    ${styles.itemexpiredate} 
+    ${
+      detail.leftExpirationDay != null && detail.leftExpirationDay < 0
+        ? styles.expired
+        : ""
+    }
+  `}
                           >
-                            {detail.leftExpirationDay >= 0
-                              ? `D-${detail.leftExpirationDay}`
-                              : `D+${Math.abs(detail.leftExpirationDay)}`}
+                            {detail.leftExpirationDay != null
+                              ? detail.leftExpirationDay >= 0
+                                ? `D-${detail.leftExpirationDay}`
+                                : `D+${Math.abs(detail.leftExpirationDay)}`
+                              : "유통기한 없음"}
                           </div>
                         </div>
                       ))

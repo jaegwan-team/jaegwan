@@ -202,7 +202,10 @@ export default function MainPage() {
                         {receipt.createdDate}
                       </div>
                       <div className={styles.tableheaditem}>
-                        {`${receipt.mainIngredientName} 외 ${receipt.leftCount}개 품목`}
+                        {receipt.mainIngredientName
+                          ? `${receipt.mainIngredientName} 외 `
+                          : ``}
+                        {receipt.leftCount > 0 && `${receipt.leftCount}개 품목`}
                       </div>
                       <div className={styles.tableheadcheck}>
                         <Image
