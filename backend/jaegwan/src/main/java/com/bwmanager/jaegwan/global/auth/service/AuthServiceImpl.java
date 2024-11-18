@@ -34,9 +34,9 @@ public class AuthServiceImpl implements AuthService {
         String[] decodedIdToken = kakaoUtil.getSubAndEmail(kakaoToken.getIdToken());
 
         // 추출한 이메일 정보를 통해 사용자를 조회한다.
+        // 사용자 정보가 없다면 회원가입을 진행한 후 회원 정보를 가져온다.
         String email = decodedIdToken[1];
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+        Member member = memberRepository.findByEmail(email).orElseGet(() -> register(kakaoToken));
 
         // 사용자 정보를 통해 액세스 토큰과 리프레시 토큰을 생성한다.
         return createTokens(member);
@@ -49,8 +49,7 @@ public class AuthServiceImpl implements AuthService {
 
         // 추출한 이메일 정보를 통해 사용자를 조회한다.
         String email = decodedIdToken[1];
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+        Member member = memberRepository.findByEmail(email).orElseGet(() -> register(request));
 
         // 사용자 정보를 통해 액세스 토큰과 리프레시 토큰을 생성한다.
         return createTokens(member);
@@ -72,6 +71,27 @@ public class AuthServiceImpl implements AuthService {
 
         // 사용자 정보를 통해 액세스 토큰과 리프레시 토큰을 재발급한다.
         return createTokens(member);
+    }
+
+    /**
+     * 회원가입을 진행한다.
+     * @param kakaoToken 카카오 OAuth의 액세스 토큰
+     * @return 사용자 정보
+     */
+    private Member register(KakaoTokenRequest kakaoToken) {
+        // 카카오 OAuth의 액세스 토큰을 통해 카카오 프로필 정보를 가져온다.
+        KakaoProfileResponse kakaoProfile = kakaoUtil.getProfile(kakaoToken.getAccessToken());
+
+        // 카카오 프로필 정보를 통해 새로운 사용자 정보를 생성한다.
+        Member member = Member.builder()
+                .name(kakaoProfile.getKakaoAccount().getProfile().getNickname())
+                .email(kakaoProfile.getKakaoAccount().getEmail())
+                .imageUrl(kakaoProfile.getKakaoAccount().getProfile().getProfile_image_url())
+                .build();
+
+        // 사용자 정보를 DB에 등록하고 반환한다.
+        memberRepository.save(member);
+        return member;
     }
 
     /**
