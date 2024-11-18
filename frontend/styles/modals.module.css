@@ -45,6 +45,27 @@
   background-color: rgb(243, 244, 246);
 }
 
+.spinnerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2rem;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  color: #1a5319; /* 메인 컬러 */
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .progressBar {
   display: flex;
   gap: 0.5rem;

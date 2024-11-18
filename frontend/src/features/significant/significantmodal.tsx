@@ -1,6 +1,6 @@
 import { SignificantModalProps } from "@/types/significantType";
 import styles from "../../../styles/modals.module.css";
-import { X, Check, Trash2 } from "lucide-react";
+import { X, Check, Trash2, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { confirmSignificant, deleteSignificant } from "@/services/api";
 
@@ -63,7 +63,9 @@ export default function SignificantModal({
     <div className={styles.modalOverlay}>
       <div className={`${styles.modalContainer} ${styles.significantModal}`}>
         {isLoading ? (
-          <div className={styles.loading}>처리 중...</div>
+          <div className={styles.spinnerContainer}>
+            <Loader2 className={styles.spinner} size={40} />
+          </div>
         ) : (
           <>
             <div className={styles.modalHeader}>
