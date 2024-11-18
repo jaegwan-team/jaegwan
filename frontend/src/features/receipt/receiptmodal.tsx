@@ -22,7 +22,6 @@ import {
   ReceiptDetailTypes,
   UpdatedReceiptDetailTypes,
 } from "@/types/receiptType";
-import Image from "next/image";
 
 const UNITS: UnitStatus[] = ["kg", "g", "ml", "l", "개"];
 
@@ -197,8 +196,6 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
   }
 
   const ImageModal = () => {
-    const [imageLoading, setImageLoading] = useState(true);
-
     return (
       <div
         className={styles.imageModalOverlay}
@@ -208,20 +205,7 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
           className={styles.imageModalContent}
           onClick={(e) => e.stopPropagation()}
         >
-          {imageLoading && (
-            <div className={styles.loading}>이미지 로딩 중...</div>
-          )}
-          <Image
-            src={imageUrl}
-            alt="영수증"
-            className={`${styles.receiptImage} ${
-              imageLoading ? styles.hidden : ""
-            }`}
-            fill={true}
-            style={{ objectFit: "contain" }}
-            unoptimized={true}
-            onLoadingComplete={() => setImageLoading(false)}
-          />
+          <img src={imageUrl} alt="영수증" className={styles.receiptImage} />
           <button
             onClick={() => setIsImageModalOpen(false)}
             className={styles.closeButton}
