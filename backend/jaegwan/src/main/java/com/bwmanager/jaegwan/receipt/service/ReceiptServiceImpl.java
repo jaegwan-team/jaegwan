@@ -73,7 +73,7 @@ public class ReceiptServiceImpl implements ReceiptService {
     @Override
     public List<OcrResponse> imageOcr(ImageUrlRequest request) {
         List<OcrResponse> ocrResponses = ocrFeignClient.imageOcr(OcrRequest.builder().image_url(request.getImageUrl()).build());
-        log.info("ocrResponses: " + ocrResponses.toString());
+        log.info("ocrResponses: " + ocrResponses.size());
 
         for (OcrResponse ocrResponse : ocrResponses) {
             // 영수증-재료 저장
