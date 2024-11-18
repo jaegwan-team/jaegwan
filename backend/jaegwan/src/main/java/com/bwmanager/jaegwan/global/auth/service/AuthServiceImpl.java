@@ -1,8 +1,6 @@
 package com.bwmanager.jaegwan.global.auth.service;
 
-import com.bwmanager.jaegwan.global.auth.dto.AuthResponse;
-import com.bwmanager.jaegwan.global.auth.dto.KakaoProfileResponse;
-import com.bwmanager.jaegwan.global.auth.dto.KakaoTokenResponse;
+import com.bwmanager.jaegwan.global.auth.dto.*;
 import com.bwmanager.jaegwan.global.error.ErrorCode;
 import com.bwmanager.jaegwan.global.error.exception.AuthException;
 import com.bwmanager.jaegwan.global.error.exception.MemberException;
@@ -34,6 +32,20 @@ public class AuthServiceImpl implements AuthService {
 
         // 가져온 토큰 중 idToken을 decode하여 sub와 email을 추출한다.
         String[] decodedIdToken = kakaoUtil.getSubAndEmail(kakaoToken.getIdToken());
+
+        // 추출한 이메일 정보를 통해 사용자를 조회한다.
+        String email = decodedIdToken[1];
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+
+        // 사용자 정보를 통해 액세스 토큰과 리프레시 토큰을 생성한다.
+        return createTokens(member);
+    }
+
+    @Override
+    public AuthResponse loginOrRegisterForApp(KakaoTokenRequest request) {
+        // 가져온 토큰 중 idToken을 decode하여 sub와 email을 추출한다.
+        String[] decodedIdToken = kakaoUtil.getSubAndEmail(request.getIdToken());
 
         // 추출한 이메일 정보를 통해 사용자를 조회한다.
         String email = decodedIdToken[1];

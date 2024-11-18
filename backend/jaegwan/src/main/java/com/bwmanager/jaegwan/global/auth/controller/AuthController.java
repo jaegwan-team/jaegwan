@@ -1,6 +1,6 @@
 package com.bwmanager.jaegwan.global.auth.controller;
 
-import com.bwmanager.jaegwan.global.auth.dto.AuthResponse;
+import com.bwmanager.jaegwan.global.auth.dto.*;
 import com.bwmanager.jaegwan.global.auth.service.AuthService;
 import com.bwmanager.jaegwan.global.dto.CommonResponse;
 import com.bwmanager.jaegwan.global.error.ErrorCode;
@@ -66,6 +66,18 @@ public class AuthController {
 
         // Authorization 헤더에 액세스 토큰을 저장한다.
 //        response.setHeader("Authorization", authResponse.getAccessToken());
+
+        // 쿠키에 액세스 토큰과 리프레시 토큰을 추가한다.
+        addTokensToCookie(response, authResponse);
+
+        // 메인 페이지로 리다이렉트한다.
+        response.sendRedirect(homeUri);
+    }
+
+    @GetMapping("/kakao/app")
+    public void loginOrRegisterForApp(@RequestBody KakaoTokenRequest request, HttpServletResponse response)
+            throws IOException {
+        AuthResponse authResponse = authService.loginOrRegisterForApp(request);
 
         // 쿠키에 액세스 토큰과 리프레시 토큰을 추가한다.
         addTokensToCookie(response, authResponse);
