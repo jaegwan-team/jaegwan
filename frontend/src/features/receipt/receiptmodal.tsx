@@ -36,7 +36,7 @@ const formatDate = (date: Date): string => {
 const DEFAULT_ITEM: NewReceiptDetailTypes = {
   id: 0,
   name: "",
-  unit: "개",
+  unit: "개" as UnitStatus,
   amount: 0,
   price: 0,
   expirationDate: formatDate(new Date()),
@@ -98,6 +98,8 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
     value: NewReceiptDetailTypes[K]
   ) => {
     setPurchaseList((prevList) => {
+      if (!prevList[currentIndex]) return prevList;
+
       const newList = [...prevList];
       newList[currentIndex] = {
         ...newList[currentIndex],
@@ -122,6 +124,8 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
   };
 
   const handleCheckItem = () => {
+    if (!purchaseList[currentIndex]) return;
+
     if (purchaseList[currentIndex].isChecked === "Checked") {
       handleChange("isChecked", "Yet");
     } else {
@@ -131,6 +135,8 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
   };
 
   const handleDeleteItem = () => {
+    if (!purchaseList[currentIndex]) return;
+
     if (purchaseList[currentIndex].isChecked === "Deleted") {
       handleChange("isChecked", "Yet");
     } else {
@@ -275,11 +281,11 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
                   <label className={styles.formLabel}>품목명:</label>
                   <input
                     type="text"
-                    value={purchaseList[currentIndex].name}
+                    value={purchaseList[currentIndex]?.name ?? ""}
                     onChange={(e) => handleChange("name", e.target.value)}
                     className={styles.formInput}
                     disabled={
-                      purchaseList[currentIndex].isChecked === "Deleted"
+                      purchaseList[currentIndex]?.isChecked === "Deleted"
                     }
                   />
                 </div>
@@ -287,11 +293,11 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
                 <div className={styles.formGroup}>
                   <label className={styles.formLabel}>카테고리:</label>
                   <select
-                    value={purchaseList[currentIndex].category}
+                    value={purchaseList[currentIndex]?.category ?? "육류"}
                     onChange={(e) => handleChange("category", e.target.value)}
                     className={styles.unitSelect}
                     disabled={
-                      purchaseList[currentIndex].isChecked === "Deleted"
+                      purchaseList[currentIndex]?.isChecked === "Deleted"
                     }
                   >
                     {Object.entries(CategoryLabel).map(([value, label]) => (
@@ -307,23 +313,23 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
                   <div className={styles.amountInputGroup}>
                     <input
                       type="number"
-                      value={purchaseList[currentIndex].amount}
+                      value={purchaseList[currentIndex]?.amount ?? 0}
                       onChange={(e) =>
-                        handleChange("amount", Number(e.target.value))
+                        handleChange("amount", Number(e.target.value) || 0)
                       }
                       className={styles.amountInput}
                       disabled={
-                        purchaseList[currentIndex].isChecked === "Deleted"
+                        purchaseList[currentIndex]?.isChecked === "Deleted"
                       }
                     />
                     <select
-                      value={purchaseList[currentIndex].unit}
+                      value={purchaseList[currentIndex]?.unit ?? "개"}
                       onChange={(e) =>
                         handleChange("unit", e.target.value as UnitStatus)
                       }
                       className={styles.unitSelect}
                       disabled={
-                        purchaseList[currentIndex].isChecked === "Deleted"
+                        purchaseList[currentIndex]?.isChecked === "Deleted"
                       }
                     >
                       {UNITS.map((u) => (
@@ -339,13 +345,16 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
                   <label className={styles.formLabel}>유통기한:</label>
                   <input
                     type="date"
-                    value={purchaseList[currentIndex].expirationDate}
+                    value={
+                      purchaseList[currentIndex]?.expirationDate ??
+                      formatDate(new Date())
+                    }
                     onChange={(e) =>
                       handleChange("expirationDate", e.target.value)
                     }
                     className={styles.formInput}
                     disabled={
-                      purchaseList[currentIndex].isChecked === "Deleted"
+                      purchaseList[currentIndex]?.isChecked === "Deleted"
                     }
                     min={formatDate(new Date())}
                   />
@@ -355,21 +364,22 @@ export default function ReceiptModal({ receiptId, onClose }: ModalProps) {
                   <button
                     onClick={handleCheckItem}
                     className={`${styles.actionButton} ${
-                      purchaseList[currentIndex].isChecked === "Checked"
+                      purchaseList[currentIndex]?.isChecked === "Checked"
                         ? styles.checked
                         : ""
                     }`}
                     disabled={
-                      purchaseList[currentIndex].isChecked === "Deleted"
+                      purchaseList[currentIndex]?.isChecked === "Deleted"
                     }
                   >
                     <Check size={20} />
                     확인
                   </button>
+
                   <button
                     onClick={handleDeleteItem}
                     className={`${styles.actionButton} ${
-                      purchaseList[currentIndex].isChecked === "Deleted"
+                      purchaseList[currentIndex]?.isChecked === "Deleted"
                         ? styles.deleted
                         : ""
                     }`}
