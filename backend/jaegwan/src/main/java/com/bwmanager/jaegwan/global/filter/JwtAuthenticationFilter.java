@@ -8,19 +8,19 @@ import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+import java.util.Map;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
-import java.util.Map;
-
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
-    private static final List<String> EXCLUDE_URLS = List.of("/api/auth", "/api/swagger-ui", "/api/api-docs");
+    private static final List<String> EXCLUDE_URLS = List.of("/api/auth", "/api/swagger-ui", "/api/api-docs",
+            "/api/significant");
 
     private final JwtUtil jwtUtil;
 
