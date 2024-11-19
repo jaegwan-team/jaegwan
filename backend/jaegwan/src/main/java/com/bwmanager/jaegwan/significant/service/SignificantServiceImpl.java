@@ -6,23 +6,19 @@ import com.bwmanager.jaegwan.ingredient.repository.IngredientDetailRepository;
 import com.bwmanager.jaegwan.ingredient.repository.IngredientRepository;
 import com.bwmanager.jaegwan.restaurant.entity.Restaurant;
 import com.bwmanager.jaegwan.restaurant.repository.RestaurantRepository;
-import com.bwmanager.jaegwan.significant.dto.SignificantConfirmRequest;
-import com.bwmanager.jaegwan.significant.dto.SignificantCreateRequest;
-import com.bwmanager.jaegwan.significant.dto.SignificantCreateResponse;
-import com.bwmanager.jaegwan.significant.dto.SignificantDetailReadResponse;
-import com.bwmanager.jaegwan.significant.dto.SignificantReadRequest;
-import com.bwmanager.jaegwan.significant.dto.SignificantReadResponse;
+import com.bwmanager.jaegwan.significant.dto.*;
 import com.bwmanager.jaegwan.significant.entity.Significant;
 import com.bwmanager.jaegwan.significant.entity.SignificantIngredient;
 import com.bwmanager.jaegwan.significant.repository.SignificantIngredientRepository;
 import com.bwmanager.jaegwan.significant.repository.SignificantRepository;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +36,7 @@ public class SignificantServiceImpl implements SignificantService {
     public List<SignificantReadResponse> getSignificants(
             SignificantReadRequest significantReadRequest) {
         ArrayList<SignificantReadResponse> result = new ArrayList<>(
-                significantRepository.findAllByRestaurantId(
+                significantRepository.findAllByRestaurantIdOrderByIsConfirmed(
                                 significantReadRequest.getRestaurantId())
                         .stream()
                         .map(SignificantReadResponse::fromEntity).toList());
