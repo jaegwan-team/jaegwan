@@ -1,0 +1,9 @@
+train (t-o499xxnfadzuo7zs97t7fgqzr) {
+  utterance ("[g:CreateBySignificantResponse] (파인애플)[v:IngredientNameInput] (1)[v:AmountInput]개 썩었어")
+  enabled (false)
+  last-modified (1730879318014)
+}
+train (t-oh4a1t6ddx2n18jnt64r4kwez) {
+  utterance ("[g:CreateBySignificantResponse] (감자)[v:IngredientNameInput] 썼어 (2)[v:AmountInput]개")
+  last-modified (1730880430177)
+}

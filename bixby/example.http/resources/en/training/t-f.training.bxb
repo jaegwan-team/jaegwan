@@ -1,0 +1,5 @@
+train (t-flu1rugtimkcs9wc6uid6ulxg) {
+  utterance ([g:FindShoeRemoteEndpoint] Find shoes with remote endpoint)
+  plan (Y2BiEEytSMwtyEnVyygpKdALzshPZVBGEXLLzEsBCQel5uaXpLrmpRTkZ+aVMDACIQMUA0kA)
+  last-modified (1604357919596)
+}

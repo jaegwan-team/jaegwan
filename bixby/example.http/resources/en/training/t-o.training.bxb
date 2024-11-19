@@ -1,0 +1,5 @@
+train (t-og7kopsjlqplp7zh6evxappv0) {
+  utterance ([g:FindShoe] Find shoes)
+  plan (Y2BiEEytSMwtyEnVyygpKdALzshPZRBFEXLLzEsBCzMCIQMUA0kA)
+  last-modified (1604357862358)
+}

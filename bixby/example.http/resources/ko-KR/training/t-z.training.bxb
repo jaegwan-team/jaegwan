@@ -1,0 +1,4 @@
+train (t-z9zx72zdmsi9crchj2p7hmxcm) {
+  utterance ("[g:CreateBySignificantResponse] (당근)[v:IngredientNameInput]을 (5)[v:AmountInput]개 사용했어")
+  last-modified (1730875265429)
+}

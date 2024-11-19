@@ -1,0 +1,26 @@
+capsule {
+  id (jaegwan.bixby)
+  version (1.1.6)
+  format (3)
+  targets {
+    target (bixby-mobile-ko-KR) //타겟을 한국으로 설정
+  }
+  runtime-version (8) {
+    overrides {
+      no-fallback-dialog-in-views (false)
+      auto-on-click-for-list-of(true)
+    }
+  }
+  capsule-imports {
+    import (viv.money) {
+      as (money)
+      version (2.22.51)
+    }
+  }
+  store-countries {
+    all
+  }
+  store-sections {
+    section (EducationAndReference)
+  }
+}

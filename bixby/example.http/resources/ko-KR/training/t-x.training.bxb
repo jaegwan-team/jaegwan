@@ -1,0 +1,5 @@
+train (t-x6jwdyamdzujlq8kiymega3qf) {
+  utterance ("[g:CreateBySignificant] (김)[v:IngredientNameInput] (21)[v:AmountInput]개 등록해줘")
+  enabled (false)
+  last-modified (1730881737096)
+}

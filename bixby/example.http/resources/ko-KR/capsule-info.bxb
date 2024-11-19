@@ -1,0 +1,4 @@
+capsule-info {
+  display-name ("음성으로 재료를 관리해드릴게요!")
+  icon-asset (assets/images/bxby-logo.png)
+}

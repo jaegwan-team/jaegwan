@@ -1,0 +1,15 @@
+result-view {
+  match: CreateBySignificantResponse (createBySignificantResponse)
+  render {
+    if (size(createBySignificantResponse) >= 1) {
+      layout{
+        macro(createBySignificant) {
+          param (createBySignificantResponse) {
+            expression (createBySignificantResponse)
+          }
+        }
+      }
+    }
+  }
+}
+

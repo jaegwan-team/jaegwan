@@ -1,0 +1,27 @@
+action (CreateBySignificant) {
+  type(Search)
+  description (특이사항으로 관련 정보 생성 action)
+  collect{
+    input (IngredientNameInput){
+      type (IngredientNameInput)
+      min (Required) max (Many)
+    }
+    input (AmountInput){
+      type (AmountInput)
+      min (Required) max (Many)
+    }
+  }
+  output (CreateBySignificantResponse){
+    throws{
+      error (NoUnderstand){
+        on-catch{
+          halt{
+            dialog{
+              template ("제대로 인식하지 못햇습니다!")
+            }
+          }
+        }
+      }
+    }
+  }
+}

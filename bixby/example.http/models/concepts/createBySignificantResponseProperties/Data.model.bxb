@@ -1,0 +1,12 @@
+structure (Data) {//구조체 컨셉의 이름
+  description (특이사항 생성 응답 데이터중 data 부분)
+
+  property (ingredientName){ //프로퍼티의 이름
+    type (IngredientName)//primitive 컨셉명
+    min(Required)
+  } 
+  property (amount){ //프로퍼티의 이름
+    type (Amount)//primitive 컨셉명
+    min(Required)
+  } 
+}
