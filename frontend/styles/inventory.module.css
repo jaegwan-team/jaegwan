@@ -1,0 +1,183 @@
+.content {
+  padding: 1rem 2rem;
+  width: 100%;
+  height: 89%;
+  border-radius: 1rem;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 1),
+    rgba(255, 255, 255, 0.9)
+  );
+  box-shadow: 0 0.2rem 2rem rgba(0, 0, 0, 0.3),
+    0 0.4rem 0.8rem rgba(0, 0, 0, 0.3),
+    inset 0 0.1rem 0.2rem rgba(255, 255, 255, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.inventorybox {
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+}
+
+.inventoryheader {
+  width: 100%;
+  height: 7.5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inventorytitle {
+  font-size: 2.5rem;
+  font-weight: 1000;
+}
+
+.inventorytable {
+  width: 100%;
+  height: 92%;
+  padding-top: 1rem;
+}
+
+.tablehead {
+  width: 100%;
+  height: 12%;
+  background-color: #d1e9d3;
+  border-radius: 0.5rem 0.5rem 0 0;
+  box-shadow: 0 0.1rem 0.5rem rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  font-size: 1.8rem;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+}
+
+.itemname {
+  width: 20%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.itemcategory {
+  width: 20%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.itemamount {
+  width: 27.5%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.itemexpiredate {
+  width: 27.5%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.expired {
+  color: #ff0000;
+}
+
+.itemarrow {
+  width: 5%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tabledetails {
+  width: 100%;
+  height: 88%;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 0.4rem;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(26, 83, 25, 0.3);
+    border-radius: 0.4rem;
+
+    &:hover {
+      background-color: rgba(26, 83, 25, 0.5);
+    }
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+    margin: 0.2rem 0;
+  }
+}
+
+.tabledetail {
+  width: 100%;
+  height: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 1rem;
+}
+
+.tabledetail:hover {
+  background-color: rgb(234, 234, 234);
+}
+
+.itemDetails {
+  width: 100%;
+  background-color: rgba(209, 233, 211, 0.2);
+  border-radius: 0.5rem;
+  margin: 0.5rem 0;
+  padding: 0.5rem 0;
+}
+
+.detailRow {
+  width: 100%;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  font-size: 1.4rem;
+  padding: 0 1rem;
+}
+
+.detailRow:hover {
+  background-color: rgba(234, 234, 234, 0.5);
+}
+
+.spinnerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2rem;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  color: #1a5319; /* 메인 컬러 */
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
