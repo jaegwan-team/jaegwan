@@ -1,0 +1,33 @@
+endpoints {
+
+  action-endpoints {
+        action-endpoint (CreateBySignificant) {
+      accepted-inputs (IngredientNameInput,AmountInput)
+      local-endpoint (createBySignificant.js)
+    }
+    
+    // action-endpoint (FindShoeFiltering) {
+    //   accepted-inputs (type)
+    //   local-endpoint (FindShoeFiltering.js)
+    // }
+    
+    // action-endpoint (FindShoeRemoteEndpoint) {
+    //   accepted-inputs ()
+    //   remote-endpoint ("https://my-json-server.typicode.com/bixbydevelopers/capsule-samples-collection/shoes") {
+    //     method (GET)
+    //   }
+    // }
+    
+    // action-endpoint (FindShoeError) {
+    //   local-endpoint (FindShoeError.js)
+    // }
+    
+    // action-endpoint (FindShoeReturnHeaders) {
+    //   local-endpoint (FindShoeReturnHeaders.js)
+    // }
+    
+    // action-endpoint (CreateShoe) {
+    //   local-endpoint (CreateShoe.js)
+    // }
+  }
+}

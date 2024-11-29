@@ -1,0 +1,14 @@
+structure (CreateBySignificantResponse) {//구조체 컨셉의 이름
+  description (특이사항 생성 전체 응답 데이터)
+
+  property (data){ //프로퍼티의 이름
+    type (Data)//primitive 컨셉명
+    min(Required) max (Many)
+  }
+
+  property (message){
+    type (Message)
+    min(Required) max (Many)
+  }
+
+}

@@ -1,0 +1,3 @@
+text (IngredientName) {
+  description (특이사항 관련된 재료 이름)
+}

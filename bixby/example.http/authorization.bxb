@@ -1,0 +1,11 @@
+authorization{
+  user{
+    oauth2-authorization-code (jaeGwan){
+      authorize-endpoint (https://k11a501.p.ssafy.io/login)
+      client-id (qkrtprjs)
+      client-secret-key (qkrtprjs)
+      scope (read,wrtie,access)
+      token-endpoint (https://k11a501.p.ssafy.io/login)
+    }
+  }
+}

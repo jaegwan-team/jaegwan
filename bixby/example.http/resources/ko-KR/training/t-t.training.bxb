@@ -1,0 +1,8 @@
+train (t-twntnjif4ra0gr6kgyeasveyh) {
+  utterance ("[g:CreateBySignificantResponse] (배추)[v:IngredientNameInput] (1)[v:AmountInput]개를 저장해줘")
+  last-modified (1730877953733)
+}
+train (t-tgafet7siz6zzfyapkpm9ze64) {
+  utterance ("[g:CreateBySignificantResponse] (대파)[v:IngredientNameInput] (4)[v:AmountInput]개")
+  last-modified (1730942536193)
+}

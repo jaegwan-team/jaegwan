@@ -1,0 +1,13 @@
+train (t-rzxv0lsw76wfml8l7hnn6rqkv) {
+  utterance ("[g:CreateBySignificant] (당근)[v:IngredientNameInput]을 (다섯)[v:AmountInput]개 사용했어")
+  enabled (false)
+  last-modified (1730868730930)
+}
+train (t-r8a8zqpn1rv64bpd6u75zai8x) {
+  utterance ("[g:CreateBySignificantResponse] (배추)[v:IngredientNameInput] (19)[v:AmountInput]개 처리해")
+  last-modified (1730879973503)
+}
+train (t-rgd4uwoz700eo5c76dtdddvis) {
+  utterance ("[g:CreateBySignificantResponse] (배추)[v:IngredientNameInput] 썩었어 (2)[v:AmountInput]개")
+  last-modified (1730880399293)
+}

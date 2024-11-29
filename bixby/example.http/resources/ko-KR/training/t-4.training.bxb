@@ -1,0 +1,8 @@
+train (t-48viagitozhznblruv1pcwir5) {
+  utterance ("[g:CreateBySignificantResponse] (마늘)[v:IngredientNameInput] (22)[v:AmountInput]개를 입력해")
+  last-modified (1730878038505)
+}
+train (t-41c9h1r4631kbu31ekh1qiaug) {
+  utterance ("[g:CreateBySignificantResponse] (배추)[v:IngredientNameInput] (8)[v:AmountInput]개랑 (감자)[v:IngredientNameInput] (5)[v:AmountInput]개 처리해줘")
+  last-modified (1730955857902)
+}

@@ -1,0 +1,5 @@
+train (t-cj37nuxeuryfk3cvb6mzq5u8v) {
+  utterance ("[g:CreateBySignificantResponse] (배추)[v:IngredientNameInput] (1)[v:AmountInput]개랑 (감자)[v:IngredientNameInput] (5)[v:AmountInput]개 처리해")
+  enabled (false)
+  last-modified (1730955649666)
+}

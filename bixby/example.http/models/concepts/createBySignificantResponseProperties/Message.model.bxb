@@ -1,0 +1,3 @@
+text (Message) {
+  description (응답과 함께 응답되는 메시지)
+}

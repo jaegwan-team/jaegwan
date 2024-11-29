@@ -1,0 +1,46 @@
+// macro-def(createBySignificant) {
+//   params {
+//     param (createBySignificantResponse) {
+//       type (CreateBySignificantResponse)
+//       min (Required)
+//       max (Many)
+//     }
+//   }
+
+//   content {
+//     section {  // this macro returns a "section"
+//       content {
+//         paragraph {
+//           value ("#{value(createBySignificantResponse.data.ingredientName)}라는 재료가 #{value(createBySignificantResponse.data.amount)}만큼 등록되었습니다!")
+//           style (Detail_M)
+//         }
+//       }
+//     }
+//   }
+// }
+
+
+macro-def(createBySignificant) {
+  params {
+    param (createBySignificantResponse) {
+      type (CreateBySignificantResponse)
+      min (Required)
+      max (Many)
+    }
+  }
+
+  content {
+    section {
+      content{
+        for-each (createBySignificantResponse){
+          as (response){
+            paragraph {
+              value ("#{value(response.data.ingredientName)}라는 재료가 #{value(response.data.amount)}만큼 소진되었습니다!")
+              style (Detail_M)
+            }
+          }
+        }
+      }
+    }
+  }
+}
